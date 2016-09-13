@@ -11,9 +11,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include <readline/readline.h>
-#include <readline/history.h>
-
 #include "read.h"
 
 
@@ -120,7 +117,8 @@ uint  sfs_get_sexpr( char *input, FILE *fp ) {
 
     do {
         ret = NULL;
-        chunk = NULL;
+        chunk=k;
+        memset( chunk, '\0', BIGSTRING );
 
         /* si en mode interactif*/
         if ( stdin == fp ) {
@@ -144,12 +142,13 @@ uint  sfs_get_sexpr( char *input, FILE *fp ) {
             }
 
             /*saisie de la prochaine ligne à ajouter dans l'input*/
-            chunk = readline( sfs_prompt );
+            printf("%s",sfs_prompt);
+            ret = fgets( chunk, BIGSTRING, fp );
+            if (ret && chunk[strlen(chunk)-1] == '\n') chunk[strlen(chunk)-1] = '\0';
+
         }
         /*si en mode fichier*/
         else {
-            chunk=k;
-            memset( chunk, '\0', BIGSTRING );
             ret = fgets( chunk, BIGSTRING, fp );
 
             if ( NULL == ret ) {
@@ -285,9 +284,6 @@ uint  sfs_get_sexpr( char *input, FILE *fp ) {
     /* Suppression des espaces restant a la fin de l'expression, notamment le dernier '\n' */
     while (isspace(input[strlen(input)-1])) input[strlen(input)-1] = '\0';
 
-    if(stdin == fp) {
-        add_history( input );
-    }
     return S_OK;
 }
 

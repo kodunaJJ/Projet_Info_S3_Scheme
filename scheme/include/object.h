@@ -28,11 +28,12 @@ typedef struct object_t {
         char             character;
         string           string;
         string           symbol;
+	uint		 boolean;
 
         struct pair_t {
             struct object_t *car;
             struct object_t *cdr;
-        }                pair;
+        }pair;
 
         struct object_t *special;
 
@@ -42,7 +43,15 @@ typedef struct object_t {
 
 
 object make_object( uint type );
-object make_nil( void );
+object make_empty_list( void );
+object make_boolean( unsigned int a );
+object make_symbol( char* sym );
+object make_integer( num val );
+object make_character( char c );
+object make_string( char* str );
+object make_pair( pair p ) //comment définir la paire hors de l'objet ?
+
+
 
 #define SFS_NUMBER       0x00
 #define SFS_CHARACTER    0x01
