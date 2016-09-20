@@ -49,7 +49,9 @@ object make_symbol( char* sym );
 object make_integer( num val );
 object make_character( char c );
 object make_string( char* str );
-object make_pair( pair p ) //comment définir la paire hors de l'objet ?
+object make_pair( object *car, object *cdr ) //comment définir la paire hors de l'objet ? // pointeur vers objets ou void ??
+object read( char *c);
+
 
 
 

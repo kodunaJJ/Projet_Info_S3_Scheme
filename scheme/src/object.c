@@ -24,6 +24,7 @@ object make_object( uint type ) {
 //CREATION DES FONCTIONS POUR VARIABLES GLOBALES
 
 // Création d'une liste vide
+// make_nil et make_empty_list vraiment identique ????
 object make_empty_list( void ) {
 
     object t = make_object( SFS_NIL );
@@ -76,10 +77,16 @@ object make_string( char* str ){
 }
 
 //Création des paires //comment définir la paire hors de l'objet ?
-object make_pair( pair p ){
+object make_pair( object *car, object *cdr ){
 	object t = make_object( SFS_PAIR );
-	t->this.pair.car = p.car ;
-	t->this.pair.cdr = p.cdr ;
+	t->this.pair.car = car ;
+	t->this.pair.cdr = cdr ;
 
 	return t;
+}
+
+// création de la fonction de lecture et de création d'arbre syntaxique
+
+object read(char *c){
+
 }
