@@ -11,7 +11,7 @@
 #include "object.h"
 #include "mem.h"
 
-//Création d'un objet en spécifiant son type
+/* Création d'un objet en spécifiant son type */
 object make_object( uint type ) {
 
     object t = sfs_malloc( sizeof( *t ) );
@@ -21,11 +21,10 @@ object make_object( uint type ) {
     return t;
 }
 
-//CREATION DES FONCTIONS POUR VARIABLES GLOBALES
+/* CREATION DES FONCTIONS POUR VARIABLES GLOBALES A INITIALISER */
 
-// Création d'une liste vide
-// make_nil et make_empty_list vraiment identique ????
-object make_empty_list( void ) {
+/* Création d'une liste vide */
+object make_nil( void ) {
 
     object t = make_object( SFS_NIL );
 
@@ -34,20 +33,20 @@ object make_empty_list( void ) {
     return t;
 }
 
-//Création du booléen (TRUE / FALSE) basé sur le C
+/* Création du booléen (TRUE / FALSE) basé sur le C */
 object make_boolean( unsigned int  val ){
 	
 	object t = make_object( SFS_BOOLEAN );
 	
-	if (val != 0) t->this.boolean =1; 
-	else t->this.boolean = 0;
+	if (val != 0) t->this.boolean =TRUE; 
+	else t->this.boolean = FALSE;
 
 	return t;
 }
 
-//CREATION DES TYPES DE BASE
+/* CREATION DES TYPES DE BASE */
 
-//Création des symboles
+/* Création des symboles */
 object make_symbol( char* sym ){
 	
 	object t = make_object( SFS_SYMBOL );
@@ -55,28 +54,28 @@ object make_symbol( char* sym ){
 	return t;
 }
 
-//Création des entiers
+/* Création des entiers */
 object make_integer( num val ){
 	object t = make_object( SFS_NUMBER );
 	t->this.number = val;
 	return t;
 }
 
-//Création des caractères
+/* Création des caractères */
 object make_character( char c ){
 	object t = make_object( SFS_CHARACTER );
 	t->this.character = c ;
 	return t;
 }
 
-//Création des chaines de caractères
+/* Création des chaines de caractères */
 object make_string( char* str ){
 	object t = make_object( SFS_STRING );
 	strcpy(t->this.symbol, str );
 	return t;
 }
 
-//Création des paires //comment définir la paire hors de l'objet ?
+/* Création des paires //on utilise les pointeurs car et cdr */
 object make_pair( object *car, object *cdr ){
 	object t = make_object( SFS_PAIR );
 	t->this.pair.car = car ;
@@ -85,8 +84,3 @@ object make_pair( object *car, object *cdr ){
 	return t;
 }
 
-// création de la fonction de lecture et de création d'arbre syntaxique
-
-object read(char *c){
-
-}

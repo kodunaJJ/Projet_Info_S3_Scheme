@@ -36,7 +36,11 @@ void init_interpreter ( void ) {
 
     nil      = make_nil();
 
+	true = make_boolean(TRUE);
+	false = make_boolean(FALSE);
 }
+
+
 
 int main ( int argc, char *argv[] ) {
 

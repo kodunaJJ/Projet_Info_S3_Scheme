@@ -305,12 +305,65 @@ object sfs_read( char *input, uint *here ) {
     }
 }
 
-object sfs_read_atom( char *input, uint *here ) {
+/*
+object is_int(char *input, uint *here ){
+	
+	
+	if (isspace(input[*here]) (*here)++;
+	
+	if (isdigit(input[*here])){
+		if (isdigit(input[*here +1])){
+		char* str_int;
+		str_int[0]=*here;
+		str_int	
+			
+			while(isdigit(input[*here+1])) *here++;
+			int end_int = *here;
+			
+			while(start_int != end_int) 
+		
+		
+			return atom = make_integer(atoi(input[*here]));
+		}
+		else return atom = make_integer(atoi(input[*here]));
+	
+	*/
 
-    object atom = NULL;
 
-    return atom;
+
+object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
+
+	object atom = NULL;
+	char *str = NULL;
+	
+	while (isspace(input[*here]) (*here)++ ;
+	
+	while( isspace(input[*here]) == 0 ){
+		str[*here]=input[*here];
+		(*here)++;
+	}
+	str[*here+1]="\0";	// decoupage d'une chaine de char traitee + tard en atom
+	
+	if (atoi(str)!= 0) return atom = make_integer(atoi(str));
+	else if(strcmp( str, '0') != 0) return atom = make_integer(0);
+	
+		else if (str[0]== '#'){ 
+			switch(str[1]){
+				
+				case 't' : return atom = make_boolean(TRUE); break;
+				case 'f' : return atom = make_boolean(FALSE); break;
+				
+				case '\' : return atom = make_character(str[2]); break;
+				
+				default : break;
+			}
+		
+			else if (str[0]== '"') return atom = make_string(str);
+		}
+	
+
 }
+/* La fonction est capable de retourner et de stocker le type correct de l'objet, sans erreur de syntaxe cependant */
 
 object sfs_read_pair( char *stream, uint *i ) {
 

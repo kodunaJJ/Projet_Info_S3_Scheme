@@ -43,14 +43,13 @@ typedef struct object_t {
 
 
 object make_object( uint type );
-object make_empty_list( void );
+object make_nil( void );
 object make_boolean( unsigned int a );
 object make_symbol( char* sym );
 object make_integer( num val );
 object make_character( char c );
 object make_string( char* str );
-object make_pair( object *car, object *cdr ) //comment définir la paire hors de l'objet ? // pointeur vers objets ou void ??
-object read( char *c);
+object make_pair( object *car, object *cdr ) /* on utilise les pointeurs de car et cdr */
 
 
 
@@ -65,6 +64,8 @@ object read( char *c);
 
 
 extern object nil;
+extern object true;
+extern object false;
 
 #ifdef __cplusplus
 }
