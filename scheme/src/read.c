@@ -289,7 +289,6 @@ uint  sfs_get_sexpr( char *input, FILE *fp ) {
 
 
 object sfs_read( char *input, uint *here ) {
-
     if ( input[*here] == '(' ) {
         if ( input[(*here)+1] == ')' ) {
             *here += 2;
@@ -301,6 +300,7 @@ object sfs_read( char *input, uint *here ) {
         }
     }
     else {
+      
         return sfs_read_atom( input, here );
     }
 }
@@ -332,42 +332,44 @@ object is_int(char *input, uint *here ){
 
 
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
-  printf("debut read_atom");
+ 
 	object atom = NULL;
-	char *str = NULL;
-	uint *indice = here;
+	char str[BIGSTRING];
+	uint indice = *here;
 	int val;
-	
-	while(isspace(input[*indice])){
-	    (*indice)++;
+	 puts("debut read_atom");
+	while(isspace(input[indice])){
+	    indice++;
 	}
-	if(input[*indice] == '"'){
-	  while(input[*indice]!='"'){
-	  str[*indice]=input[*indice];
-	  (*indice)++;
+	if(input[indice] == '"'){
+	  indice++;
+	  while(input[indice]!='"'){
+	  str[indice-1]=input[indice];
+	  indice++;
 	  }
-	  str[*indice]='\0';
-	  return atom=make_string(str);
+	  str[indice]='\0';
+	  atom=make_string(str);
+	  return make_string(str);
 	}
-	else if(input[*indice] == '#'){
-	  switch(input[*indice+1]){
+	else if(input[indice] == '#'){
+	  switch(input[indice+1]){
 
 	  case 't': return atom=make_boolean(TRUE);
 	  case 'f': return atom=make_boolean(FALSE);
 	  case '\"':
-	    if(atoi(input[*indice+1])){
-	      val = atoi(input[*indice+1]);
+	    if(atoi(input[indice+1])){
+	      val = atoi(input[indice+1]);
 	      return atom=make_integer(val);
 	    }
-	    else if(atoi(input[*indice+1])==0 && input[*indice+1]=='0'){
+	    else if(atoi(input[indice+1])==0 /*&& input[indice+1]=='0'*/){
 	      return atom=make_integer(0);
 	    }
-	    else if(input[*indice+1] =='s'){
-	      while(isspace(input[*indice])){
-		str[*indice]=input[*indice];
-		*indice++;
+	    else if(input[indice+1] =='s'){
+	      while(isspace(input[indice])){
+		str[indice]=input[indice];
+		indice++;
 	      }
-	      str[*indice]='\0';
+	      str[indice]='\0';
 	      if(strcmp(str, "space")==0){
 		return atom=make_character(' ');
 	      }
@@ -375,12 +377,12 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 		return make_character('s');
 	      }
 	    }
-	    else if(input[*indice+1]=='n'){
-	      while(isspace(input[*indice])){
-		str[*indice]=input[*indice];
-		*indice++;
+	    else if(input[indice+1]=='n'){
+	      while(isspace(input[indice])){
+		str[indice]=input[indice];
+		indice++;
 	      }
-	      str[*indice]='\0';
+	      str[indice]='\0';
 	      if(strcmp(str, "newline")==0){
 		return atom=make_character('\n');
 	      }
@@ -389,25 +391,25 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	      }
 	    }
 	    else {
-	      return atom=make_character(input[*indice+1]);
+	      return atom=make_character(input[indice+1]);
 	    }
 	  default : break;
 	  }
 	}
-	  else if(input[*indice] == '+' || input[*indice]=='-'){
-	    while(isspace(input[*indice])){
-		str[*indice]=input[*indice];
-		*indice++;
+	  else if(input[indice] == '+' || input[indice]=='-'){
+	    while(isspace(input[indice])){
+		str[indice]=input[indice];
+		indice++;
 	      }
-	    str[*indice]='\0';
+	    str[indice]='\0';
 	    return make_integer(atoi(str));
 	  }
-	  else if(isdigit(input[*indice])){
-	    while(isspace(input[*indice])){
-	      str[*indice]=input[*indice];
-	      *indice++;
+	  else if(isdigit(input[indice])){
+	    while(isspace(input[indice])){
+	      str[indice]=input[indice];
+	      indice++;
 	    }
-	    str[*indice]='\0';
+	    str[indice]='\0';
 	    return make_integer(atoi(str));
 	  }     
 	  return NULL;

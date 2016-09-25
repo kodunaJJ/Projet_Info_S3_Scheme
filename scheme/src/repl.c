@@ -78,7 +78,7 @@ int main ( int argc, char *argv[] ) {
     }
 
     init_interpreter();
-
+    
     /*par defaut : mode shell interactif */
     fp = stdin;
     mode = INTERACTIF;
@@ -120,7 +120,6 @@ int main ( int argc, char *argv[] ) {
         if ( 0 == strlen( input ) ) {
             continue;
         }
-
         /* Pour le step 0 on se contente d'afficher */
         /* la S-Expression lue */
         /* puis d'en lire une autre */
@@ -128,7 +127,8 @@ int main ( int argc, char *argv[] ) {
         /* POUR PASSER A L'INCREMENT 1 */
         /*printf("%s\n", input );*/
 	/* ---- ajout pour test read_atom() ---- */
-	sfs_print(sfs_read( input, &here ));
+	
+	sfs_print(sfs_read( &input, &here ));
 	  /* ---- fin ajout test read_atom ---- */
         continue;
 
