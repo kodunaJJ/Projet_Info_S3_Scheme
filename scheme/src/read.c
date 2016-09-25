@@ -341,15 +341,12 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	while(isspace(input[*indice])){
 	    (*indice)++;
 	}
-       /*while( isspace(input[*indice]) == 0 ){
-		str[*indice]=input[*indice];
-		(*indice)++;
-		}*/
 	if(input[*indice] == '"'){
 	  while(input[*indice]!='"'){
 	  str[*indice]=input[*indice];
 	  (*indice)++;
 	  }
+	  str[*indice]='\0';
 	  return atom=make_string(str);
 	}
 	else if(input[*indice] == '#'){
@@ -370,6 +367,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 		str[*indice]=input[*indice];
 		*indice++;
 	      }
+	      str[*indice]='\0';
 	      if(strcmp(str, "space")==0){
 		return atom=make_character(' ');
 	      }
@@ -382,6 +380,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 		str[*indice]=input[*indice];
 		*indice++;
 	      }
+	      str[*indice]='\0';
 	      if(strcmp(str, "newline")==0){
 		return atom=make_character('\n');
 	      }
@@ -395,7 +394,23 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	  default : break;
 	  }
 	}
-	return NULL;
+	  else if(input[*indice] == '+' || input[*indice]=='-'){
+	    while(isspace(input[*indice])){
+		str[*indice]=input[*indice];
+		*indice++;
+	      }
+	    str[*indice]='\0';
+	    return make_integer(atoi(str));
+	  }
+	  else if(isdigit(input[*indice])){
+	    while(isspace(input[*indice])){
+	      str[*indice]=input[*indice];
+	      *indice++;
+	    }
+	    str[*indice]='\0';
+	    return make_integer(atoi(str));
+	  }     
+	  return NULL;
 }
 
 /* La fonction est capable de retourner et de stocker le type correct de l'objet, sans erreur de syntaxe cependant */
