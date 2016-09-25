@@ -332,37 +332,72 @@ object is_int(char *input, uint *here ){
 
 
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
-
+  printf("debut read_atom");
 	object atom = NULL;
 	char *str = NULL;
+	uint *indice = here;
+	int val;
 	
-	while (isspace(input[*here]) (*here)++ ;
-	
-	while( isspace(input[*here]) == 0 ){
-		str[*here]=input[*here];
-		(*here)++;
+	while(isspace(input[*indice])){
+	    (*indice)++;
 	}
-	str[*here+1]="\0";	// decoupage d'une chaine de char traitee + tard en atom
-	
-	if (atoi(str)!= 0) return atom = make_integer(atoi(str));
-	else if(strcmp( str, '0') != 0) return atom = make_integer(0);
-	
-		else if (str[0]== '#'){ 
-			switch(str[1]){
-				
-				case 't' : return atom = make_boolean(TRUE); break;
-				case 'f' : return atom = make_boolean(FALSE); break;
-				
-				case '\' : return atom = make_character(str[2]); break;
-				
-				default : break;
-			}
-		
-			else if (str[0]== '"') return atom = make_string(str);
-		}
-	
+       /*while( isspace(input[*indice]) == 0 ){
+		str[*indice]=input[*indice];
+		(*indice)++;
+		}*/
+	if(input[*indice] == '"'){
+	  while(input[*indice]!='"'){
+	  str[*indice]=input[*indice];
+	  (*indice)++;
+	  }
+	  return atom=make_string(str);
+	}
+	else if(input[*indice] == '#'){
+	  switch(input[*indice+1]){
 
+	  case 't': return atom=make_boolean(TRUE);
+	  case 'f': return atom=make_boolean(FALSE);
+	  case '\"':
+	    if(atoi(input[*indice+1])){
+	      val = atoi(input[*indice+1]);
+	      return atom=make_integer(val);
+	    }
+	    else if(atoi(input[*indice+1])==0 && input[*indice+1]=='0'){
+	      return atom=make_integer(0);
+	    }
+	    else if(input[*indice+1] =='s'){
+	      while(isspace(input[*indice])){
+		str[*indice]=input[*indice];
+		*indice++;
+	      }
+	      if(strcmp(str, "space")==0){
+		return atom=make_character(' ');
+	      }
+	      else{
+		return make_character('s');
+	      }
+	    }
+	    else if(input[*indice+1]=='n'){
+	      while(isspace(input[*indice])){
+		str[*indice]=input[*indice];
+		*indice++;
+	      }
+	      if(strcmp(str, "newline")==0){
+		return atom=make_character('\n');
+	      }
+	      else{
+		return atom=make_character('n');
+	      }
+	    }
+	    else {
+	      return atom=make_character(input[*indice+1]);
+	    }
+	  default : break;
+	  }
+	}
+	return NULL;
 }
+
 /* La fonction est capable de retourner et de stocker le type correct de l'objet, sans erreur de syntaxe cependant */
 
 object sfs_read_pair( char *stream, uint *i ) {

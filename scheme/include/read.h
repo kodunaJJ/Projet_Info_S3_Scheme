@@ -18,6 +18,7 @@ extern "C" {
 #include <stdio.h>
 
 #include "object.h"
+#include "number.h"
 
 enum {S_OK, S_KO, S_END};
 

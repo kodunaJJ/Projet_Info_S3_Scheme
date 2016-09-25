@@ -24,7 +24,7 @@ typedef struct object_t {
 
     union {
 
-        num              number;
+        int              number;
         char             character;
         string           string;
         string           symbol;
@@ -46,10 +46,10 @@ object make_object( uint type );
 object make_nil( void );
 object make_boolean( unsigned int a );
 object make_symbol( char* sym );
-object make_integer( num val );
+object make_integer( int val );
 object make_character( char c );
 object make_string( char* str );
-object make_pair( object *car, object *cdr ) /* on utilise les pointeurs de car et cdr */
+object make_pair( object *car, object *cdr ); /* on utilise les pointeurs de car et cdr */
 
 
 

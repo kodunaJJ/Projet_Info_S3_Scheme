@@ -55,7 +55,7 @@ object make_symbol( char* sym ){
 }
 
 /* Création des entiers */
-object make_integer( num val ){
+object make_integer( int val ){
 	object t = make_object( SFS_NUMBER );
 	t->this.number = val;
 	return t;

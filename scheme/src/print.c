@@ -13,8 +13,34 @@
 #include <stdio.h>
 
 void sfs_print_atom( object o ) {
-
-    return;
+  switch(o->type){
+  case SFS_NUMBER:
+    printf(" %d",o->this.number);
+    break;
+  case SFS_CHARACTER:
+    printf(" %c",o->this.character);
+    break;
+  case SFS_STRING:
+    printf(" %s",o->this.string);
+    break;
+  case SFS_NIL:
+    printf(" ()");
+    break;
+  case SFS_BOOLEAN:
+    if(o->this.boolean){
+      printf(" #t");
+    }
+    else {
+      printf(" #f");
+    }
+    break;  
+  case SFS_SYMBOL:
+    printf("symbol non pris en cgarge pour le moment \n");
+    break;
+  default:
+    printf("Erreur atome inconnu");
+    break;
+  }
 }
 
 void sfs_print_pair( object o ) {

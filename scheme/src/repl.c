@@ -31,6 +31,9 @@ void usage_error( char *command ) {
 
 
 object nil;
+object true;
+object false;
+
 
 void init_interpreter ( void ) {
 
@@ -123,7 +126,10 @@ int main ( int argc, char *argv[] ) {
         /* puis d'en lire une autre */
         /* METTRE EN COMMENTAIRE LES DEUX LIGNES SUIVANTES */
         /* POUR PASSER A L'INCREMENT 1 */
-        printf("%s\n", input );
+        /*printf("%s\n", input );*/
+	/* ---- ajout pour test read_atom() ---- */
+	sfs_print(sfs_read( input, &here ));
+	  /* ---- fin ajout test read_atom ---- */
         continue;
 
         here  = 0;
