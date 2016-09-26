@@ -356,15 +356,11 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   object atom = NULL;
   char str[BIGSTRING];
   uint indice = 0;
-  /*int val;*/
-  puts("debut read_atom");
+  /*int val=0;*/
 	
   get_atom(input, here, str);
 	
-  printf("%s\n",str);
-	
   if(str[indice] == '"'){ /*lecture des string */
-    puts("entree if string");
     return make_string(str);
   }
 	
@@ -373,27 +369,26 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     switch(str[indice+1]){
     case 't': return make_boolean(TRUE);
     case 'f': return make_boolean(FALSE);
-    case '\"':
+    case 0x5c: /* code ASCII de backslash */
       if(isdigit(str[indice+2])){
 	return make_character(str[indice+2]); 
       }
 	    
 	    
       else if(str[indice+2] =='s'){ /*Lecture des espaces */
-	if(strcmp(str, "space")==0){
+	if(strcmp(str,"#\space")==0){
 	  return make_character(' '); 
-	}
-	        
+	}    
 	else{
 	  return make_character('s');
 	}
       }   
       else if(str[indice+2]=='n'){ /*lecture du retour de ligne */
-	if(strcmp(str, "newline")==0){
-	  return atom=make_character('\n');
+	if(strcmp(str, "#\newline")==0){
+	  return make_character('\n');
 	}
 	else{
-	  return atom=make_character('n');
+	  return make_character('n');
 	}
       }
 	    
@@ -426,7 +421,11 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       }
     }
     return make_integer(atoi(str));
-  }     
+  }
+  else if(isalpha(str[indice])){
+    return make_symbol(str);
+  }
+      
   return NULL;
 }
 

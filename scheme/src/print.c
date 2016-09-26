@@ -15,27 +15,27 @@
 void sfs_print_atom( object o ) {
   switch(o->type){
   case SFS_NUMBER:
-    printf(" %d",o->this.number);
+    printf("%d",o->this.number);
     break;
   case SFS_CHARACTER:
-    printf(" %c",o->this.character);
+    printf("%c",o->this.character);
     break;
   case SFS_STRING:
     printf("%s",o->this.string);
     break;
   case SFS_NIL:
-    printf(" ()");
+    printf("()");
     break;
   case SFS_BOOLEAN:
     if(o->this.boolean){
-      printf(" #t");
+      printf("#t");
     }
     else {
-      printf(" #f");
+      printf("#f");
     }
     break;  
   case SFS_SYMBOL:
-    printf("symbol non pris en charge pour le moment \n");
+    printf("%s",o->this.symbol);
     break;
   default:
     printf("Erreur atome inconnu");
@@ -49,7 +49,7 @@ void sfs_print_pair( object o ) {
 }
 
 void sfs_print( object o ) {
-  printf("==>");
+  printf("==> ");
   if ( SFS_PAIR == o->type ) {
     sfs_print_pair( o );
   }
