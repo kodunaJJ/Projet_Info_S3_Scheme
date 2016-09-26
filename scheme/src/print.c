@@ -35,7 +35,7 @@ void sfs_print_atom( object o ) {
     }
     break;  
   case SFS_SYMBOL:
-    printf("symbol non pris en cgarge pour le moment \n");
+    printf("symbol non pris en charge pour le moment \n");
     break;
   default:
     printf("Erreur atome inconnu");

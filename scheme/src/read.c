@@ -329,87 +329,87 @@ object is_int(char *input, uint *here ){
 	
 	*/
 
+void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de caractères entre 2 espaces */
+	uint indice =0;
+	while (isspace(input[*here])) (*here)++;
+	
+	while (isspace(input[*here]) == 0){
+		str[indice] = input[*here];
+		(*here)++;
+		indice ++;
+	}
+	str[indice +1] = '\0';
+}
 
 
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
 	object atom = NULL;
 	char str[BIGSTRING];
-	uint indice = *here;
-	int val;
-	 puts("debut read_atom");
-	while(isspace(input[indice])){
-	    indice++;
+	uint indice = 0;
+	/*int val;*/
+	puts("debut read_atom");
+	
+	get_atom(input, here, str);
+	
+	printf("%s\n",str);
+	
+	if(str[indice] == '"'){ /*lecture des string */
+		return make_string(str);
 	}
-	if(input[indice] == '"'){
-	  indice++;
-	  while(input[indice]!='"'){
-	  str[indice-1]=input[indice];
-	  indice++;
-	  }
-	  str[indice]='\0';
-	  atom=make_string(str);
-	  return make_string(str);
-	}
-	else if(input[indice] == '#'){
-	  switch(input[indice+1]){
+	
+	
+	else if(str[indice] == '#'){ /*lecture des caractères */
+	  switch(str[indice+1]){
 
 	  case 't': return atom=make_boolean(TRUE);
 	  case 'f': return atom=make_boolean(FALSE);
 	  case '\"':
-	    if(atoi(input[indice+1])){
-	      val = atoi(input[indice+1]);
-	      return atom=make_integer(val);
+	    if(isdigit(str[indice+2])){
+	      return make_character(str[indice+2]); 
 	    }
-	    else if(atoi(input[indice+1])==0 /*&& input[indice+1]=='0'*/){
-	      return atom=make_integer(0);
-	    }
-	    else if(input[indice+1] =='s'){
-	      while(isspace(input[indice])){
-		str[indice]=input[indice];
-		indice++;
-	      }
-	      str[indice]='\0';
-	      if(strcmp(str, "space")==0){
-		return atom=make_character(' ');
-	      }
-	      else{
+	    
+	    
+	    else if(str[indice+2] =='s'){ /*Lecture des espaces */
+	    	if(strcmp(str, "space")==0){
+			return make_character(' '); 
+	        }
+	        
+	    else{
 		return make_character('s');
-	      }
 	    }
-	    else if(input[indice+1]=='n'){
-	      while(isspace(input[indice])){
-		str[indice]=input[indice];
-		indice++;
-	      }
-	      str[indice]='\0';
+	    }
+	    
+	    
+	    else if(str[indice+2]=='n'){ /*lecture du retour de ligne */
 	      if(strcmp(str, "newline")==0){
-		return atom=make_character('\n');
-	      }
+			return atom=make_character('\n');
+	        }
 	      else{
 		return atom=make_character('n');
 	      }
 	    }
-	    else {
-	      return atom=make_character(input[indice+1]);
+	    
+	    else { /* lecture des autres caractères */
+	      return make_character(str [indice+2]);
 	    }
-	  default : break;
+	  default : puts("Ce n'est pas un caractere"); break;
 	  }
 	}
-	  else if(input[indice] == '+' || input[indice]=='-'){
-	    while(isspace(input[indice])){
-		str[indice]=input[indice];
-		indice++;
-	      }
-	    str[indice]='\0';
-	    return make_integer(atoi(str));
+	  else if(str[indice] == '+' || str[indice]=='-'){ /*lecture des nombres */
+	  	int i;
+	  	for(i = indice+1 ; i<strlen(str)-1; i++) {
+	  		if isdigit(str[i]) i++;
+	  		else printf("Erreur de saisie du nombre %s \n",str); return NULL;
+	  		}
+	  return make_integer(atoi(str));
 	  }
-	  else if(isdigit(input[indice])){
-	    while(isspace(input[indice])){
-	      str[indice]=input[indice];
-	      indice++;
-	    }
-	    str[indice]='\0';
+	  else if(isdigit(str[indice])){
+	  int i;
+	  for(i = indice ; i<strlen(str); i++) {
+	  		if isdigit(str[i]) i++;
+	  		else printf("Erreur de saisie du nombre %s \n",str); return NULL;
+	  		}
 	    return make_integer(atoi(str));
 	  }     
 	  return NULL;
@@ -417,10 +417,18 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 
 /* La fonction est capable de retourner et de stocker le type correct de l'objet, sans erreur de syntaxe cependant */
 
+
+
+
+
 object sfs_read_pair( char *stream, uint *i ) {
 
     object pair = NULL;
-
-    return pair;
+	/*if (stream[*i] == ')') {
+		pair = make_pair(sfs_read_atom(stream, *i), nil);  on termine la paire avec la liste vide () 
+		
+	else pair = make_pair(sfs_read_atom(stream, *i) , sfs_read( comment implémenter la récursion mutuelle avec sfs_read ? 
+	*/
+    return pair;	
 }
 
