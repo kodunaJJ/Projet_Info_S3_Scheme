@@ -128,7 +128,7 @@ int main ( int argc, char *argv[] ) {
         /*printf("%s\n", input );*/
 	/* ---- ajout pour test read_atom() ---- */
 	
-	sfs_print(sfs_read( &input, &here ));
+	sfs_print(sfs_read( input, &here ));
 	  /* ---- fin ajout test read_atom ---- */
         continue;
 
