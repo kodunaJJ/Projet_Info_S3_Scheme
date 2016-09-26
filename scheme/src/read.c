@@ -373,10 +373,9 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       if(isdigit(str[indice+2])){
 	return make_character(str[indice+2]); 
       }
-	    
-	    
       else if(str[indice+2] =='s'){ /*Lecture des espaces */
-	if(strcmp(str,"#\space")==0){
+	char *str_bis = str + 2;
+	if(strcmp(str_bis,"space")==0){
 	  return make_character(' '); 
 	}    
 	else{
@@ -384,7 +383,8 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	}
       }   
       else if(str[indice+2]=='n'){ /*lecture du retour de ligne */
-	if(strcmp(str, "#\newline")==0){
+	char *str_bis = str + 2;
+	if(strcmp(str_bis, "newline")==0){
 	  return make_character('\n');
 	}
 	else{
