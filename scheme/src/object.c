@@ -35,12 +35,11 @@ object make_nil( void ) {
 
 /* Création du booléen (TRUE / FALSE) basé sur le C */
 object make_boolean( unsigned int  val ){
-	
+  
 	object t = make_object( SFS_BOOLEAN );
 	
 	if (val != 0) t->this.boolean =TRUE; 
 	else t->this.boolean = FALSE;
-
 	return t;
 }
 

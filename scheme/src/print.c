@@ -21,7 +21,7 @@ void sfs_print_atom( object o ) {
     printf(" %c",o->this.character);
     break;
   case SFS_STRING:
-    printf("%s\n",o->this.string);
+    printf("%s",o->this.string);
     break;
   case SFS_NIL:
     printf(" ()");
@@ -49,12 +49,12 @@ void sfs_print_pair( object o ) {
 }
 
 void sfs_print( object o ) {
-
-    if ( SFS_PAIR == o->type ) {
-        sfs_print_pair( o );
-    }
-    else {
-        sfs_print_atom( o );
-    }
-
+  printf("==>");
+  if ( SFS_PAIR == o->type ) {
+    sfs_print_pair( o );
+  }
+  else {
+    sfs_print_atom( o );
+  }
+  puts("");
 }
