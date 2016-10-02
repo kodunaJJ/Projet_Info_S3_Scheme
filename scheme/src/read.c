@@ -337,8 +337,9 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
       str[indice] = input[*here];
       (*here)++;
       indice ++;
-    }while (input[*here] != '"' /*&& input[(*here)-1]!='\"'*/);
+    }while (input[*here] != '"'/*&& input[(*here)-1]!='\\'*/);
     str[indice]=input[*here];
+    if(strlen(str)<BIGSTRING) str[indice +1] = '\0';
   }
   else{
     while (isspace(input[*here]) == 0 && input[*here]!='\0'){
@@ -347,7 +348,7 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
       indice ++;
     }
   }
-  if(strlen(str)<BIGSTRING) str[indice +1] = '\0';
+  if(strlen(str)<BIGSTRING) str[indice] = '\0';
 }
 
 
@@ -369,14 +370,14 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     switch(str[indice+1]){
     case 't': return make_boolean(TRUE);
     case 'f': return make_boolean(FALSE);
-    case 0x5c: /* code ASCII de backslash */
+    case '\\': /* code ASCII de backslash */
       if(isdigit(str[indice+2])){
 	return make_character(str[indice+2]); 
       }
       else if(str[indice+2] =='s'){ /*Lecture des espaces */
 	char *str_bis = str + 2;
 	if(strcmp(str_bis,"space")==0){
-	  return make_character(' '); 
+	  return make_string(str); 
 	}    
 	else{
 	  return make_character('s');
@@ -385,7 +386,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       else if(str[indice+2]=='n'){ /*lecture du retour de ligne */
 	char *str_bis = str + 2;
 	if(strcmp(str_bis, "newline")==0){
-	  return make_character('\n');
+	    return make_string(str);
 	}
 	else{
 	  return make_character('n');

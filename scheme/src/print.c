@@ -18,7 +18,7 @@ void sfs_print_atom( object o ) {
     printf("%d",o->this.number);
     break;
   case SFS_CHARACTER:
-    printf("%c",o->this.character);
+    printf("#\\%c",o->this.character);
     break;
   case SFS_STRING:
     printf("%s",o->this.string);
@@ -28,10 +28,10 @@ void sfs_print_atom( object o ) {
     break;
   case SFS_BOOLEAN:
     if(o->this.boolean){
-      printf("#t");
+      printf("t");
     }
     else {
-      printf("#f");
+      printf("f");
     }
     break;  
   case SFS_SYMBOL:
