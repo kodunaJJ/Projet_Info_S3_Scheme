@@ -49,7 +49,7 @@ object make_symbol( char* sym );
 object make_integer( int val );
 object make_character( char c );
 object make_string( char* str );
-object make_pair( object *car, object *cdr ); /* on utilise les pointeurs de car et cdr */
+object make_pair();
 
 
 
