@@ -46,7 +46,10 @@ void sfs_print_atom( object o ) {
 void sfs_print_pair( object o ) {
 	printf("(");
 	
-	if ( SFS_PAIR == o->this.pair.car->type ) sfs_print_pair( o );
+	if ( SFS_PAIR == o->this.pair.car->type ) {
+		sfs_print_pair( o->this.pair.car );
+		sfs_print_pair( o->this.pair.cdr );
+		}
 	
 	else sfs_print ( o );
 	
@@ -54,7 +57,7 @@ void sfs_print_pair( object o ) {
 }
 
 void sfs_print( object o ) {
-  /*printf("==> ");*/
+
   if ( SFS_PAIR == o->type ) {
     sfs_print_pair( o );
   }

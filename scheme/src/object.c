@@ -75,11 +75,8 @@ object make_string( char* str ){
 }
 
 /* Création des paires //on utilise les pointeurs car et cdr */
-object make_pair( object *car, object *cdr ){
+object make_pair(){
 	object t = make_object( SFS_PAIR );
-	t->this.pair.car = car ;
-	t->this.pair.cdr = cdr ;
-
 	return t;
 }
 

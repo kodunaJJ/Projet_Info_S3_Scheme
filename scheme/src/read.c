@@ -321,19 +321,20 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
     if(strlen(str)<BIGSTRING) str[indice +1] = '\0';
   }
   else{
-    while (isspace(input[*here]) == 0 && input[*here]!='\0'){
+    while ((isspace(input[*here]) == 0 && input[*here]!=')') && input[*here]!='\0') {
       str[indice] = input[*here];
+      printf("%c\n",str[indice]);
       (*here)++;
       indice ++;
     }
   }
-  if(strlen(str)<BIGSTRING) str[indice] = '\0';
+  if(indice<BIGSTRING) str[indice] = '\0';
 }
 
 
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
-  object atom = NULL;
+  /*object atom = NULL;*/
   char str[BIGSTRING];
   uint indice = 0;
   /*int val=0;*/
@@ -417,16 +418,28 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 
 object sfs_read_pair( char *stream, uint *i ) {
 
-	object p = make_pair(NULL,NULL);
+	object p=make_pair();
 	
+	object car;
+	object cdr;
 	
-	p->this.pair.car=(sfs_read(stream, i));
+	car.type= 0x55;
+	printf("%d\n",car.type);
+	if(isspace(stream[*i])) (*i)++ ;
+	 
+	car=sfs_read(stream, i);
 		
-		if(stream[(*i)+1] == ')') p->this.pair.cdr=make_nil();
+		if(stream[(*i)+1] == ')') cdr=make_nil();
 		
-		else p->this.pair.cdr=sfs_read(stream,i+1);
-	
-  return p;	
+		else{
+			(*i)++;
+			cdr=sfs_read_pair(stream,i);
+			}
+	printf("%d\n",car->this.type);		
+	p->this.pair.car=car;
+	printf("%d\n",p->this.pair.car->this.type);
+	p->this.pair.cdr=cdr;
+	return p;	
 }
 
 
