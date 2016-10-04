@@ -305,29 +305,8 @@ object sfs_read( char *input, uint *here ) {
     }
 }
 
-/*
-object is_int(char *input, uint *here ){
-	
-	
-	if (isspace(input[*here]) (*here)++;
-	
-	if (isdigit(input[*here])){
-		if (isdigit(input[*here +1])){
-		char* str_int;
-		str_int[0]=*here;
-		str_int	
-			
-			while(isdigit(input[*here+1])) *here++;
-			int end_int = *here;
-			
-			while(start_int != end_int) 
-		
-		
-			return atom = make_integer(atoi(input[*here]));
-		}
-		else return atom = make_integer(atoi(input[*here]));
-	
-	*/
+
+
 
 void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de caractères entre 2 espaces */
   uint indice =0;
@@ -438,12 +417,17 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 
 object sfs_read_pair( char *stream, uint *i ) {
 
-  object pair = NULL;
-  /*if (stream[*i] == ')') {
-    pair = make_pair(sfs_read_atom(stream, *i), nil);  on termine la paire avec la liste vide () 
-		
-    else pair = make_pair(sfs_read_atom(stream, *i) , sfs_read( comment implémenter la récursion mutuelle avec sfs_read ? */
+	object p = make_pair(NULL,NULL);
 	
-  return pair;	
+	
+	p->this.pair.car=(sfs_read(stream, i));
+		
+		if(stream[(*i)+1] == ')') p->this.pair.cdr=make_nil();
+		
+		else p->this.pair.cdr=sfs_read(stream,i+1);
+	
+  return p;	
 }
+
+
 

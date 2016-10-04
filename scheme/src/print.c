@@ -44,17 +44,22 @@ void sfs_print_atom( object o ) {
 }
 
 void sfs_print_pair( object o ) {
-
-    return;
+	printf("(");
+	
+	if ( SFS_PAIR == o->this.pair.car->type ) sfs_print_pair( o );
+	
+	else sfs_print ( o );
+	
+    printf(")");
 }
 
 void sfs_print( object o ) {
-  printf("==> ");
+  /*printf("==> ");*/
   if ( SFS_PAIR == o->type ) {
     sfs_print_pair( o );
   }
   else {
     sfs_print_atom( o );
   }
-  puts("");
+
 }
