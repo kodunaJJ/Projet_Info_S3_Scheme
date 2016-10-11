@@ -287,8 +287,12 @@ uint  sfs_get_sexpr( char *input, FILE *fp ) {
     return S_OK;
 }
 
+void skip_blanks(char* input, uint * here){
+    while(isspace(input[*here])){(*here)++; }
+    }
 
 object sfs_read( char *input, uint *here ) {
+	skip_blanks(input,here);
     if ( input[*here] == '(' ) {
         if ( input[(*here)+1] == ')' ) {
             *here += 2;
@@ -305,9 +309,7 @@ object sfs_read( char *input, uint *here ) {
     }
 }
 
-void skip_blanks(char* input, uint * here){
-    while(isspace(input[*here])){(*here)++; }
-    }
+
 
 
 void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de caractères entre 2 espaces */
@@ -318,19 +320,20 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
       str[indice] = input[*here];
       (*here)++;
       indice ++;
-    }while (input[*here] != '"'/*&& input[(*here)-1]!='\\'*/);
-    str[indice]=input[*here];
+    }while (input[*here] != '"');
+    str[indice]=input[(*here)];
+    	
     if(strlen(str)<BIGSTRING) str[indice +1] = '\0';
   }
   else{
     while ((isspace(input[*here]) == 0 && input[*here]!=')') && input[*here]!='\0') {
       str[indice] = input[*here];
-      printf("%c\n",str[indice]);
+      /*printf("%c\n",str[indice]);*/
       (*here)++;
       indice ++;
     }
+    if(indice<BIGSTRING) str[indice] = '\0';
   }
-  if(indice<BIGSTRING) str[indice] = '\0';
 }
 
 
@@ -425,9 +428,6 @@ object sfs_read_pair( char *stream, uint *i ) {
 	object car;
 	object cdr;
 	
-	/*car.type= 0x55;
-	printf("%d\n",car.type);*/
-	
 	skip_blanks(stream, i);
 	car=sfs_read(stream, i);
 	skip_blanks(stream, i);
@@ -441,9 +441,8 @@ object sfs_read_pair( char *stream, uint *i ) {
 			cdr=sfs_read_pair(stream,i);
 			}
 			
-	/*printf("%d\n",car->type);*/		
+	
 	p->this.pair.car=car;
-	/*printf("%d\n",p->this.pair.car->type);*/
 	p->this.pair.cdr=cdr;
 	return p;	
 }

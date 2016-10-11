@@ -37,7 +37,7 @@ object false;
 
 void init_interpreter ( void ) {
 
-    nil      = make_nil();
+	nil= make_nil();
 
 	true = make_boolean(TRUE);
 	false = make_boolean(FALSE);
@@ -127,10 +127,11 @@ int main ( int argc, char *argv[] ) {
         /* POUR PASSER A L'INCREMENT 1 */
         /*printf("%s\n", input );*/
 	/* ---- ajout pour test read_atom() ---- */
-	
-	sfs_print(sfs_read( input, &here ));
+	/*printf( "==> " );*/
+	/*sfs_print(sfs_read( input, &here ));*/
+	/*printf( "\n" );*/
 	  /* ---- fin ajout test read_atom ---- */
-        continue;
+        /*continue;*/
 
         here  = 0;
         sexpr = sfs_read( input, &here );
@@ -158,6 +159,7 @@ int main ( int argc, char *argv[] ) {
         }
 
         printf( "==> " );
+	if(output->type==SFS_PAIR) printf("(");
         sfs_print( output );
         printf( "\n" );
     }

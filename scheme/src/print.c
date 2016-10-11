@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 void sfs_print_atom( object o ) {
+/*DEBUG_MSG(" entrée dans la fonction print atom type de l' atome : %d  ",o->type);*/
   switch(o->type){
   case SFS_NUMBER:
     printf("%d",o->this.number);
@@ -24,7 +25,7 @@ void sfs_print_atom( object o ) {
     printf("%s",o->this.string);
     break;
   case SFS_NIL:
-    printf("");
+    printf("()");
     break;
   case SFS_BOOLEAN:
     if(o->this.boolean){
@@ -45,27 +46,33 @@ void sfs_print_atom( object o ) {
 
 
 void sfs_print_pair( object o ) {
-    DEBUG_MSG(" entre print pair type %d",o->type);
-    if(o->this.pair.cdr != nil) printf("(");
-    /*if(o->this.pair.car->type==3){
-	printf("(");}*/
-    sfs_print(o->this.pair.car); /*Affichage du car de l'objet*/
+    DEBUG_MSG(" entrée print pair type %d",o->type);
     
-    /*if(o->this.pair.cdr==nil){
-	printf(")");   }*/
-    if(o->this.pair.cdr != nil)   printf(" ");
-    sfs_print(o->this.pair.cdr);	
+	if(o->this.pair.car->type == SFS_PAIR) printf("(");
+	
+    sfs_print(o->this.pair.car);
+    
+    if(o->this.pair.cdr->type == SFS_NIL) printf(")");
+    
+    if(o->this.pair.cdr->type != SFS_NIL)  {
+    	printf(" ");
+    	sfs_print(o->this.pair.cdr);
+    	}
+
+    	
 	 }
 
+	
+	 
 void sfs_print( object o ) {
+DEBUG_MSG(" entrée print ");
+	if ( SFS_PAIR == o->type ) {
 
-  if ( SFS_PAIR == o->type ) {
-  	
-    sfs_print_pair( o );
-    printf(")\n");
-  }
-  else {
-    sfs_print_atom( o );
+		sfs_print_pair( o );
+    
+  }	
+	else {
+    	sfs_print_atom( o );
   }
 
 }

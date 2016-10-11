@@ -25,6 +25,7 @@ enum {S_OK, S_KO, S_END};
 uint   sfs_get_sexpr( string input, FILE *fp );
 
 void get_atom(char* input, uint *here, char *str);
+void skip_blanks(char* input, uint * here);
 object sfs_read( char *input, uint *here );
 object sfs_read_atom( char *input, uint *here );
 object sfs_read_pair( char *stream, uint *i );
