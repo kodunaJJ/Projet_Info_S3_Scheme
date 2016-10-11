@@ -24,7 +24,7 @@ void sfs_print_atom( object o ) {
     printf("%s",o->this.string);
     break;
   case SFS_NIL:
-    printf("()");
+    printf("");
     break;
   case SFS_BOOLEAN:
     if(o->this.boolean){
@@ -43,23 +43,26 @@ void sfs_print_atom( object o ) {
   }
 }
 
+
 void sfs_print_pair( object o ) {
-	printf("(");
-	
-	if ( SFS_PAIR == o->this.pair.car->type ) {
-		sfs_print_pair( o->this.pair.car );
-		sfs_print_pair( o->this.pair.cdr );
-		}
-	
-	else sfs_print ( o );
-	
-    printf(")");
-}
+    DEBUG_MSG(" entre print pair type %d",o->type);
+    if(o->this.pair.cdr != nil) printf("(");
+    /*if(o->this.pair.car->type==3){
+	printf("(");}*/
+    sfs_print(o->this.pair.car); /*Affichage du car de l'objet*/
+    
+    /*if(o->this.pair.cdr==nil){
+	printf(")");   }*/
+    if(o->this.pair.cdr != nil)   printf(" ");
+    sfs_print(o->this.pair.cdr);	
+	 }
 
 void sfs_print( object o ) {
 
   if ( SFS_PAIR == o->type ) {
+  	
     sfs_print_pair( o );
+    printf(")\n");
   }
   else {
     sfs_print_atom( o );

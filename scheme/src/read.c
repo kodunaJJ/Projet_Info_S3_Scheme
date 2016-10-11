@@ -305,7 +305,9 @@ object sfs_read( char *input, uint *here ) {
     }
 }
 
-
+void skip_blanks(char* input, uint * here){
+    while(isspace(input[*here])){(*here)++; }
+    }
 
 
 void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de caractères entre 2 espaces */
@@ -423,21 +425,25 @@ object sfs_read_pair( char *stream, uint *i ) {
 	object car;
 	object cdr;
 	
-	car.type= 0x55;
-	printf("%d\n",car.type);
-	if(isspace(stream[*i])) (*i)++ ;
-	 
+	/*car.type= 0x55;
+	printf("%d\n",car.type);*/
+	
+	skip_blanks(stream, i);
 	car=sfs_read(stream, i);
-		
-		if(stream[(*i)+1] == ')') cdr=make_nil();
+	skip_blanks(stream, i);
+	
+		if(stream[(*i)] == ')') {cdr=make_nil();
+			(*i)++;
+			}
 		
 		else{
-			(*i)++;
+	
 			cdr=sfs_read_pair(stream,i);
 			}
-	printf("%d\n",car->this.type);		
+			
+	/*printf("%d\n",car->type);*/		
 	p->this.pair.car=car;
-	printf("%d\n",p->this.pair.car->this.type);
+	/*printf("%d\n",p->this.pair.car->type);*/
 	p->this.pair.cdr=cdr;
 	return p;	
 }
