@@ -125,13 +125,9 @@ int main ( int argc, char *argv[] ) {
         /* puis d'en lire une autre */
         /* METTRE EN COMMENTAIRE LES DEUX LIGNES SUIVANTES */
         /* POUR PASSER A L'INCREMENT 1 */
-        /*printf("%s\n", input );*/
-	/* ---- ajout pour test read_atom() ---- */
-	/*printf( "==> " );*/
-	/*sfs_print(sfs_read( input, &here ));*/
-	/*printf( "\n" );*/
-	  /* ---- fin ajout test read_atom ---- */
-        /*continue;*/
+	
+        /*printf("%s\n", input );
+	  continue;*/
 
         here  = 0;
         sexpr = sfs_read( input, &here );
@@ -157,7 +153,7 @@ int main ( int argc, char *argv[] ) {
             /*sinon on rend la main à l'utilisateur*/
             continue ;
         }
-
+	
         printf( "==> " );
 	if(output->type==SFS_PAIR) printf("(");
         sfs_print( output );
