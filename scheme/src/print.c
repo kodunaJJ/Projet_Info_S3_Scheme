@@ -46,7 +46,7 @@ void sfs_print_atom( object o ) {
 
 
 void sfs_print_pair( object o ) {
-    DEBUG_MSG(" entrée print pair type %d",o->type);
+  /*DEBUG_MSG(" entrée print pair type %d",o->type);*/
     
 	if(o->this.pair.car->type == SFS_PAIR) printf("(");
 	
@@ -65,7 +65,7 @@ void sfs_print_pair( object o ) {
 	
 	 
 void sfs_print( object o ) {
-DEBUG_MSG(" entrée print ");
+  /*DEBUG_MSG(" entrée print ");*/
 	if ( SFS_PAIR == o->type ) {
 
 		sfs_print_pair( o );
@@ -75,4 +75,11 @@ DEBUG_MSG(" entrée print ");
     	sfs_print_atom( o );
   }
 
+}
+
+void sfs_print_expr( object o ){
+  printf( "==> " );
+  if(o->type==SFS_PAIR) printf("(");
+  sfs_print( o );
+  printf( "\n" );
 }
