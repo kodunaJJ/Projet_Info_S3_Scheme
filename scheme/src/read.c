@@ -316,14 +316,13 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
   uint indice =0;
   while (isspace(input[*here]) && input[*here] != '\0') (*here)++;
   if(input[*here]=='"'){
-    printf("%d ", *here);
     do{
       str[indice] = input[*here];
       (*here)++;
       indice ++;
-      printf("%d ", *here);
     }while (input[*here] != '"' && input[*here]!='\0');
     str[indice]=input[(*here)];
+    (*here)++; /* incrementation pour etre sur l'espace ou la parenthese fermante */
     	
     if(indice<BIGSTRING) str[indice +1] = '\0';
     else{
@@ -338,7 +337,6 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
 	  if(input[(*here)-1]!='\\') break;
 	}
       }
-	    
       str[indice] = input[*here];
       /*printf("%c\n",str[indice]);*/
       (*here)++;
@@ -350,7 +348,6 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
       WARNING_MSG("Chaine de caractere trop longue");
     }
   }
-  /*printf("%s\n",str);*/
 }
 
 
@@ -359,10 +356,9 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   /*object atom = NULL;*/
   char str[BIGSTRING];
   uint indice = 0;
-  /*int val=0;*/
-	
+  /*int val= 0;*/
+
   get_atom(input, here, str);
-	
   if(str[indice] == '"'){ /*lecture des string */
     return make_string(str);
   }
@@ -461,7 +457,7 @@ object sfs_read_pair( char *stream, uint *i ) {
 	
   skip_blanks(stream, i);
   if(stream[(*i) ]== ')') return nil;
-	
+  
   car=sfs_read(stream, i);
   skip_blanks(stream, i);
 	
