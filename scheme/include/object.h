@@ -18,38 +18,39 @@ extern "C" {
 #include "number.h"
 
 
-typedef struct object_t {
+  typedef struct object_t {
 
     uint type;
 
     union {
 
-        int              number;
-        char             character;
-        string           string;
-        string           symbol;
-	uint		 boolean;
+      int              number;
+      char             character;
+      string           string;
+      string           symbol;
+      uint		 boolean;
 
-        struct pair_t {
-            struct object_t *car;
-            struct object_t *cdr;
-        }pair;
+      struct pair_t {
+	struct object_t *car;
+	struct object_t *cdr;
+      }pair;
 
-        struct object_t *special;
+      struct object_t *special;
 
     } this;
 
-} *object;
+  } *object;
 
 
-object make_object( uint type );
-object make_nil( void );
-object make_boolean( unsigned int a );
-object make_symbol( char* sym );
-object make_integer( int val );
-object make_character( char c );
-object make_string( char* str );
-object make_pair();
+  object make_object( uint type );
+  object make_nil( void );
+  object make_boolean( unsigned int a );
+  object make_symbol( char* sym );
+  object make_integer( int val );
+  object make_character( char c );
+  object make_string( char* str );
+  object make_pair(void);
+  object make_arith_op(char c);
 
 
 
@@ -61,11 +62,12 @@ object make_pair();
 #define SFS_NIL          0x04
 #define SFS_BOOLEAN      0x05
 #define SFS_SYMBOL       0x06
+#define SFS_ARITH_OP     0X07
 
 
-extern object nil;
-extern object true;
-extern object false;
+  extern object nil;
+  extern object true;
+  extern object false;
 
 #ifdef __cplusplus
 }

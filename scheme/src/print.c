@@ -38,6 +38,9 @@ void sfs_print_atom( object o ) {
   case SFS_SYMBOL:
     printf("%s",o->this.symbol);
     break;
+  case SFS_ARITH_OP:
+    printf("%c", o->this.character);
+    break;
   default:
     printf("Erreur atome inconnu");
     break;

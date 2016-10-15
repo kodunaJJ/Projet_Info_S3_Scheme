@@ -350,6 +350,13 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
   }
 }
 
+uint is_arithemetic_op(char c){
+
+  if(c=='+' || c=='-' || c=='*' || c== '/') return 1;
+  else return 0;
+
+}
+
 
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
@@ -359,6 +366,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   /*int val= 0;*/
 
   get_atom(input, here, str);
+  
   if(str[indice] == '"'){ /*lecture des string */
     return make_string(str);
   }
@@ -411,6 +419,8 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     default : /* ajouter test pour savoir erreur */ break;
     }
   }
+  else if(is_arithemetic_op(str[indice]) && str[indice+1] =='\0') return make_arith_op(str[indice]);
+  
   else if(str[indice] == '+' || str[indice]=='-'){ /*lecture des nombres */ /* pas de prise en compte d'un depassement de capacite */
     int i;
     for(i = indice + 1 ; i<strlen(str)-1; i++) {
@@ -418,10 +428,11 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	i++;
       }
       else{
-	printf("Erreur de saisie du nombre %s \n",str); return NULL;
+	WARNING_MSG("parser error: incorrect number");
+	return NULL;
       }
     }
-    return make_integer(atoi(str));
+    return make_integer(atoi(str)); /* changer atoi par strtol */
   }
   else if(isdigit(str[indice])){
     int i;
@@ -430,7 +441,8 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	i++;
       }
       else{
-	printf("Erreur de saisie du nombre %s \n",str); return NULL;
+	WARNING_MSG("parser error: incorrect number");
+	return NULL;
       }
     }
     return make_integer(atoi(str));
@@ -443,10 +455,6 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 }
 
 /* La fonction est capable de retourner et de stocker le type correct de l'objet, sans erreur de syntaxe cependant */
-
-
-
-
 
 object sfs_read_pair( char *stream, uint *i ) {
 

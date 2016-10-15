@@ -80,3 +80,8 @@ object make_pair(){
 	return t;
 }
 
+object make_arith_op( char c ){
+	object t = make_object( SFS_ARITH_OP );
+	t->this.character = c ;
+	return t;
+}
