@@ -337,8 +337,8 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
     }
   }
   else{
-    while (isspace(input[*here]) == 0 /*&& input[*here]!=')'*/ && input[*here]!='\0') {
-      if(input[*here]==')'){
+    while (isspace(input[*here]) == 0 && input[*here]!='\0') {
+      if(input[*here]==')'|| input[*here]=='('){
 	if(*here > 0){
 	  if(input[(*here)-1]!='\\') break;
 	}
@@ -432,7 +432,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       else { /* lecture des autres caractères */
 	return make_character(str[indice+2]);
       }
-    default : /* ajouter test pour savoir erreur */ break;
+    default : break;
     }
   }
   else if(is_arithemetic_op(str[indice]) && str[indice+1] =='\0') return make_arith_op(str[indice]);
