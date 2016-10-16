@@ -454,10 +454,12 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     int err_val = errno;
     if(err_val==ERANGE && str[indice]=='+'){
       errno=0;
+      WARNING_MSG("OVERFLOW");
       return make_string("+inf");
     }
     else if(err_val==ERANGE && str[indice]=='-'){
       errno=0;
+      WARNING_MSG("OVERFLOW");
       return make_string("-inf");
     }
     else{
@@ -479,6 +481,8 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     int value = strtol(str, NULL, 10);
     int err_val = errno;
     if(err_val==ERANGE){
+      WARNING_MSG("OVERFLOW");
+      errno=0;
       return make_string("+inf");
     }
     else{
