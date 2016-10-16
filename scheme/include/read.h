@@ -29,6 +29,7 @@ extern "C" {
   object sfs_read_atom( char *input, uint *here );
   object sfs_read_pair( char *stream, uint *i );
   uint is_arithemetic_op(char c);
+  uint is_scm_space(char* str, uint indice);
 
 #ifdef __cplusplus
 }

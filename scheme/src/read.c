@@ -363,6 +363,25 @@ uint is_arithemetic_op(char c){
 
 }
 
+uint is_scm_space(char* str, uint indice){
+  if(str[indice+2] =='s'){ /*Lecture des espaces */
+    char *str_bis = str + 2;
+    if(strcmp(str_bis,"space")==0){
+      return 1; 
+    }
+  }
+  return 0;
+}
+
+uint is_scm_newline(char* str, uint indice){
+  if(str[indice+2]=='n'){ /*lecture du retour de ligne */
+    char *str_bis = str + 2;
+    if(strcmp(str_bis, "newline")==0){
+      return 1;
+    }
+  }
+  return 0;
+}
 
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
@@ -397,30 +416,21 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	return make_boolean(FALSE);
       }
     case '\\': /* code ASCII de backslash */
-      if(isdigit(str[indice+2])){
-	return make_character(str[indice+2]); 
-      }
-      else if(str[indice+2] =='s'){ /*Lecture des espaces */
-	char *str_bis = str + 2;
-	if(strcmp(str_bis,"space")==0){
+      if(is_scm_space(str,indice)){ /*Lecture des espaces */
 	  return make_string(str); 
-	}    
-	else{
-	  return make_character('s');
-	}
-      }   
-      else if(str[indice+2]=='n'){ /*lecture du retour de ligne */
-	char *str_bis = str + 2;
-	if(strcmp(str_bis, "newline")==0){
+	}       
+      if(is_scm_newline(str,indice)){ /*lecture du retour de ligne */
 	  return make_string(str);
-	}
-	else{
-	  return make_character('n');
-	}
       }
-	    
+      if(str[indice+3]!='\0'){
+	WARNING_MSG("Parser error incorrect character");
+	break;
+      }
+      else if(isdigit(str[indice+2])){
+	return make_character(str[indice+2]); 
+      }	    
       else { /* lecture des autres caractères */
-	return make_character(str [indice+2]);
+	return make_character(str[indice+2]);
       }
     default : /* ajouter test pour savoir erreur */ break;
     }
