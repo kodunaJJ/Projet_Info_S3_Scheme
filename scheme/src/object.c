@@ -70,7 +70,7 @@ object make_character( char c ){
 /* Création des chaines de caractères */
 object make_string( char* str ){
 	object t = make_object( SFS_STRING );
-	strcpy(t->this.symbol, str );
+	strcpy(t->this.string, str );
 	return t;
 }
 
