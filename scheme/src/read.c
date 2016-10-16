@@ -318,6 +318,12 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
   if(input[*here]=='"'){
     do{
       str[indice] = input[*here];
+      if(input[*here]=='\\'){
+	if(input[(*here)+1]=='"'){ 
+	  str[indice]='"';
+	  (*here)++;
+	}
+      }
       (*here)++;
       indice ++;
     }while (input[*here] != '"' && input[*here]!='\0');
@@ -478,7 +484,6 @@ object sfs_read_pair( char *stream, uint *i ) {
     cdr=sfs_read_pair(stream,i);
   }
 			
-	
   p->this.pair.car=car;
   p->this.pair.cdr=cdr;
   return p;	
