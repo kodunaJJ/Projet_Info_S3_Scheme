@@ -28,7 +28,7 @@ extern "C" {
       char             character;
       string           string;
       string           symbol;
-      uint		 boolean;
+      uint	       boolean;
 
       struct pair_t {
 	struct object_t *car;
@@ -51,7 +51,7 @@ extern "C" {
   object make_string( char* str );
   object make_pair(void);
   object make_arith_op(char c);
-
+  object make_special_atom(char c);
 
 
 
@@ -63,7 +63,7 @@ extern "C" {
 #define SFS_BOOLEAN      0x05
 #define SFS_SYMBOL       0x06
 #define SFS_ARITH_OP     0X07
-
+#define SFS_SPECIAL_ATOM 0x08
 
   extern object nil;
   extern object true;

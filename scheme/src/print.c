@@ -41,6 +41,9 @@ void sfs_print_atom( object o ) {
   case SFS_ARITH_OP:
     printf("%c", o->this.character);
     break;
+  case SFS_SPECIAL_ATOM:
+    printf("%c", o->this.character);
+    break;
   default:
     printf("Erreur atome inconnu");
     break;

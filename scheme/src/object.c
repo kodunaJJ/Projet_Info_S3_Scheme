@@ -80,8 +80,16 @@ object make_pair(){
 	return t;
 }
 
+/* création des opérateur mathematiques simples pour l'instant */ 
 object make_arith_op( char c ){
 	object t = make_object( SFS_ARITH_OP );
+	t->this.character = c ;
+	return t;
+}
+
+/* Création des atoms ayant une fonction spéciale dans le langage comme @,^,~,... */
+object make_special_atom( char c ){
+	object t = make_object( SFS_SPECIAL_ATOM );
 	t->this.character = c ;
 	return t;
 }

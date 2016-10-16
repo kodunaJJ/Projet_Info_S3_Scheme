@@ -418,10 +418,10 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       }
     case '\\': /* code ASCII de backslash */
       if(is_scm_space(str,indice)){ /*Lecture des espaces */
-	  return make_string(str); 
-	}       
+	return make_string(str); 
+      }       
       if(is_scm_newline(str,indice)){ /*lecture du retour de ligne */
-	  return make_string(str);
+	return make_string(str);
       }
       if(str[indice+3]!='\0'){
 	WARNING_MSG("Parser error incorrect character");
@@ -488,8 +488,13 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   else if(isalpha(str[indice])){
     return make_symbol(str);
   }
-      
-  return NULL;
+  else if(ispunct(str[indice]) && str[indice]=='\0'){
+    return make_special_atom(str[indice]); /* en attendant de savoir ce qu'on en fait ^^ */
+  }
+  else {
+    return make_string(str); /* cas fourre tout a ameliorer au plus vite */
+  }
+  return NULL;     
 }
 
 /* La fonction est capable de retourner et de stocker le type correct de l'objet, sans erreur de syntaxe cependant */
