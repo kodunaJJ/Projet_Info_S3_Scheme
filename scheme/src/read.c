@@ -10,8 +10,9 @@
 
 #include <stdio.h>
 #include <ctype.h>
-
+#include <errno.h>
 #include "read.h"
+
 
 
 
@@ -448,7 +449,20 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	return NULL;
       }
     }
-    return make_integer(atoi(str)); /* changer atoi par strtol */
+    
+    int value = strtol(str, NULL, 10);
+    int err_val = errno;
+    if(err_val==ERANGE && str[indice]=='+'){
+      errno=0;
+      return make_string("+inf");
+    }
+    else if(err_val==ERANGE && str[indice]=='-'){
+      errno=0;
+      return make_string("-inf");
+    }
+    else{
+      return make_integer(value);
+    }
   }
   else if(isdigit(str[indice])){
     int i;
@@ -461,7 +475,15 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	return NULL;
       }
     }
-    return make_integer(atoi(str));
+    
+    int value = strtol(str, NULL, 10);
+    int err_val = errno;
+    if(err_val==ERANGE){
+      return make_string("+inf");
+    }
+    else{
+      return make_integer(value);
+    }
   }
   else if(isalpha(str[indice])){
     return make_symbol(str);
