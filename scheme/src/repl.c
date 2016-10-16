@@ -141,7 +141,7 @@ int main ( int argc, char *argv[] ) {
             /*sinon on rend la main à l'utilisateur*/
             continue ;
         }
-	sfs_print_expr(sexpr);
+	
         output = sfs_eval( sexpr );
         if( NULL == output) {
             /* si fichier alors on sort*/
@@ -153,7 +153,7 @@ int main ( int argc, char *argv[] ) {
             /*sinon on rend la main à l'utilisateur*/
             continue ;
         }
-	
+	sfs_print_expr(sexpr);
 	/*printf( "==> " );
 	if(output->type==SFS_PAIR) printf("(");
         sfs_print( output );
