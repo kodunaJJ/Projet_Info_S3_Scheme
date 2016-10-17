@@ -19,7 +19,7 @@ extern "C" {
 #include "object.h"
 
 object sfs_eval( object );
-
+int predicat(object o);
 #ifdef __cplusplus
 }
 #endif

@@ -33,12 +33,12 @@ void usage_error( char *command ) {
 object nil;
 object true;
 object false;
-/*object quote;
-object define;
-object set!;
-object if;
-object and;
-object or;*/
+object sfs_quote;
+object sfs_define;
+object sfs_set;
+object sfs_if;
+object sfs_and;
+object sfs_or;
 
 void init_interpreter ( void ) {
 
@@ -48,13 +48,14 @@ void init_interpreter ( void ) {
 	false = make_boolean(FALSE);
 }
 
-/*void init_forme (void){
-	quote = make_symbol("quote");
-	define= make_symbol("define");
-	set! = make_symbol("set!");
-	if = make_symbol("if");
-	and = make_symbol("and");
-	or = make_symbol("or");*/
+void init_forme (void){
+	sfs_quote = make_symbol("quote");
+	sfs_define= make_symbol("define");
+	sfs_set = make_symbol("set!");
+	sfs_if = make_symbol("if");
+	sfs_and = make_symbol("and");
+	sfs_or = make_symbol("or");
+	}
 
 int main ( int argc, char *argv[] ) {
 

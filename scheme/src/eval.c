@@ -17,28 +17,23 @@
 	else return 0;
 	}
 */
-
+int predicat(object o){
+	if (o->type == SFS_BOOLEAN && o->this.pair.car->this.boolean==0) return 0;
+	else return 1;
+	}
 
 
 object sfs_eval( object input ) {
 
 object output=input ;
 
+eval:
+
+
+
 DEBUG_MSG("type de input à évaluer : %d",input->type);
 
 /* Gestion de la forme QUOTE */
-if (output->type==SFS_SYMBOL && output->this.symbol[0]=='\''){ 
-	output=make_pair();
-	output->this.pair.car = make_symbol("quote") ;
-	int i =1;
-	while (input->this.symbol[i] != '\0'){ 
-		output->this.pair.cdr->this.symbol[i-1] = input->this.symbol[i];
-		i++;
-		}
-	DEBUG_MSG("type du car : %d",output->this.pair.car->type);
-	DEBUG_MSG("valeur : %s",output->this.pair.car->this.symbol);
-	return nil ;
-	} 
 
 if ((output->type==SFS_PAIR) && !strcmp(output->this.pair.car->this.symbol, "quote")){
 	return output->cadr;
@@ -54,14 +49,28 @@ if ((output->type==SFS_PAIR) && !strcmp(output->this.pair.car->this.symbol, "set
 	}*/
 
 
-/*Gestion de IF 
+/*Gestion de IF */
 if ((output->type==SFS_PAIR) && !strcmp(output->this.pair.car->this.symbol, "if")){
-	
 
-	}*/	
+	if (predicat(output->cadr)==TRUE){
+		output = output->caddr;
+		goto eval;
+		}
+	
+	else if (predicat(output->cadr)==FALSE && output->cadddr = nil) {
+		return FALSE;
+	}
+	
+	else {
+		output = output->cadddr;
+		goto eval; 
+		}
+	}
 	
 
 else return output;
 
-
 }
+
+
+

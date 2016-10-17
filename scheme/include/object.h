@@ -28,9 +28,9 @@ extern "C" {
       char             character;
       string           string;
       string           symbol;
-      uint	       boolean;
+      uint	           boolean;
 
-      struct pair_t {
+    struct pair_t {
 	struct object_t *car;
 	struct object_t *cdr;
       }pair;

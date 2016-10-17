@@ -320,7 +320,7 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
     do{
       str[indice] = input[*here];
       if(input[*here]=='\\'){
-	if(input[(*here)+1]=='"'){ 
+	if(input[(*here)+1]=='"' && (*here)>0){ 
 	  str[indice]='"';
 	  (*here)++;
 	}
@@ -345,8 +345,15 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
 	}
       }
       str[indice] = input[*here];
-      /*printf("%c\n",str[indice]);*/
-      (*here)++;
+      if(input[*here]=='\\'){
+		if(input[(*here)-1]=='#' && input[(*here)+1]=='"' && (*here)>0){
+		str[indice]='\\';
+		str[indice+1]='"';
+		indice++;
+		(*here)++;
+		}
+		}
+		(*here)++;
       indice ++;
     }
     if(indice<BIGSTRING) str[indice] = '\0';
@@ -357,6 +364,7 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
   }
 }
 
+/* Detecte les operateurs arithmetiques simples */
 uint is_arithemetic_op(char c){
 
   if(c=='+' || c=='-' || c=='*' || c== '/') return 1;
@@ -364,6 +372,7 @@ uint is_arithemetic_op(char c){
 
 }
 
+/* Detecte le caractere espace en scheme */
 uint is_scm_space(char* str, uint indice){
   if(str[indice+2] =='s'){ /*Lecture des espaces */
     char *str_bis = str + 2;
@@ -374,6 +383,7 @@ uint is_scm_space(char* str, uint indice){
   return 0;
 }
 
+/* Detecte le caractere retour a la ligne en scheme */
 uint is_scm_newline(char* str, uint indice){
   if(str[indice+2]=='n'){ /*lecture du retour de ligne */
     char *str_bis = str + 2;
@@ -497,11 +507,11 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   
   else {
   	int indice2 = indice;
-  	if(str[indice2] == '\''){
+  	if(str[indice2] == '\''){ /*Gestion de la tranformation de 'a en (quote a)*/
   		char quote[256];
   		strcpy(quote, "(quote ");
   		while(indice2 < strlen(str)){ str[indice2]=str[indice2+1]; indice2++;}
-  		strcat(quote,str);
+  		strcat(quote,str); /*concaténation de "(quote " avec le reste sans ' */
   		quote[strlen(quote)]=')';
   		DEBUG_MSG("valeur de quote : %s",quote);
   		(*here)=0;
