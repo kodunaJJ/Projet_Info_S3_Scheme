@@ -49,7 +49,7 @@ if ((output->type==SFS_PAIR) && !strcmp(output->this.pair.car->this.symbol, "set
 	}*/
 
 
-/*Gestion de IF */
+/*Gestion de IF 
 if ((output->type==SFS_PAIR) && !strcmp(output->this.pair.car->this.symbol, "if")){
 
 	if (predicat(output->cadr)==TRUE){
@@ -65,7 +65,7 @@ if ((output->type==SFS_PAIR) && !strcmp(output->this.pair.car->this.symbol, "if"
 		output = output->cadddr;
 		goto eval; 
 		}
-	}
+	}*/
 	
 
 else return output;
