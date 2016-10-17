@@ -288,6 +288,8 @@ uint  sfs_get_sexpr( char *input, FILE *fp ) {
   return S_OK;
 }
 
+
+
 void skip_blanks(char* input, uint * here){
   while(isspace(input[*here])){(*here)++; }
 }
@@ -320,7 +322,7 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
     do{
       str[indice] = input[*here];
       if(input[*here]=='\\'){
-	if(input[(*here)+1]=='"'){ 
+	if( input[(*here)+1]=='"' && (*here)>0){
 	  str[indice]='"';
 	  (*here)++;
 	}
@@ -345,8 +347,15 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
 	}
       }
       str[indice] = input[*here];
-      /*printf("%c\n",str[indice]);*/
-      (*here)++;
+      if(input[*here]=='\\'){
+	if(input[(*here)-1]=='#' && input[(*here)+1]=='"' && (*here)>0){
+	  str[indice]='\\';
+	  str[indice+1]='"';
+	  indice++;
+	  (*here)++;
+	}
+      }
+     (*here)++;
       indice ++;
     }
     if(indice<BIGSTRING) str[indice] = '\0';
@@ -357,12 +366,16 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
   }
 }
 
+/* Detecte les operateurs arithmetiques simples */
+
 uint is_arithemetic_op(char c){
 
   if(c=='+' || c=='-' || c=='*' || c== '/') return 1;
   else return 0;
 
 }
+
+/* Detecte le caractere espace en scheme */
 
 uint is_scm_space(char* str, uint indice){
   if(str[indice+2] =='s'){ /*Lecture des espaces */
@@ -373,6 +386,8 @@ uint is_scm_space(char* str, uint indice){
   }
   return 0;
 }
+
+/* Detecte le caractere retour a la ligne en scheme */
 
 uint is_scm_newline(char* str, uint indice){
   if(str[indice+2]=='n'){ /*lecture du retour de ligne */
