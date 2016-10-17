@@ -488,16 +488,31 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     else{
       return make_integer(value);
     }
-  }
-  else if(isalpha(str[indice])){
-    return make_symbol(str);
-  }
-  else if(ispunct(str[indice]) && str[indice]=='\0'){
-    return make_special_atom(str[indice]); /* en attendant de savoir ce qu'on en fait ^^ */
-  }
+     }
+     
+  /*else if(ispunct(str[indice]) && str[indice]=='\0'){
+    return make_special_atom(str[indice]); en attendant de savoir ce qu'on en fait ^^ 
+  }*/
+  
+  
   else {
-    return make_string(str); /* cas fourre tout a ameliorer au plus vite */
-  }
+  	int indice2 = indice;
+  	if(str[indice2] == '\''){
+  		char quote[256];
+  		strcpy(quote, "(quote ");
+  		while(indice2 < strlen(str)){ str[indice2]=str[indice2+1]; indice2++;}
+  		strcat(quote,str);
+  		quote[strlen(quote)]=')';
+  		DEBUG_MSG("valeur de quote : %s",quote);
+  		(*here)=0;
+  		return sfs_read(quote, here);
+  		}
+  		
+    else return make_symbol(str);
+	}
+  /*else {
+    return make_string(str);  cas fourre tout a ameliorer au plus vite 
+  }*/
   return NULL;     
 }
 

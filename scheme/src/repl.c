@@ -33,7 +33,12 @@ void usage_error( char *command ) {
 object nil;
 object true;
 object false;
-
+/*object quote;
+object define;
+object set!;
+object if;
+object and;
+object or;*/
 
 void init_interpreter ( void ) {
 
@@ -43,7 +48,13 @@ void init_interpreter ( void ) {
 	false = make_boolean(FALSE);
 }
 
-
+/*void init_forme (void){
+	quote = make_symbol("quote");
+	define= make_symbol("define");
+	set! = make_symbol("set!");
+	if = make_symbol("if");
+	and = make_symbol("and");
+	or = make_symbol("or");*/
 
 int main ( int argc, char *argv[] ) {
 
@@ -153,7 +164,7 @@ int main ( int argc, char *argv[] ) {
             /*sinon on rend la main à l'utilisateur*/
             continue ;
         }
-	sfs_print_expr(sexpr);
+	sfs_print_expr(output);
 	/*printf( "==> " );
 	if(output->type==SFS_PAIR) printf("(");
         sfs_print( output );
