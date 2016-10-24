@@ -31,6 +31,7 @@ extern "C" {
   uint is_arithemetic_op(char c);
   uint is_scm_space(char* str,uint indice);
   uint is_scm_newline(char* str, uint indice);
+  object is_symbol(char *str, uint indice);
 
 #ifdef __cplusplus
 }

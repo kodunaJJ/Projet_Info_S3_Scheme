@@ -1,4 +1,3 @@
-
 /**
  * @file read.c
  * @author François Cayre <cayre@yiking.(null)>
@@ -399,6 +398,17 @@ uint is_scm_newline(char* str, uint indice){
   return 0;
 }
 
+/* Detection des formes */
+
+object is_symbol(char *str, uint indice){
+  if(strcmp(str,"quote")==0 || strcmp(str,"'")==0 /*str[indice]==quote_char*/) return quote;
+  if(strcmp(str,"if")==0) return if_scm;
+  if(strcmp(str,"set!")==0) return set_scm;
+  if(strcmp(str,"define")==0) return define;
+  if(strcmp(str,"and")==0) return and_scm;
+  return make_symbol(str);
+}
+
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
   /*object atom = NULL;*/
@@ -421,7 +431,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	break;
       }
       else{
-	return make_boolean(TRUE);
+	return true;
       }
     case 'f':
       if(str[indice+2]!='\0'){
@@ -429,7 +439,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
 	break;
       }
       else{
-	return make_boolean(FALSE);
+	return false;
       }
     case '\\': /* code ASCII de backslash */
       if(is_scm_space(str,indice)){ /*Lecture des espaces */
@@ -504,8 +514,9 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       return make_integer(value);
     }
   }
-  else if(isalpha(str[indice])){
-    return make_symbol(str);
+  else if(isalpha(str[indice]) || strcmp(str,"'")==0){
+    
+    return is_symbol(str,indice);
   }
   else if(ispunct(str[indice]) && str[indice]=='\0'){
     return make_special_atom(str[indice]); /* en attendant de savoir ce qu'on en fait ^^ */

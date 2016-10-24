@@ -33,14 +33,34 @@ void usage_error( char *command ) {
 object nil;
 object true;
 object false;
+object quote;
+object set_scm;
+object define;
+object if_scm;
+object and_scm;
 
+void init_boolean(object *true, object *false){
+  *true = make_boolean(TRUE);
+  *false = make_boolean(FALSE);
+}
+
+void init_form(object *quote, object *set_scm, object *define, object *and_scm, object *if_scm){
+  *quote = make_symbol("quote");
+  *set_scm = make_symbol("set!");
+  *define = make_symbol("define");
+  *and_scm = make_symbol("and");
+  *if_scm = make_symbol("if");
+}
+  
 
 void init_interpreter ( void ) {
 
 	nil= make_nil();
 
-	true = make_boolean(TRUE);
-	false = make_boolean(FALSE);
+	/*true = make_boolean(TRUE);
+	  false = make_boolean(FALSE);*/
+	init_boolean(&true, &false);
+	init_form(&quote, &set_scm, &define, &and_scm, &if_scm);
 }
 
 

@@ -54,7 +54,6 @@ extern "C" {
   object make_special_atom(char c);
 
 
-
 #define SFS_NUMBER       0x00
 #define SFS_CHARACTER    0x01
 #define SFS_STRING       0x02
@@ -65,9 +64,19 @@ extern "C" {
 #define SFS_ARITH_OP     0X07
 #define SFS_SPECIAL_ATOM 0x08
 
+  /* empty list */
   extern object nil;
+
+  /* boolean object */
   extern object true;
   extern object false;
+
+  /* form */
+  extern object quote;
+  extern object if_scm;
+  extern object set_scm;
+  extern object define;
+  extern object and_scm; 
 
 #ifdef __cplusplus
 }
