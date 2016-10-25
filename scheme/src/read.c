@@ -397,7 +397,7 @@ uint is_scm_newline(char* str, uint indice){
 object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
   /*object atom = NULL;*/
-  char str[BIGSTRING];
+  char str[BIGSTRING]="";
   uint indice = 0;
   /*int val= 0;*/
 
@@ -506,13 +506,18 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   
   
   else {
-  	int indice2 = indice;
-  	if(str[indice2] == '\''){ /*Gestion de la tranformation de 'a en (quote a)*/
-  		char quote[256];
+  	
+  	if(str[indice] == '\''){ /*Gestion de la tranformation de 'abc en (quote abc)*/
+  		char quote[256] = "";
   		strcpy(quote, "(quote ");
-  		while(indice2 < strlen(str)){ str[indice2]=str[indice2+1]; indice2++;}
-  		strcat(quote,str); /*concaténation de "(quote " avec le reste sans ' */
-  		quote[strlen(quote)]=')';
+  		DEBUG_MSG("valeur de str : %s",str);
+  		while(indice < strlen(str)+1){ 
+  			quote[indice+7]=str[indice+1]; 
+  			indice++;
+  			}
+  		
+  		quote[strlen(str)+6]=')';
+  		/*quote[strlen(str)+7]='\0';*/
   		DEBUG_MSG("valeur de quote : %s",quote);
   		(*here)=0;
   		return sfs_read(quote, here);

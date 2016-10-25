@@ -70,8 +70,8 @@ extern "C" {
 #define caar this.pair.car->this.pair.car
 #define cdar this.pair.car->this.pair.cdr
 #define cddr this.pair.cdr->this.pair.cdr
-#define caddr caddr->this.pair.car
-#define cdddr caddr->this.pair.cdr
+#define caddr cddr->this.pair.car
+#define cdddr cddr->this.pair.cdr
 #define cadddr cdddr->this.pair.car
 #define cddddr cdddr->this.pair.cdr
 
