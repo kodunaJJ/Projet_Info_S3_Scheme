@@ -401,7 +401,16 @@ uint is_scm_newline(char* str, uint indice){
 /* Detection des formes */
 
 object is_symbol(char *str, uint indice){
-  if(strcmp(str,"quote")==0 || strcmp(str,"'")==0 /*str[indice]==quote_char*/) return quote;
+  puts("yolo");
+  if(strcmp(str,"quote")==0) return quote;
+  if(str[indice]=='\''){
+    puts("yolo1");
+    object p = make_pair();
+    p->this.pair.car=quote;
+    indice++;
+    p->this.pair.cdr=sfs_read(str,&indice);
+    return p;
+  }
   if(strcmp(str,"if")==0) return if_scm;
   if(strcmp(str,"set!")==0) return set_scm;
   if(strcmp(str,"define")==0) return define;
@@ -417,6 +426,8 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   /*int val= 0;*/
 
   get_atom(input, here, str);
+
+  printf("-->%s\n",str);
   
   if(str[indice] == '"'){ /*lecture des string */
     return make_string(str);
@@ -514,7 +525,7 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
       return make_integer(value);
     }
   }
-  else if(isalpha(str[indice]) || strcmp(str,"'")==0){
+  else if(isalpha(str[indice]) || str[indice]=='\''){
     
     return is_symbol(str,indice);
   }

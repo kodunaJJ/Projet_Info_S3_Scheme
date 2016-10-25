@@ -18,7 +18,16 @@ extern "C" {
 
 #include "object.h"
 
-object sfs_eval( object );
+  object sfs_eval( object );
+  uint form_type(object o);
+
+#define QUOTE_FORM  0x00
+#define IF_FORM     0x01
+#define SET_FORM    0x02
+#define DEFINE_FORM 0x03
+#define AND_FORM    0x04
+#define NOT_FORM    0xFF
+  
 
 #ifdef __cplusplus
 }
