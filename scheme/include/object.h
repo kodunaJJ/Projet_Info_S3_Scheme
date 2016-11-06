@@ -30,7 +30,7 @@ extern "C" {
       string           symbol;
       uint	           boolean;
 
-    struct pair_t {
+      struct pair_t {
 	struct object_t *car;
 	struct object_t *cdr;
       }pair;
@@ -64,6 +64,8 @@ extern "C" {
 #define SFS_SYMBOL       0x06
 #define SFS_ARITH_OP     0X07
 #define SFS_SPECIAL_ATOM 0x08
+#define SFS_ENVIRONMENT 0x09
+  
 
 
 #define cadr this.pair.cdr->this.pair.car
