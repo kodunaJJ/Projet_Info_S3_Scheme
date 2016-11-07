@@ -64,7 +64,7 @@ extern "C" {
 #define SFS_SYMBOL       0x06
 #define SFS_ARITH_OP     0X07
 #define SFS_SPECIAL_ATOM 0x08
-#define SFS_ENVIRONMENT 0x09
+#define SFS_ENVIRONMENT  0x09
   
 
 

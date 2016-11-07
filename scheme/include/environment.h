@@ -19,6 +19,8 @@ extern "C" {
   void add_variable(object name, object value, object env);
   object delete_variable(object variable);
   object research_variable(object variable, object env);
+  void display_variable(object variable);
+  void display_environment(object env, int num);
   
 #ifdef __cplusplus
 }
