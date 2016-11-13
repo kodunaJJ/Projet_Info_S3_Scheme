@@ -3,15 +3,19 @@
 #include "notify.h"
 #include "print.h"
 
-#define TOP_LEVEL 0x00
+/* environnement = paire dont car indique l'environnement précédent
+   et cdr indique la liste de variables associées à l'environnement */
 
-object create_environment(int num){
+object create_environment(){
 
   object env = make_pair();
   env->type = SFS_ENVIRONMENT;
-  env->this.number = num;
   env->this.pair.car=nil;
   env->this.pair.cdr=nil;
+  /*printf("env type = %d\n", env->type);
+printf("env num = %d\n",env->this.pair.car->this.number);
+sfs_print(env->this.pair.car);
+sfs_print(env->this.pair.cdr);*/
   return env;
 }
 
@@ -20,22 +24,24 @@ object create_top_level_environment(){
 
   /* modification de make_pair pour initialiser car et cdr à nil ??? */
   
-  top->this.pair.car=nil;
+  /* top->this.pair.car=nil; */
 
   /* ajout de la creation des formes ??? */
 
   return top;
 }
 
-object add_environment(object env, int num){
-  int num_env = TOP_LEVEL+num;
-  object new_env = create_environment(num_env);
+object add_environment(object env){
+  object new_env = create_environment();
   new_env->this.pair.car=env;
   return new_env;
 }
 
 object delete_environment(object env){
-  if(env->this.number == 0) return env;
+  if(env->this.pair.car->type == SFS_NIL){
+    WARNING_MSG("Deletion of top level environment IMPOSSIBLE");
+    return env;
+  }
   if(env->this.pair.cdr->type == SFS_NIL){
     object env1 = env->this.pair.car; 
     sfs_free(env);
@@ -58,12 +64,20 @@ object delete_environment(object env){
   }*/
 
 void add_variable(object name, object value, object env){
+
+  puts("debut add var");
   object variable = make_pair();
   variable->this.pair.car = make_pair();
-  variable->caar = make_symbol(name->this.symbol);
+  variable->caar = make_pair();
+  variable->caar->this.pair.car = make_symbol(name->this.symbol);
+  variable->caar->this.pair.cdr = make_nil();
+
+  /* pas de prise en charge des listes pour l'instant */
   switch(value->type){
   case SFS_NUMBER:
-    variable->cdar = make_integer(value->this.number);
+    variable->cdar = make_pair();
+    variable->cdar->this.pair.car = make_integer(value->this.number);
+    variable->cdar->this.pair.cdr = make_nil();
     break;
   case SFS_CHARACTER:
     variable->cdar = make_character(value->this.character);
@@ -72,10 +86,14 @@ void add_variable(object name, object value, object env){
     variable->cdar = make_string(value->this.string);
     break;
   case SFS_NIL:
-    variable->cdar = make_nil();
+    variable->cdar = make_pair();
+    variable->cdar->this.pair.car = make_nil();
+    variable->cdar->this.pair.cdr = make_nil();
     break;
   case SFS_BOOLEAN:
-    variable->cdar = make_boolean(value->this.boolean);
+    variable->cdar = make_pair();
+    variable->cdar->this.pair.car = make_boolean(value->this.boolean);
+    variable->cdar->this.pair.cdr = make_nil();
     break;  
   case SFS_SYMBOL:
     variable->cdar = make_symbol(value->this.symbol);
@@ -129,31 +147,48 @@ object research_variable(object variable, object env){
   return nil;
 }
 
+/* fonctions pour debuggage */
+
 void display_variable(object variable){
-  sfs_print_pair(variable->this.pair.car);
+  object var = variable->this.pair.car;
+  if(variable->cdar->type == SFS_PAIR){
+    sfs_print_pair(variable->this.pair.car);
+  }
+  else{
+    sfs_print_atom(variable);
+  }
 }
 
-void display_environment(object env, int num){
+void display_environment(object env, int num_env2display){
   object env1 = env;
   object var = nil;
+  int num_env = 0;
 
-  while(env1->this.number != num){
-    env1=env1->this.pair.car;
+  /* printf("env num = %d\n",env1->thi); */
+  puts(" debut display");
+  if(num_env != -1){
+    while(num_env != num_env2display && env1->this.pair.car->type != SFS_NIL){
+      env1=env1->this.pair.car;
+      num_env ++;
+    }
   }
+  puts("End env research"); 
   var=env1->this.pair.cdr;
+  printf("var type = %d\n",var->type);
 
   if(var->type == SFS_NIL){
     DEBUG_MSG("No variable declared in this environment");
   }
   else{
-    do{
-      uint i = 0;
-      printf("Displaying environment n°%d :\n",env1->this.number);
-      printf("Variable n°%d is \n",i);
+    printf("Displaying environment n°%d :\n",num_env+1);
+    uint i = 0;
+    do{    
+      printf("Variable n°%d is --> ",i);
       display_variable(var);
+      puts("");
       var=var->this.pair.cdr;
       i++;
-    }while(var->this.pair.cdr->type != SFS_NIL);
+    }while(var->type != SFS_NIL);
     printf("End of display\n");
   }
 }

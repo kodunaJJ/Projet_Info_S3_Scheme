@@ -19,6 +19,7 @@
 #include "read.h"
 #include "eval.h"
 #include "print.h"
+#include "environment.h"
 
 /* mode d'interaction avec l'interpreteur (exemple)*/
 typedef enum {INTERACTIF,SCRIPT} inter_mode;
@@ -40,12 +41,36 @@ object sfs_if;
 object sfs_and;
 object sfs_or;
 
+object false_test;
+object true_test;
+object nil_test;
+
 void init_interpreter ( void ) {
 
-	nil= make_nil();
+  nil= make_nil();
+  true = make_boolean(TRUE);
+  false = make_boolean(FALSE);
 
-	true = make_boolean(TRUE);
-	false = make_boolean(FALSE);
+  nil_test=make_symbol("@nil");
+  true_test=make_symbol("@true");
+  false_test=make_symbol("@false");
+
+  puts("yolo !!");
+  
+  object top_level_env = create_top_level_environment();
+  puts("creation env ok ?");
+
+  display_environment(top_level_env,TOP_LEVEL);
+
+  puts("display env ok ?");
+  add_variable(nil_test,nil,top_level_env);
+  puts("add var nil ok ?");
+  add_variable(true_test,true,top_level_env);
+  puts("add var true ok ?");
+  add_variable(false_test,false,top_level_env);
+  puts("add var false ok ?");
+  display_environment(top_level_env,TOP_LEVEL);
+  puts("end display test");
 }
 
 void init_forme (void){
