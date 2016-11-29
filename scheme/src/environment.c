@@ -123,30 +123,35 @@ object delete_variable(object variable){
   return variable1;
 }
 
-object research_variable(object variable, object env){
-  object var = variable;
-  object env1 = env;
+object research_variable(object variable_name, object env){
+  object var = env->this.pair.cdr;
+  if(var->type == SFS_NIL){
+    DEBUG_MSG("Empty environment");
+    return nil;
+  }
+    
   do{
-    if(env1->this.pair.cdr->type == SFS_NIL){
+    /*if(env1->this.pair.cdr->type == SFS_NIL){
       env1 = env1->this.pair.car;
     }
     else if(var->this.pair.car->type == SFS_NIL){
       env1 = env1->this.pair.car;
-    }
+      }*/
 
-    if(strcmp(var->caar->this.string, variable->caar->this.string) == 0 && var->cdar->type == variable->cdar->type){
-      return var;
+    if(strcmp(var->caar->this.string, variable->this.string) == 0){
+      return var->this.pair.car;
     }
     else{
       var = var->this.pair.cdr;
     }
 
-  }while(env1->type != SFS_NIL && var->this.pair.cdr->type != SFS_NIL);
+  }while( var->this.pair.cdr->type != SFS_NIL);
 
   WARNING_MSG("Unbound variable");
   return nil;
 }
 
+  
 /* fonctions pour debuggage */
 
 void display_variable(object variable){
