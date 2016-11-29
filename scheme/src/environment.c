@@ -138,7 +138,7 @@ object research_variable(object variable_name, object env){
       env1 = env1->this.pair.car;
       }*/
 
-    if(strcmp(var->caar->this.string, variable->this.string) == 0){
+    if(strcmp(var->caar->this.symbol, variable_name->this.symbol) == 0){
       return var->this.pair.car;
     }
     else{
