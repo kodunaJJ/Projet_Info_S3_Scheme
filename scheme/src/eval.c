@@ -19,21 +19,23 @@
 */
 
 object sfs_eval_predicat(object input){
+	input = sfs_eval(input);
 	if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
 	else return true;
 	}
 
 object sfs_eval(object input ) {
 
+
 restart:
 
 DEBUG_MSG("type de input à évaluer : %d",input->type);
 
-/* Gestion de la forme QUOTE
+/* Gestion de la forme QUOTE */
 
 if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "quote")){
 	return input->cadr;
-	}*/
+	}
 
 
 /*Gestion de DEFINE */

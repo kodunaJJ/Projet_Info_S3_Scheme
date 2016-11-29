@@ -11,7 +11,7 @@
 
 extern object toplevel;
 
-object add(object input)
+object add(object input, object env)
 			{
 				object p=create_environment();
 				object resultat=make_integer(0);
@@ -26,7 +26,7 @@ object add(object input)
 						resultat->this.number+=input->this.pair.car->this.number;
 					}
 					else if(input->this.pair.car->type==SFS_SYMBOL){
-						p=research_variable(input->this.pair.car->this.symbol, toplevel);
+						p=research_variable(input->this.pair.car->this.symbol, env);
 						if(p->this.pair.cdr->type==SFS_NUMBER){
 							resultat->this.number.this.integer+=p->this.pair.cdr->this.number;
 						}
@@ -110,11 +110,10 @@ object divi(object input)
 				}return resultat;
 }
 
-object sous(object input)
+object sous(object input, object env)
 			{
 				object p=create_environment();
 				object resultat=make_number(0);
-				resultat->this.number.this.integer=0;
 				if(input->this.pair.cdr->type!=SFS_NIL)
 				{
 					if(input->cadr->type==SFS_PAIR){
@@ -125,7 +124,7 @@ object sous(object input)
 						input=input->this.pair.cdr;
 					}
 					if(input->cadr->type==SFS_SYMBOL){
-						p=research(input->cadr->this.symbol,toplevel);
+						p=research(input->cadr->this.symbol,env);
 						if(p->this.pair.cdr->type==SFS_NUMBER){
 							resultat->this.number=p->this.pair.cdr->this.number;
 						}

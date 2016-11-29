@@ -28,12 +28,16 @@ extern "C" {
       char             character;
       string           string;
       string           symbol;
-      uint	           boolean;
+      uint	       boolean;
 
       struct pair_t {
 	struct object_t *car;
 	struct object_t *cdr;
       }pair;
+      
+      struct {
+      	struct object_t*(*function)(struct object_t*);
+      	} primitive;
 
       struct object_t *special;
 
@@ -52,6 +56,7 @@ extern "C" {
   object make_pair(void);
   object make_arith_op(char c);
   object make_special_atom(char c);
+  object make_primitive(char* str);
 
 
 
@@ -65,6 +70,7 @@ extern "C" {
 #define SFS_ARITH_OP     0X07
 #define SFS_SPECIAL_ATOM 0x08
 #define SFS_ENVIRONMENT  0x09
+#define SFS_PRIMITVE     0x10
   
 
 

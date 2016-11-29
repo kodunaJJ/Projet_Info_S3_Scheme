@@ -93,3 +93,5 @@ object make_special_atom( char c ){
 	t->this.character = c ;
 	return t;
 }
+
+/* Création des primitives*/
