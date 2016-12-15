@@ -141,7 +141,6 @@ object divi(object input, object env)
 }
 
 
-		/*ON VERRA LA SUITE PLUS TARD*/	
 
 object egal(object input, object env)
 
@@ -206,6 +205,8 @@ object egal(object input, object env)
 				}
 				return resultat;
 }
+
+
 /*
 object inf(object input, object env)
 
@@ -672,89 +673,7 @@ object new_list(object input)
 		return new_list;
 	}return input;
 		
-}
-*/
-/* Test si deux object sont identiques*/
-/*
-object eq_poly(object input)
-{
-	object resultat=make_object(SFS_BOOLEAN);
-	object env_courant=creer_env();
-	env_courant=env;
-
-	while(input->cddr->type!=SFS_NIL)
-	{	
-		/* on remplace les éléments non auto évaluants (les pairs et les symbols) par leur valeur */
-		if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		if(input->caddr->type==SFS_PAIR) input->caddr=sfs_eval(input->caddr);
-		if(input->cadr->type==SFS_SYMBOL) input->cadr=association(env_courant,input->cadr);
-		if(input->caddr->type==SFS_SYMBOL) input->caddr=association(env_courant,input->caddr);
-		
-		/* on regarde si les types sont égaux */
-		if(input->cadr->type==input->caddr->type)
-		{	
-			switch(input->cadr->type)
-			{		
-				case 0x00 : 
-					if(input->cadr->this.number==input->caddr->this.number) 
-					resultat->this.boolean=1;
-						
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						
-						return resultat;
-					}break;
-
-				case 0x01 :
-					if(input->cadr->this.character==input->caddr->this.character) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-
-				case 0x02 : 
-					if(!strcmp(input->cadr->this.string,input->caddr->this.string)) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-				
-				case 0x04 :
-					resultat->this.boolean=TRUE;
-					break;
-
-				case 0x05 : 
-					if(input->cadr->this.boolean==input->caddr->this.boolean) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-								
-				case 0x06 :
-					if(!strcmp(input->cadr->this.symbol,input->caddr->this.symbol)) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-									
-			}
-			input=input->this.pair.cdr;
-			
-		}
-		else{
-			resultat->this.boolean=FALSE;
-			input=input->this.pair.cdr;
-		}
-	
-	}return resultat;
-
 }*/
+
+
+
