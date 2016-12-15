@@ -10,6 +10,7 @@
 
 #include "eval.h"
 #include "object.h"
+#include "environment.h"
 
 
 /*int is_forme(object o){
@@ -18,13 +19,34 @@
 	}
 */
 
-object sfs_eval_predicat(object input){
-	input = sfs_eval(input);
+int error_syntax_IF_form(object input){
+
+  object o;
+  if(input->this.pair.cdr->type != SFS_PAIR){
+    DEBUG_MSG("syntax error --> too few arguments");    
+    return 1;
+  }
+  else if(input->cddr->type != SFS_PAIR){
+    DEBUG_MSG("syntax error --> too few arguments");
+    return 1;
+  }
+  o = input->cddr;
+  if(o->this.pair.cdr->type != SFS_NIL){
+    if(o->cddr->type != SFS_NIL){
+      DEBUG_MSG("syntax error --> too many arguments");
+      return 1;
+    }
+  }
+  return 0;
+}
+
+object sfs_eval_predicat(object input, object env){
+  input = sfs_eval(input, env);
 	if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
 	else return true;
 	}
 
-object sfs_eval(object input ) {
+object sfs_eval(object input, object env ) {
 
 
 restart:
@@ -39,54 +61,112 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "quote
 
 
 /*Gestion de DEFINE */
-if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "define")){
+ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "define")){
 
-	
-	}
+   if(input->cadr->type != SFS_SYMBOL /*|| input->cadr->type != SFS_PAIR*/){
+     WARNING_MSG("Expected symbol name or pair after define");
+   }
+   else{
+    
+     if(research_variable(input->cadr,env)->type == SFS_NIL){
+       DEBUG_MSG("research ok");
+       add_variable(input->cadr, input->cddr, env);
+       return env->cadr->this.pair.car;
+     }
+     else {
+       WARNING_MSG("Variable already declared");
+       return nil;
+     }
+   }
+ }
 
-/*Gestion de SET! 
+
+/*Gestion de SET! */ 
 if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "set!")){
-	}*/
+  object var = research_variable(input->cadr,env);
+  if(var->type == SFS_NIL){
+    WARNING_MSG("Unknown variable");
+    return nil;
+  }
+  else{
+    var->this.pair.cdr = input->cddr;
+    return var->this.pair.car;
+  }
+ }
 
 
 /*Gestion de IF */
-if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "if")){
+ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "if")){
+   if(error_syntax_IF_form(input)){
+     WARNING_MSG("Syntax error");
+     return nil;
+   }
+   else{
+     if (sfs_eval_predicat(input->cadr, env)== true && input->caddr->type != SFS_NIL){
+       input = input->caddr;
+       DEBUG_MSG("type de la conséquence: %d", input->type);
+       goto restart;
+     }
+		
+     else if (sfs_eval_predicat(input->cadr,env)== false && input->cadddr->type != SFS_NIL){
+       input = input->cadddr;
+       DEBUG_MSG("type de l'alternative: %d", input->type);
+       goto restart; 
+     }
+   }
+    return nil;
+     
 
 	
-	if (input->this.pair.cdr->type == SFS_NIL){
-		WARNING_MSG("Pas de prédicat");
-		return false;
+  /*if (input->this.pair.cdr->type == SFS_NIL){
+		WARNING_MSG("Syntax error --> Nothing to evaluate");
+		return nil;
+		 return false 
+		
 		}
 	
-	else if (sfs_eval_predicat(input->cadr)== true && input->caddr->type != SFS_NIL){
+	else if (sfs_eval_predicat(input->cadr, env)== true && input->caddr->type != SFS_NIL){
 		input = input->caddr;
 		DEBUG_MSG("type de la conséquence: %d", input->type);
 		goto restart;
 		}
 		
-	else if (sfs_eval_predicat(input->cadr)== false && input->cadddr->type != SFS_NIL){
+	else if (sfs_eval_predicat(input->cadr,env)== false && input->cadddr->type != SFS_NIL){
 		input = input->cadddr;
 		DEBUG_MSG("type de l'alternative: %d", input->type);
 		goto restart; 
 		}
 	
-	else return false;
-	}
+		else return false; */
+  
+}
 	
 
 
 /*Gestion de AND*/
 if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "and")){
 
-	if (input->this.pair.cdr->type == SFS_NIL || input->caddr->type == SFS_NIL){
-		WARNING_MSG("Pas d'arguments à évaluer");
-		return false;
-		}
+  /*if (input->this.pair.cdr->type == SFS_NIL || input->caddr->type == SFS_NIL){
+    WARNING_MSG("Pas d'arguments à évaluer");
+    return false;
+    }
 	
-	else if(sfs_eval_predicat(input->cadr)== true && sfs_eval_predicat(input->caddr)== true) return true;
+    else if(sfs_eval_predicat(input->cadr,env)== true && sfs_eval_predicat(input->caddr, env)== true) return true;
 
-	else return false;
-	}
+    else return false;*/
+
+  if (input->this.pair.cdr->type == SFS_NIL){
+    return true;
+  }
+  else if(sfs_eval_predicat(input->cadr,env)== true){
+    input = input->cadr;
+    goto restart;
+  }
+  else if(sfs_eval_predicat(input->cadr,env)== false){
+    return input;
+  }
+      
+ }
 
 /*Gestion de OR*/
 if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "or")){
@@ -96,7 +176,7 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "or"))
 		return false;
 		}
 	
-	else if(sfs_eval_predicat(input->cadr)== true || sfs_eval_predicat(input->caddr)== true) return true;
+	else if(sfs_eval_predicat(input->cadr, env)== true || sfs_eval_predicat(input->caddr, env)== true) return true;
 
 	else return false;
 	}

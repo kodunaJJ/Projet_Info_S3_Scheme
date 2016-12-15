@@ -41,6 +41,8 @@ object sfs_if;
 object sfs_and;
 object sfs_or;
 
+object top_level_env;
+
 object false_test;
 object true_test;
 object nil_test;
@@ -51,26 +53,21 @@ void init_interpreter ( void ) {
   true = make_boolean(TRUE);
   false = make_boolean(FALSE);
 
-  nil_test=make_symbol("@nil");
+  /* nil_test=make_symbol("@nil");
   true_test=make_symbol("@true");
-  false_test=make_symbol("@false");
+  false_test=make_symbol("@false");*/
+  top_level_env = create_top_level_environment();
+  /*display_environment(top_level_env,TOP_LEVEL);
 
-  puts("yolo !!");
-  
-  object top_level_env = create_top_level_environment();
-  puts("creation env ok ?");
-
-  display_environment(top_level_env,TOP_LEVEL);
-
-  puts("display env ok ?");
+ 
   add_variable(nil_test,nil,top_level_env);
-  puts("add var nil ok ?");
+ 
   add_variable(true_test,true,top_level_env);
-  puts("add var true ok ?");
+ 
   add_variable(false_test,false,top_level_env);
-  puts("add var false ok ?");
-  display_environment(top_level_env,TOP_LEVEL);
-  puts("end display test");
+ 
+  display_environment(top_level_env,TOP_LEVEL);*/
+ 
 }
 
 void init_forme (void){
@@ -179,7 +176,8 @@ int main ( int argc, char *argv[] ) {
             continue ;
         }
 	
-        output = sfs_eval( sexpr );
+        output = sfs_eval( sexpr,top_level_env );
+	  display_environment(top_level_env,TOP_LEVEL);
         if( NULL == output) {
             /* si fichier alors on sort*/
             if (mode == SCRIPT) {
