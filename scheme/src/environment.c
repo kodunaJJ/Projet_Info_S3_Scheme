@@ -65,7 +65,6 @@ object delete_environment(object env){
 
 void add_variable(object name, object value, object env){
 
-  puts("debut add var");
   object variable = make_pair();
   variable->this.pair.car = make_pair();
   variable->caar = make_pair();
@@ -124,12 +123,14 @@ object delete_variable(object variable){
 }
 
 object research_variable(object variable_name, object env){
+  DEBUG_MSG("debut recherche");
+  DEBUG_MSG("env = %p", env->this.pair.cdr);
   object var = env->this.pair.cdr;
   if(var->type == SFS_NIL){
     DEBUG_MSG("Empty environment");
     return nil;
   }
-    
+  DEBUG_MSG("debut do while");
   do{
     /*if(env1->this.pair.cdr->type == SFS_NIL){
       env1 = env1->this.pair.car;
@@ -170,39 +171,30 @@ void display_environment(object env, int num_env2display){
   int num_env = 0;
 
   /* printf("env num = %d\n",env1->thi); */
-  puts(" debut display");
+  DEBUG_MSG("debut env display");
   if(num_env != -1){
     while(num_env != num_env2display && env1->this.pair.car->type != SFS_NIL){
       env1=env1->this.pair.car;
       num_env ++;
     }
   }
-  puts("End env research"); 
+  DEBUG_MSG("End env research"); 
   var=env1->this.pair.cdr;
-  printf("var type = %d\n",var->type);
+  DEBUG_MSG("var type = %d\n",var->type);
 
   if(var->type == SFS_NIL){
     DEBUG_MSG("No variable declared in this environment");
   }
   else{
-    printf("Displaying environment n°%d :\n",num_env+1);
+    DEBUG_MSG("Displaying environment n°%d :\n",num_env+1);
     uint i = 0;
     do{    
-      printf("Variable n°%d is --> ",i);
+      DEBUG_MSG("Variable n°%d is --> ",i);
       display_variable(var);
       puts("");
       var=var->this.pair.cdr;
       i++;
     }while(var->type != SFS_NIL);
-    printf("End of display\n");
+    DEBUG_MSG("End of display\n");
   }
 }
-    
-    
-  
-  
-  
-  
-
-
-
