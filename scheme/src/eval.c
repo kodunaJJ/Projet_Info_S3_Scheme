@@ -18,31 +18,61 @@
 	}
 */
 
-object sfs_eval_predicat(object input){
-	input = sfs_eval(input);
+object sfs_eval_predicat(object input, object env_courant){
+	input = sfs_eval(input, env_courant);
 	if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
 	else return true;
 	}
 
-object sfs_eval(object input ) {
+object sfs_eval(object input, object env_courant) {
 
 
 restart:
+
+object p=create_environment();
+
+ /*Renvoie directement la valeur de la variable si on l'entre*/
+if(input->type==SFS_SYMBOL){
+	p=research_variable(input->this.symbol, env_courant);
+	if (p==NULL) return input;
+	return p->this.pair.cdr;
+}
+
+
+/*Dans le cas d'une paire on gère les primitives et les formes*/
+if(input->type==SFS_PAIR){
+
+		/*Test si le car est un symbol*/
+		if(input->this.pair.car->type==SFS_SYMBOL)
+		{
+			/*Recherche du symbole dans l'environnement courant*/
+			p=research_variable(input->this.pair.car->this.symbol, env_courant);
+			if(p==NULL) return input; /*Renvoie l'entrée si le symbole n'existe pas*/
+
+			/* Test si le cdr est une primitive */
+			if(p->this.pair.cdr->type==SFS_PRIMITIVE)
+			{
+
+				object (*prim)(object); /* Pointeur de fonction */
+				prim = p->this.pair.cdr->this.primitive; /* Association de la fonction */
+				return prim(input);
+			}
+
+
+
 
 DEBUG_MSG("type de input à évaluer : %d",input->type);
 
 /* Gestion de la forme QUOTE */
 
-if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "quote")){
+if (!strcmp(input->this.pair.car->this.symbol, "quote")){
 	return input->cadr;
 	}
 
 
-/*Gestion de DEFINE */
+/*Gestion de DEFINE
 if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "define")){
-
-	
-	}
+	}*/
 
 /*Gestion de SET! 
 if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "set!")){
@@ -58,13 +88,13 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "if"))
 		return false;
 		}
 	
-	else if (sfs_eval_predicat(input->cadr)== true && input->caddr->type != SFS_NIL){
+	else if (sfs_eval_predicat(input->cadr, env_courant)== true && input->caddr->type != SFS_NIL){
 		input = input->caddr;
 		DEBUG_MSG("type de la conséquence: %d", input->type);
 		goto restart;
 		}
 		
-	else if (sfs_eval_predicat(input->cadr)== false && input->cadddr->type != SFS_NIL){
+	else if (sfs_eval_predicat(input->cadr, env_courant)== false && input->cadddr->type != SFS_NIL){
 		input = input->cadddr;
 		DEBUG_MSG("type de l'alternative: %d", input->type);
 		goto restart; 
@@ -83,7 +113,7 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "and")
 		return false;
 		}
 	
-	else if(sfs_eval_predicat(input->cadr)== true && sfs_eval_predicat(input->caddr)== true) return true;
+	else if(sfs_eval_predicat(input->cadr, env_courant)== true && sfs_eval_predicat(input->caddr, env_courant)== true) return true;
 
 	else return false;
 	}
@@ -96,15 +126,17 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "or"))
 		return false;
 		}
 	
-	else if(sfs_eval_predicat(input->cadr)== true || sfs_eval_predicat(input->caddr)== true) return true;
+	else if(sfs_eval_predicat(input->cadr, env_courant)== true || sfs_eval_predicat(input->caddr, env_courant)== true) return true;
 
 	else return false;
 	}
+} /*fin du test de SYMBOL*/
 
+} /*fin du test de PAIR*/
 
 else return input;
 
 }
-
+ 
 
 

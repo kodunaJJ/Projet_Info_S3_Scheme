@@ -13,8 +13,8 @@
 
 object add(object input, object env)
 			{
-				/*object p=create_environment();*/
-				object p=make_pair();
+				object p=create_environment();
+				/*object p=make_pair();*/
 				object resultat=make_integer(0);
 				while(input->this.pair.cdr->type!=SFS_NIL)
 				{
@@ -39,8 +39,8 @@ return resultat;
 
 object sous(object input, object env)
 {
-				/*object p=create_environment();*/
-				object p=make_pair();
+				object p=create_environment();
+				/*object p=make_pair();*/
 				object resultat=make_integer(0);
 				while(input->this.pair.cdr->type!=SFS_NIL)
 				{
@@ -66,8 +66,8 @@ return resultat;
 			
 object mult(object input, object env)
 {				
-				/*object p=create_environment();*/
-				object p=make_pair();
+				object p=create_environment();
+				/*object p=make_pair();*/
 				object resultat=make_integer(1);
 				while(input->this.pair.cdr->type!=SFS_NIL)
 				{
@@ -93,8 +93,8 @@ object mult(object input, object env)
 
 object divi(object input, object env)
 {
-				/*object p=create_environment();*/
-				object p=make_pair();
+				object p=create_environment();
+				/*object p=make_pair();*/
 				
 				object resultat=make_integer(1);	
 				if(input->this.pair.cdr->type!=SFS_NIL)
@@ -142,7 +142,7 @@ object divi(object input, object env)
 
 
 		/*ON VERRA LA SUITE PLUS TARD*/	
-	/*		
+
 object egal(object input, object env)
 
 {
@@ -186,7 +186,7 @@ object egal(object input, object env)
 						if(input->this.pair.car->type==SFS_SYMBOL){
 							p=recherche(env,input->this.pair.car->this.symbol);
 							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-								operande2->this.number.this.integer=p->this.pair.cdr->this.number.this.integer;
+								operande2->this.number=p->this.pair.cdr->this.number;
 							}
 							else {
 							    WARNING_MSG("Pas de nombre à comparer");
@@ -194,19 +194,19 @@ object egal(object input, object env)
 							}
 						}
 						else if(input->this.pair.car->type==SFS_NUMBER){
-							operande2->this.number.this.integer=input->this.pair.car->this.number.this.integer;
+							operande2->this.number=input->this.pair.car->this.number;
 						}
 						else {
 						    WARNING_MSG("Pas de nombre à comparer");
 						    return nil;
 						}
 					}
-					resultat->this.boolean= (operande1->this.number.this.integer == operande2->this.number.this.integer) ? TRUE:FALSE;
-					operande1->this.number.this.integer = operande2->this.number.this.integer;
+					resultat->this.boolean= (operande1->this.number == operande2->this.number) ? TRUE:FALSE;
+					operande1->this.number. = operande2->this.number;
 				}
 				return resultat;
 }
-
+/*
 object inf(object input, object env)
 
 {
@@ -225,7 +225,7 @@ object inf(object input, object env)
 					if(input->this.pair.car->type==SFS_SYMBOL){
 						p=recherche(env,input->this.pair.car->this.symbol);
 						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-							operande1->this.number.this.integer=p->this.pair.cdr->this.number.this.integer;
+							operande1->this.number.=p->this.pair.cdr->this.number;
 						}
 						else {
 						    WARNING_MSG("Pas de nombre à comparer");
@@ -233,7 +233,7 @@ object inf(object input, object env)
 						}
 					}
 					else if(input->this.pair.car->type==SFS_NUMBER){
-						operande1->this.number.this.integer=input->this.pair.car->this.number.this.integer;
+						operande1->this.number=input->this.pair.car->this.number;
 					}
 					else {
 					    WARNING_MSG("Pas de nombre à comparer");
@@ -251,7 +251,7 @@ object inf(object input, object env)
 						if(input->this.pair.car->type==SFS_SYMBOL){
 							p=recherche(env,input->this.pair.car->this.symbol);
 							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-								operande2->this.number.this.integer=p->this.pair.cdr->this.number.this.integer;
+								operande2->this.number=p->this.pair.cdr->this.number.;
 							}
 							else {
 							    WARNING_MSG("Pas de nombre à comparer");
@@ -259,15 +259,15 @@ object inf(object input, object env)
 							}
 						}
 						else if(input->this.pair.car->type==SFS_NUMBER){
-							operande2->this.number.this.integer=input->this.pair.car->this.number.this.integer;
+							operande2->this.number.=input->this.pair.car->this.number;
 						}
 						else {
 						    WARNING_MSG("Pas de nombre à comparer");
 						    return nil;
 						}
 					}
-					resultat->this.boolean= (operande1->this.number.this.integer < operande2->this.number.this.integer) ? TRUE:FALSE;
-					operande1->this.number.this.integer = operande2->this.number.this.integer;
+					resultat->this.boolean= (operande1->this.number < operande2->this.number) ? TRUE:FALSE;
+					operande1->this.number. = operande2->this.number;
 				}
 				return resultat;
 }
@@ -290,7 +290,7 @@ object sup(object input, object env)
 					if(input->this.pair.car->type==SFS_SYMBOL){
 						p=recherche(env,input->this.pair.car->this.symbol);
 						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-							operande1->this.number.this.integer=p->this.pair.cdr->this.number.this.integer;
+							operande1->this.number=p->this.pair.cdr->this.number;
 						}
 						else {
 						    WARNING_MSG("Pas de nombre à comparer");
@@ -298,7 +298,7 @@ object sup(object input, object env)
 						}
 					}
 					else if(input->this.pair.car->type==SFS_NUMBER){
-						operande1->this.number.this.integer=input->this.pair.car->this.number.this.integer;
+						operande1->this.number=input->this.pair.car->this.number;
 					}
 					else {
 					    WARNING_MSG("Pas de nombre à comparer");
@@ -317,7 +317,7 @@ object sup(object input, object env)
 						if(input->this.pair.car->type==SFS_SYMBOL){
 							p=recherche(env,input->this.pair.car->this.symbol);
 							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-								operande2->this.number.this.integer=p->this.pair.cdr->this.number.this.integer;
+								operande2->this.number=p->this.pair.cdr->this.number;
 							}
 							else {
 							    WARNING_MSG("Pas de nombre à comparer");
@@ -325,15 +325,15 @@ object sup(object input, object env)
 							}
 						}
 						else if(input->this.pair.car->type==SFS_NUMBER){
-							operande2->this.number.this.integer=input->this.pair.car->this.number.this.integer;
+							operande2->this.number=input->this.pair.car->this.number;
 						}
 						else {
 						    WARNING_MSG("Pas de nombre à comparer");
 						    return nil;
 						}
 					}
-					resultat->this.boolean= (operande1->this.number.this.integer > operande2->this.number.this.integer) ? TRUE:FALSE;
-					operande1->this.number.this.integer = operande2->this.number.this.integer;
+					resultat->this.boolean= (operande1->this.number > operande2->this.number) ? TRUE:FALSE;
+					operande1->this.number = operande2->this.number;
 				}
 				return resultat;
 }
@@ -447,7 +447,7 @@ object est_character(object input)
 
 object est_integer(object input)
 {
-	object resultat=make_object(SFS_BOOLEAN);
+	object resultat=make_integer(1);
 	resultat->this.boolean=TRUE;
 	while(input->this.pair.cdr->type!=SFS_NIL)
 	{
@@ -496,7 +496,7 @@ object conv_char_to_integer(object input){
 	object resultat=make_object(SFS_NUMBER);
 	if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
 	if(input->cadr->type==SFS_CHARACTER){
-		resultat->this.number.this.integer=(int)input->cadr->this.character;
+		resultat->this.number=(int)input->cadr->this.character;
 		return resultat;
 	}
 	WARNING_MSG("Vous essayez de convertir un type qui n'est pas un caractère");
@@ -507,7 +507,7 @@ object conv_integer_to_char(object input){
 	object resultat=make_object(SFS_CHARACTER);
 	if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
 	if(input->cadr->type==SFS_NUMBER){
-		resultat->this.character=input->cadr->this.number.this.integer;
+		resultat->this.character=input->cadr->this.number;
 		return resultat;
 	}
 	WARNING_MSG("Vous essayez de convertir un type qui n'est pas un nombre");
@@ -518,7 +518,7 @@ object conv_number_to_string(object input){
 	object result=make_object(SFS_STRING);
 	if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
 	if(input->cadr->type==SFS_NUMBER){
-		sprintf(result->this.string,"%d",input->cadr->this.number.this.integer);
+		sprintf(result->this.string,"%d",input->cadr->this.number);
 		return result;
 	}
 	WARNING_MSG("Vous essayez de convertir un type qui n'est pas un nombre");
@@ -581,7 +581,7 @@ object conv_string_to_number(object input)
 	{
 		while(i<strlen(input->cadr->this.string))
 		{
-			resultat->this.number.this.integer+=((int)(input->cadr->this.string[i]));
+			resultat->this.number.+=((int)(input->cadr->this.string[i]));
 			i++;
 		}return resultat;
 
@@ -696,7 +696,7 @@ object eq_poly(object input)
 			switch(input->cadr->type)
 			{		
 				case 0x00 : 
-					if(input->cadr->this.number.this.integer==input->caddr->this.number.this.integer) 
+					if(input->cadr->this.number==input->caddr->this.number) 
 					resultat->this.boolean=1;
 						
 					else 
