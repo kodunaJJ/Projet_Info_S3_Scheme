@@ -91,6 +91,7 @@ object mult(object input, object env)
 
 }
 
+<<<<<<< Updated upstream
 object divi(object input, object env)
 {
 				object p=create_environment();
@@ -139,6 +140,58 @@ object divi(object input, object env)
 					}
 				}return resultat;
 }
+=======
+int error_syntax_IF_form(object input){
+
+  object o;
+  if(input->this.pair.cdr->type != SFS_PAIR){
+    ERROR_MSG("syntax error IF_form--> too few arguments");    
+    return 1;
+  }
+  else if(input->cddr->type != SFS_PAIR){
+    ERROR_MSG("syntax error IF_form--> too few arguments");
+    return 1;
+  }
+  o = input->cddr;
+  if(o->this.pair.cdr->type != SFS_NIL){
+    if(o->cddr->type != SFS_NIL){
+      ERROR_MSG("syntax error IF_form --> too many arguments");
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int error_syntax_AND_form(object input){
+  if(input->this.pair.car->type == SFS_PAIR){
+    if(input->this.pair.car->type != SFS_SYMBOL){
+      ERROR_MSG("syntax error AND_form");
+      return 1;
+    }
+  }
+  else{
+    return 0;
+  }
+}
+
+int error_syntax_OR_form(object input){
+  if(input->this.pair.car->type == SFS_PAIR){
+    if(input->this.pair.car->type != SFS_SYMBOL){
+      ERROR_MSG("syntax error OR_form");
+      return 1;
+    }
+  }
+  else{
+    return 0;
+  }
+}
+
+object sfs_eval_predicat(object input, object env){
+  input = sfs_eval(input, env);
+	if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
+	else return true;
+	}
+>>>>>>> Stashed changes
 
 
 		/*ON VERRA LA SUITE PLUS TARD*/	
@@ -338,6 +391,7 @@ object sup(object input, object env)
 				return resultat;
 }
 
+<<<<<<< Updated upstream
 object est_null(object input){
 	object resultat=make_object(SFS_BOOLEAN);
 	resultat->this.boolean=TRUE;
@@ -350,6 +404,50 @@ object est_null(object input){
 	}
 	return resultat;
 }
+=======
+  object p=create_environment();
+
+ /*Renvoie directement la valeur de la variable si on l'entre*/
+if(input->type==SFS_SYMBOL){
+	p=research_variable(input->this.symbol, env_courant);
+	if (p==NULL) return input;
+	return p->this.pair.cdr;
+}
+
+
+/*Dans le cas d'une paire on gère les primitives et les formes*/
+if(input->type==SFS_PAIR){
+
+		/*Test si le car est un symbol*/
+		if(input->this.pair.car->type==SFS_SYMBOL)
+		{
+			/*Recherche du symbole dans l'environnement courant*/
+			p=research_variable(input->this.pair.car->this.symbol, env_courant);
+			if(p==NULL) return input; /*Renvoie l'entrée si le symbole n'existe pas*/
+
+			/* Test si le cdr est une primitive */
+			if(p->this.pair.cdr->type==SFS_PRIMITIVE)
+			{
+
+				object (*prim)(object); /* Pointeur de fonction */
+				prim = p->this.pair.cdr->this.primitive; /* Association de la fonction */
+				return prim(input);
+			}
+
+
+
+
+DEBUG_MSG("type de input à évaluer : %d",input->type);
+	       
+
+
+/* Gestion de la forme QUOTE */
+
+if (!strcmp(input->this.pair.car->this.symbol, "quote")){
+	return input->cadr;
+}
+DEBUG_MSG("type de input à évaluer : %d",input->type);
+>>>>>>> Stashed changes
 
 object est_boolean(object input){
 	object resultat=make_object(SFS_BOOLEAN);
@@ -391,6 +489,7 @@ object est_pair(object input)
 			
 		}
 
+<<<<<<< Updated upstream
 		else
 		{
 			resultat->this.boolean=FALSE;
@@ -490,6 +589,62 @@ object est_primitive(object input)
 		}input=input->this.pair.cdr;
 	}return resultat;
 	
+=======
+/*Gestion de DEFINE */
+ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "define")){
+
+   if(input->cadr->type != SFS_SYMBOL /*|| input->cadr->type != SFS_PAIR*/){
+     WARNING_MSG("Expected symbol name or pair after define");
+   }
+   else{
+    
+     if(research_variable(input->cadr,env)->type == SFS_NIL){
+       DEBUG_MSG("research ok");
+       add_variable(input->cadr, input->cddr, env);
+       return env->cadr->this.pair.car;
+     }
+     else {
+       WARNING_MSG("Variable already declared");
+       return nil;
+     }
+   }
+ }
+
+
+/*Gestion de SET! */ 
+if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "set!")){
+  object var = research_variable(input->cadr,env);
+  if(var->type == SFS_NIL){
+    WARNING_MSG("Unknown variable");
+    return nil;
+  }
+  else{
+    var->this.pair.cdr = input->cddr;
+    return var->this.pair.car;
+  }
+ }
+
+
+/*Gestion de IF */
+ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "if")){
+   if(error_syntax_IF_form(input)){
+     return nil;
+   }
+   else{
+     if (sfs_eval_predicat(input->cadr, env)== true && input->caddr->type != SFS_NIL){
+       input = input->caddr;
+       DEBUG_MSG("type de la conséquence: %d", input->type);
+       goto restart;
+     }
+		
+     else if (sfs_eval_predicat(input->cadr,env)== false && input->cadddr->type != SFS_NIL){
+       input = input->cadddr;
+       DEBUG_MSG("type de l'alternative: %d", input->type);
+       goto restart; 
+     }
+   }
+    return nil;  
+>>>>>>> Stashed changes
 }
 
 object conv_char_to_integer(object input){
@@ -536,6 +691,7 @@ object conv_string_to_symbol(object input)
 		input->cadr=sfs_eval(input->cadr);
 	}
 
+<<<<<<< Updated upstream
 	if(input->cadr->type==SFS_STRING)
 	{
 		strcpy(resultat->this.symbol,input->cadr->this.string);
@@ -596,6 +752,54 @@ object car(object input){
 		input->cadr=sfs_eval(input->cadr);
 		if(input->cadr->type==SFS_PAIR)return input->cadr->this.pair.car;
 	}
+=======
+/*Gestion de AND*/
+ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "and")){
+
+   /*if (input->this.pair.cdr->type == SFS_NIL || input->caddr->type == SFS_NIL){
+     WARNING_MSG("Pas d'arguments à évaluer");
+     return false;
+     }
+	
+     else if(sfs_eval_predicat(input->cadr,env)== true && sfs_eval_predicat(input->caddr, env)== true) return true;
+
+     else return false;*/
+
+   if(input->this.pair.cdr->type == SFS_NIL){
+     return true;
+   }
+   input = input->this.pair.cdr;
+
+   while(sfs_eval_predicat(input->this.pair.car,env)== true){
+     if(error_syntax_AND_form(input)){
+       return nil;
+     }
+     else{
+       
+       DEBUG_MSG("car type = %d",input->this.pair.car->type);
+       DEBUG_MSG("cdr type = %d",input->this.pair.cdr->type);
+       DEBUG_MSG("next pair");
+       if(input->this.pair.cdr->type == SFS_NIL){
+	 if(input->this.pair.cdr->type != SFS_PAIR){
+	   input = input->this.pair.car;
+	   goto restart;
+	 }
+       }
+       input = input->this.pair.cdr;
+       DEBUG_MSG("inc");
+     }
+   }
+   return false;
+ }
+
+/*Gestion de OR*/
+if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "or")){
+
+  /*if (input->this.pair.cdr->type == SFS_NIL || input->caddr->type == SFS_NIL){
+		WARNING_MSG("Pas d'arguments à évaluer");
+		return false;
+		}
+>>>>>>> Stashed changes
 	
 	WARNING_MSG("Ce n'est pas une paire");
 	return input;
@@ -628,13 +832,48 @@ object set_car(object input)
 
 		}
 
+<<<<<<< Updated upstream
 		else WARNING_MSG("Erreur de syntaxe");
 	}
+=======
+	else return input;*/
+ if(input->this.pair.cdr->type == SFS_NIL){
+     return false;
+   }
+   input = input->this.pair.cdr;
+
+   while(sfs_eval_predicat(input->this.pair.car,env)== false){
+     if(error_syntax_OR_form(input)){
+       return nil;
+     }
+     else{
+       
+       DEBUG_MSG("car type = %d",input->this.pair.car->type);
+       DEBUG_MSG("cdr type = %d",input->this.pair.cdr->type);
+       DEBUG_MSG("next pair");
+       if(input->this.pair.cdr->type == SFS_NIL){
+	 if(input->this.pair.cdr->type != SFS_PAIR){
+	   input = input->this.pair.car;
+	   goto restart;
+	 }
+       }
+       input = input->this.pair.cdr;
+       DEBUG_MSG("inc");
+     }
+   }
+   return true;
+>>>>>>> Stashed changes
 
 	else WARNING_MSG("Erreur de syntaxe");
 	return input;
 }
+} /*fin du test de SYMBOL*/
 
+} /*fin du test de PAIR*/
+
+else return input;
+
+}
 
 object set_cdr(object input)
 {

@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -62,6 +65,7 @@ object sous(object input, object env)
 				}
 return resultat;
 }
+<<<<<<< Updated upstream
 			
 			
 object mult(object input, object env)
@@ -120,6 +124,15 @@ object divi(object input, object env)
 						input=input->this.pair.cdr;
 					}
 				}
+=======
+			
+			
+object mult(object input, object env)
+{				
+				object p=create_environment();
+				/*object p=make_pair();*/
+				object resultat=make_integer(1);
+>>>>>>> Stashed changes
 				while(input->this.pair.cdr->type!=SFS_NIL)
 				{
 					input=input->this.pair.cdr;
@@ -128,16 +141,25 @@ object divi(object input, object env)
 					}
 					if(input->this.pair.car->type==SFS_NUMBER)
 					{
+<<<<<<< Updated upstream
 						resultat->this.number/=input->this.pair.car->this.number;
+=======
+						resultat->this.number*=input->this.pair.car->this.number;
+>>>>>>> Stashed changes
 					}
 					if(input->this.pair.car->type==SFS_SYMBOL){
 						p=research_variable(input->this.pair.car, env);
 						if(p->this.pair.cdr->type==SFS_NUMBER){
+<<<<<<< Updated upstream
 							resultat->this.number/=p->this.pair.cdr->this.number;
+=======
+							resultat->this.number*=p->this.pair.cdr->this.number;
+>>>>>>> Stashed changes
 						}
 						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
 					}
 				}return resultat;
+<<<<<<< Updated upstream
 }
 
 
@@ -218,10 +240,48 @@ object inf(object input, object env)
 				
 				
 				if(input->this.pair.cdr->type!=SFS_NIL){
+=======
+			
+
+}
+
+object divi(object input, object env)
+{
+				object p=create_environment();
+				/*object p=make_pair();*/
+				
+				object resultat=make_integer(1);	
+				if(input->this.pair.cdr->type!=SFS_NIL)
+				{
+					if(input->cadr->type==SFS_PAIR){
+						input->cadr=sfs_eval(input->cadr);
+					}
+					if(input->cadr->type==SFS_NUMBER && input->cadr->this.number !=0){
+						resultat->this.number=input->cadr->this.number;
+						input=input->this.pair.cdr;
+					}
+					if(input->cadr->type==SFS_NUMBER && input->cadr->this.number ==0)
+					{
+					ERROR_MSG("Division par 0 impossible");
+
+					}
+					if(input->cadr->type==SFS_SYMBOL){
+						p=research_variable(input->cadr, env);
+						if(p->this.pair.cdr->type==SFS_NUMBER){
+							resultat->this.number=p->this.pair.cdr->this.number;
+						}
+						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
+						input=input->this.pair.cdr;
+					}
+				}
+				while(input->this.pair.cdr->type!=SFS_NIL)
+				{
+>>>>>>> Stashed changes
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
 						input->this.pair.car=sfs_eval(input->this.pair.car);
 					}
+<<<<<<< Updated upstream
 					if(input->this.pair.car->type==SFS_SYMBOL){
 						p=recherche(env,input->this.pair.car->this.symbol);
 						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
@@ -280,8 +340,58 @@ object sup(object input, object env)
 				resultat->this.boolean=TRUE;
 				object operande1=make_object(SFS_NUMBER);
 				object operande2=make_object(SFS_NUMBER);
+=======
+					if(input->this.pair.car->type==SFS_NUMBER)
+					{
+						resultat->this.number/=input->this.pair.car->this.number;
+					}
+					if(input->this.pair.car->type==SFS_SYMBOL){
+						p=research_variable(input->this.pair.car, env);
+						if(p->this.pair.cdr->type==SFS_NUMBER){
+							resultat->this.number/=p->this.pair.cdr->this.number;
+						}
+						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
+					}
+				}return resultat;
+}
+
+/*
+
+object egal(object input, object env)
+
+{
+				object p=create_environment();
+				object resultat=make_boolean(1);
+				object operande1=make_integer(1);
+				object operande2=make_integer(1);
 				
+>>>>>>> Stashed changes
 				
+				if(input->this.pair.cdr->type!=SFS_NIL){
+					input=input->this.pair.cdr;
+					if(input->this.pair.car->type==SFS_PAIR){
+						input->this.pair.car=sfs_eval(input->this.pair.car);
+					}
+					if(input->this.pair.car->type==SFS_SYMBOL){
+						p=research_environment(input->this.pair.car->this.symbol, env);
+						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
+							operande1->this.number=p->this.pair.cdr->this.number;
+						}
+						else {
+						    WARNING_MSG("Pas de nombre à comparer");
+						    return nil;
+						}
+					}
+					else if(input->this.pair.car->type==SFS_NUMBER){
+						operande1->this.number=input->this.pair.car->this.number;
+					}
+					else {
+					    WARNING_MSG("Pas de nombre à comparer");
+					    return nil;
+					}
+				}
+				
+<<<<<<< Updated upstream
 				if(input->this.pair.cdr->type!=SFS_NIL){
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
@@ -307,6 +417,8 @@ object sup(object input, object env)
 					
 				}
 				
+=======
+>>>>>>> Stashed changes
 				while(input->this.pair.cdr->type!=SFS_NIL && resultat->this.boolean==TRUE){
 
 					if(input->this.pair.cdr->type!=SFS_NIL){
@@ -332,6 +444,7 @@ object sup(object input, object env)
 						    return nil;
 						}
 					}
+<<<<<<< Updated upstream
 					resultat->this.boolean= (operande1->this.number > operande2->this.number) ? TRUE:FALSE;
 					operande1->this.number = operande2->this.number;
 				}
@@ -758,3 +871,11 @@ object eq_poly(object input)
 	}return resultat;
 
 }*/
+=======
+					resultat->this.boolean= (operande1->this.number == operande2->this.number) ? TRUE:FALSE;
+					operande1->this.number. = operande2->this.number;
+				}
+				return resultat;
+}
+*/
+>>>>>>> Stashed changes
