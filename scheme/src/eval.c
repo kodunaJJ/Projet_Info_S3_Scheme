@@ -1,161 +1,39 @@
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+/**
+ * @file eval.c
+ * @author François Cayre <cayre@yiking.(null)>
+ * @date Fri Jun 22 20:11:30 2012
+ * @brief Evaluation stuff for SFS.
+ *
+ * Evaluation stuff for SFS.
+ */
 
-
-#include "primitives.h"
 #include "eval.h"
+#include "object.h"
 #include "environment.h"
-#include "basic.h"
 
-/*extern object env;*/
 
-object add(object input, object env)
-			{
-				object p=create_environment();
-				/*object p=make_pair();*/
-				object resultat=make_integer(0);
-				while(input->this.pair.cdr->type!=SFS_NIL)
-				{
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_NUMBER)
-					{
-						resultat->this.number+=input->this.pair.car->this.number;
-					}
-					else if(input->this.pair.car->type==SFS_SYMBOL){
-					p=research_variable(input->this.pair.car, env);
-						if(p->this.pair.cdr->type==SFS_NUMBER){
-							resultat->this.number+=p->this.pair.cdr->this.number;
-						}
-						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
-					}
-				}
-return resultat;
-}
+/*int is_forme(object o){
+	if (strcmp(o->this.symbol == ("quote" || "define" || "set!" || "if" || "and" || "or" ))==0) return 1;
+	else return 0;
+	}
+*/
 
-object sous(object input, object env)
-{
-				object p=create_environment();
-				/*object p=make_pair();*/
-				object resultat=make_integer(0);
-				while(input->this.pair.cdr->type!=SFS_NIL)
-				{
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_NUMBER)
-					{
-						resultat->this.number-=input->this.pair.car->this.number;
-					}
-					else if(input->this.pair.car->type==SFS_SYMBOL){
-						p=research_variable(input->this.pair.car, env);
-						if(p->this.pair.cdr->type==SFS_NUMBER){
-							resultat->this.number-=p->this.pair.cdr->this.number;
-						}
-						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
-					}
-				}
-return resultat;
-}
-			
-			
-object mult(object input, object env)
-{				
-				object p=create_environment();
-				/*object p=make_pair();*/
-				object resultat=make_integer(1);
-				while(input->this.pair.cdr->type!=SFS_NIL)
-				{
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_NUMBER)
-					{
-						resultat->this.number*=input->this.pair.car->this.number;
-					}
-					if(input->this.pair.car->type==SFS_SYMBOL){
-						p=research_variable(input->this.pair.car, env);
-						if(p->this.pair.cdr->type==SFS_NUMBER){
-							resultat->this.number*=p->this.pair.cdr->this.number;
-						}
-						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
-					}
-				}return resultat;
-			
-
-}
-
-<<<<<<< Updated upstream
-object divi(object input, object env)
-{
-				object p=create_environment();
-				/*object p=make_pair();*/
-				
-				object resultat=make_integer(1);	
-				if(input->this.pair.cdr->type!=SFS_NIL)
-				{
-					if(input->cadr->type==SFS_PAIR){
-						input->cadr=sfs_eval(input->cadr);
-					}
-					if(input->cadr->type==SFS_NUMBER && input->cadr->this.number !=0){
-						resultat->this.number=input->cadr->this.number;
-						input=input->this.pair.cdr;
-					}
-					if(input->cadr->type==SFS_NUMBER && input->cadr->this.number ==0)
-					{
-					ERROR_MSG("Division par 0 impossible");
-
-					}
-					if(input->cadr->type==SFS_SYMBOL){
-						p=research_variable(input->cadr, env);
-						if(p->this.pair.cdr->type==SFS_NUMBER){
-							resultat->this.number=p->this.pair.cdr->this.number;
-						}
-						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
-						input=input->this.pair.cdr;
-					}
-				}
-				while(input->this.pair.cdr->type!=SFS_NIL)
-				{
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_NUMBER)
-					{
-						resultat->this.number/=input->this.pair.car->this.number;
-					}
-					if(input->this.pair.car->type==SFS_SYMBOL){
-						p=research_variable(input->this.pair.car, env);
-						if(p->this.pair.cdr->type==SFS_NUMBER){
-							resultat->this.number/=p->this.pair.cdr->this.number;
-						}
-						else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
-					}
-				}return resultat;
-}
-=======
 int error_syntax_IF_form(object input){
 
   object o;
   if(input->this.pair.cdr->type != SFS_PAIR){
-    ERROR_MSG("syntax error IF_form--> too few arguments");    
+    DEBUG_MSG("syntax error --> too few arguments");    
     return 1;
   }
   else if(input->cddr->type != SFS_PAIR){
-    ERROR_MSG("syntax error IF_form--> too few arguments");
+    DEBUG_MSG("syntax error --> too few arguments");
     return 1;
   }
   o = input->cddr;
   if(o->this.pair.cdr->type != SFS_NIL){
     if(o->cddr->type != SFS_NIL){
-      ERROR_MSG("syntax error IF_form --> too many arguments");
+      DEBUG_MSG("syntax error --> too many arguments");
       return 1;
     }
   }
@@ -191,405 +69,21 @@ object sfs_eval_predicat(object input, object env){
 	if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
 	else return true;
 	}
->>>>>>> Stashed changes
+
+object sfs_eval(object input, object env ) {
 
 
-		/*ON VERRA LA SUITE PLUS TARD*/	
-
-object egal(object input, object env)
-
-{
-				object p=create_environment();
-				object resultat=make_boolean(1);
-				object operande1=make_integer(1);
-				object operande2=make_integer(1);
-				
-				
-				if(input->this.pair.cdr->type!=SFS_NIL){
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_SYMBOL){
-						p=research_environment(input->this.pair.car->this.symbol, env);
-						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-							operande1->this.number=p->this.pair.cdr->this.number;
-						}
-						else {
-						    WARNING_MSG("Pas de nombre à comparer");
-						    return nil;
-						}
-					}
-					else if(input->this.pair.car->type==SFS_NUMBER){
-						operande1->this.number=input->this.pair.car->this.number;
-					}
-					else {
-					    WARNING_MSG("Pas de nombre à comparer");
-					    return nil;
-					}
-				}
-				
-				while(input->this.pair.cdr->type!=SFS_NIL && resultat->this.boolean==TRUE){
-
-					if(input->this.pair.cdr->type!=SFS_NIL){
-						input=input->this.pair.cdr;
-						if(input->this.pair.car->type==SFS_PAIR){
-							input->this.pair.car=sfs_eval(input->this.pair.car);
-						}
-						if(input->this.pair.car->type==SFS_SYMBOL){
-							p=recherche(env,input->this.pair.car->this.symbol);
-							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-								operande2->this.number=p->this.pair.cdr->this.number;
-							}
-							else {
-							    WARNING_MSG("Pas de nombre à comparer");
-							    return nil;
-							}
-						}
-						else if(input->this.pair.car->type==SFS_NUMBER){
-							operande2->this.number=input->this.pair.car->this.number;
-						}
-						else {
-						    WARNING_MSG("Pas de nombre à comparer");
-						    return nil;
-						}
-					}
-					resultat->this.boolean= (operande1->this.number == operande2->this.number) ? TRUE:FALSE;
-					operande1->this.number. = operande2->this.number;
-				}
-				return resultat;
-}
-/*
-object inf(object input, object env)
-
-{
-				object p=creer_env();
-				object resultat=make_object(SFS_BOOLEAN);
-				resultat->this.boolean=TRUE;
-				object operande1=make_object(SFS_NUMBER);
-				object operande2=make_object(SFS_NUMBER);
-				
-				
-				if(input->this.pair.cdr->type!=SFS_NIL){
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_SYMBOL){
-						p=recherche(env,input->this.pair.car->this.symbol);
-						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-							operande1->this.number.=p->this.pair.cdr->this.number;
-						}
-						else {
-						    WARNING_MSG("Pas de nombre à comparer");
-						    return nil;
-						}
-					}
-					else if(input->this.pair.car->type==SFS_NUMBER){
-						operande1->this.number=input->this.pair.car->this.number;
-					}
-					else {
-					    WARNING_MSG("Pas de nombre à comparer");
-					    return nil;
-					}
-				}
-				
-				while(input->this.pair.cdr->type!=SFS_NIL && resultat->this.boolean==TRUE){
-
-					if(input->this.pair.cdr->type!=SFS_NIL){
-						input=input->this.pair.cdr;
-						if(input->this.pair.car->type==SFS_PAIR){
-							input->this.pair.car=sfs_eval(input->this.pair.car);
-						}
-						if(input->this.pair.car->type==SFS_SYMBOL){
-							p=recherche(env,input->this.pair.car->this.symbol);
-							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-								operande2->this.number=p->this.pair.cdr->this.number.;
-							}
-							else {
-							    WARNING_MSG("Pas de nombre à comparer");
-							    return nil;
-							}
-						}
-						else if(input->this.pair.car->type==SFS_NUMBER){
-							operande2->this.number.=input->this.pair.car->this.number;
-						}
-						else {
-						    WARNING_MSG("Pas de nombre à comparer");
-						    return nil;
-						}
-					}
-					resultat->this.boolean= (operande1->this.number < operande2->this.number) ? TRUE:FALSE;
-					operande1->this.number. = operande2->this.number;
-				}
-				return resultat;
-}
-
-object sup(object input, object env)
-
-{
-				object p=creer_env();
-				object resultat=make_object(SFS_BOOLEAN);
-				resultat->this.boolean=TRUE;
-				object operande1=make_object(SFS_NUMBER);
-				object operande2=make_object(SFS_NUMBER);
-				
-				
-				if(input->this.pair.cdr->type!=SFS_NIL){
-					input=input->this.pair.cdr;
-					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
-					}
-					if(input->this.pair.car->type==SFS_SYMBOL){
-						p=recherche(env,input->this.pair.car->this.symbol);
-						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-							operande1->this.number=p->this.pair.cdr->this.number;
-						}
-						else {
-						    WARNING_MSG("Pas de nombre à comparer");
-						    return nil;
-						}
-					}
-					else if(input->this.pair.car->type==SFS_NUMBER){
-						operande1->this.number=input->this.pair.car->this.number;
-					}
-					else {
-					    WARNING_MSG("Pas de nombre à comparer");
-					    return nil;
-					}
-					
-				}
-				
-				while(input->this.pair.cdr->type!=SFS_NIL && resultat->this.boolean==TRUE){
-
-					if(input->this.pair.cdr->type!=SFS_NIL){
-						input=input->this.pair.cdr;
-						if(input->this.pair.car->type==SFS_PAIR){
-							input->this.pair.car=sfs_eval(input->this.pair.car);
-						}
-						if(input->this.pair.car->type==SFS_SYMBOL){
-							p=recherche(env,input->this.pair.car->this.symbol);
-							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-								operande2->this.number=p->this.pair.cdr->this.number;
-							}
-							else {
-							    WARNING_MSG("Pas de nombre à comparer");
-							    return nil;
-							}
-						}
-						else if(input->this.pair.car->type==SFS_NUMBER){
-							operande2->this.number=input->this.pair.car->this.number;
-						}
-						else {
-						    WARNING_MSG("Pas de nombre à comparer");
-						    return nil;
-						}
-					}
-					resultat->this.boolean= (operande1->this.number > operande2->this.number) ? TRUE:FALSE;
-					operande1->this.number = operande2->this.number;
-				}
-				return resultat;
-}
-
-<<<<<<< Updated upstream
-object est_null(object input){
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(resultat->this.boolean && input->this.pair.cdr->type!=SFS_NIL){
-		if(input->this.pair.cdr->type!=SFS_NIL){
-		    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		    resultat->this.boolean= (input->cadr->type==SFS_NIL) ? TRUE:FALSE;
-		}
-		input=input->this.pair.cdr;
-	}
-	return resultat;
-}
-=======
-  object p=create_environment();
-
- /*Renvoie directement la valeur de la variable si on l'entre*/
-if(input->type==SFS_SYMBOL){
-	p=research_variable(input->this.symbol, env_courant);
-	if (p==NULL) return input;
-	return p->this.pair.cdr;
-}
-
-
-/*Dans le cas d'une paire on gère les primitives et les formes*/
-if(input->type==SFS_PAIR){
-
-		/*Test si le car est un symbol*/
-		if(input->this.pair.car->type==SFS_SYMBOL)
-		{
-			/*Recherche du symbole dans l'environnement courant*/
-			p=research_variable(input->this.pair.car->this.symbol, env_courant);
-			if(p==NULL) return input; /*Renvoie l'entrée si le symbole n'existe pas*/
-
-			/* Test si le cdr est une primitive */
-			if(p->this.pair.cdr->type==SFS_PRIMITIVE)
-			{
-
-				object (*prim)(object); /* Pointeur de fonction */
-				prim = p->this.pair.cdr->this.primitive; /* Association de la fonction */
-				return prim(input);
-			}
-
-
-
+restart:
 
 DEBUG_MSG("type de input à évaluer : %d",input->type);
-	       
-
 
 /* Gestion de la forme QUOTE */
 
-if (!strcmp(input->this.pair.car->this.symbol, "quote")){
+if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "quote")){
 	return input->cadr;
-}
-DEBUG_MSG("type de input à évaluer : %d",input->type);
->>>>>>> Stashed changes
-
-object est_boolean(object input){
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(resultat->this.boolean && input->this.pair.cdr->type!=SFS_NIL)
-	{
-		if(input->this.pair.cdr->type!=SFS_NIL){
-		    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		    resultat->this.boolean= (input->cadr->type==SFS_BOOLEAN) ? TRUE:FALSE;
-		}
-		input=input->this.pair.cdr;
 	}
-	return resultat;
-}
 
-object est_symbol(object input){
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(resultat->this.boolean && input->this.pair.cdr->type!=SFS_NIL)
-	{
-		if(input->this.pair.cdr->type!=SFS_NIL){
-		    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		    resultat->this.boolean= (input->cadr->type==SFS_SYMBOL) ? TRUE:FALSE;
-		}input=input->this.pair.cdr;
-	}
-	return resultat;
-}
 
-object est_pair(object input)
-{
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(input->this.pair.cdr->type!=SFS_NIL)
-	{
-	    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		if (input->cadr->type==SFS_PAIR)
-		{
-			resultat->this.boolean=TRUE;
-			
-		}
-
-<<<<<<< Updated upstream
-		else
-		{
-			resultat->this.boolean=FALSE;
-			return resultat;
-		}input=input->this.pair.cdr;
-	}return resultat;
-
-}
-
-object est_string(object input)
-{
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(input->this.pair.cdr->type!=SFS_NIL)
-	{
-	    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		if (input->cadr->type==SFS_STRING)
-		{
-			resultat->this.boolean=TRUE;
-		
-		}
-
-		else
-		{
-			resultat->this.boolean=FALSE;
-			return resultat;
-		}
-
-		input=input->this.pair.cdr;	
-	}return resultat;
-
-}
-
-object est_character(object input)
-{
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(input->this.pair.cdr->type!=SFS_NIL)
-	{
-	    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		if (input->cadr->type==SFS_CHARACTER)
-		{
-			resultat->this.boolean=TRUE;
-			
-		}
-
-		else
-		{
-			resultat->this.boolean=FALSE;
-			return resultat;
-		}input=input->this.pair.cdr;
-	}return resultat;
-}
-
-object est_integer(object input)
-{
-	object resultat=make_integer(1);
-	resultat->this.boolean=TRUE;
-	while(input->this.pair.cdr->type!=SFS_NIL)
-	{
-	    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		if (input->cadr->type==SFS_NUMBER)
-		{
-			resultat->this.boolean=TRUE;
-		
-		}
-
-		else
-		{
-			resultat->this.boolean=FALSE;
-			return resultat;
-		}input=input->this.pair.cdr;
-	}return resultat;
-
-}
-
-object est_primitive(object input)
-{
-	object p=creer_env();
-	object resultat=make_object(SFS_BOOLEAN);
-	resultat->this.boolean=TRUE;
-	while(input->this.pair.cdr->type!=SFS_NIL)
-	{
-	    if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		p=recherche(env,input->cadr->this.symbol);
-
-		if (p->this.pair.cdr->type==SFS_PRIMITIVE)
-		{
-			resultat->this.boolean=TRUE;
-		
-		}
-
-		else
-		{
-			resultat->this.boolean=FALSE;
-			return resultat;
-		}input=input->this.pair.cdr;
-	}return resultat;
-	
-=======
 /*Gestion de DEFINE */
  if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "define")){
 
@@ -628,6 +122,7 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "set!"
 /*Gestion de IF */
  if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "if")){
    if(error_syntax_IF_form(input)){
+     WARNING_MSG("Syntax error");
      return nil;
    }
    else{
@@ -643,357 +138,99 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "set!"
        goto restart; 
      }
    }
-    return nil;  
->>>>>>> Stashed changes
-}
-
-object conv_char_to_integer(object input){
-	object resultat=make_object(SFS_NUMBER);
-	if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-	if(input->cadr->type==SFS_CHARACTER){
-		resultat->this.number=(int)input->cadr->this.character;
-		return resultat;
-	}
-	WARNING_MSG("Vous essayez de convertir un type qui n'est pas un caractère");
-	return input;
-}
-
-object conv_integer_to_char(object input){
-	object resultat=make_object(SFS_CHARACTER);
-	if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-	if(input->cadr->type==SFS_NUMBER){
-		resultat->this.character=input->cadr->this.number;
-		return resultat;
-	}
-	WARNING_MSG("Vous essayez de convertir un type qui n'est pas un nombre");
-	return input;
-}
-
-object conv_number_to_string(object input){
-	object result=make_object(SFS_STRING);
-	if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-	if(input->cadr->type==SFS_NUMBER){
-		sprintf(result->this.string,"%d",input->cadr->this.number);
-		return result;
-	}
-	WARNING_MSG("Vous essayez de convertir un type qui n'est pas un nombre");
-	return input;
-}
-
-object conv_string_to_symbol(object input)
-{	
-
-	object resultat=make_object(SFS_SYMBOL);
-	
-
-	if(input->cadr->type==SFS_PAIR)
-	{
-		input->cadr=sfs_eval(input->cadr);
-	}
-
-<<<<<<< Updated upstream
-	if(input->cadr->type==SFS_STRING)
-	{
-		strcpy(resultat->this.symbol,input->cadr->this.string);
-		return resultat;
-	} 
-
-	else ERROR_MSG("Vous essayez de convertir type qui n'est pas une chaine de caractère");
-	
-}
-
-object conv_symbol_to_string(object input)
-{
-	object resultat=make_object(SFS_STRING);
-
-	if(input->cadr->type==SFS_PAIR)
-	{
-		input->cadr=sfs_eval(input->cadr);
-	}
-
-	if(input->cadr->type==SFS_SYMBOL)
-	{
-		strcpy(resultat->this.string,input->cadr->this.symbol);
-		return resultat;
-				
-	} 
-
-	else ERROR_MSG("Vous essayez de convertir type qui n'est pas un symbol");
+    return nil;
+     
 
 	
+  /*if (input->this.pair.cdr->type == SFS_NIL){
+		WARNING_MSG("Syntax error --> Nothing to evaluate");
+		return nil;
+		 return false 
+		
+		}
+	
+	else if (sfs_eval_predicat(input->cadr, env)== true && input->caddr->type != SFS_NIL){
+		input = input->caddr;
+		DEBUG_MSG("type de la conséquence: %d", input->type);
+		goto restart;
+		}
+		
+	else if (sfs_eval_predicat(input->cadr,env)== false && input->cadddr->type != SFS_NIL){
+		input = input->cadddr;
+		DEBUG_MSG("type de l'alternative: %d", input->type);
+		goto restart; 
+		}
+	
+		else return false; */
+  
 }
+	
 
-object conv_string_to_number(object input)
-{
-	object resultat=make_object(SFS_NUMBER);
-	int i=0;
 
-	if(input->cadr->type==SFS_PAIR)
-	{
-		input->cadr=sfs_eval(input->cadr);
-	}
-
-	if(input->cadr->type==SFS_STRING)
-	{
-		while(i<strlen(input->cadr->this.string))
-		{
-			resultat->this.number.+=((int)(input->cadr->this.string[i]));
-			i++;
-		}return resultat;
-
-	}
-return input;
-
-}
-
-object car(object input){
-	if (input->cadr->type==SFS_PAIR) 
-	{
-		input->cadr=sfs_eval(input->cadr);
-		if(input->cadr->type==SFS_PAIR)return input->cadr->this.pair.car;
-	}
-=======
 /*Gestion de AND*/
- if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "and")){
+if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "and")){
 
-   /*if (input->this.pair.cdr->type == SFS_NIL || input->caddr->type == SFS_NIL){
-     WARNING_MSG("Pas d'arguments à évaluer");
-     return false;
-     }
-	
-     else if(sfs_eval_predicat(input->cadr,env)== true && sfs_eval_predicat(input->caddr, env)== true) return true;
+    if(input->this.pair.cdr->type == SFS_NIL){
+      return true;
+    }
+    input = input->this.pair.cdr;
 
-     else return false;*/
-
-   if(input->this.pair.cdr->type == SFS_NIL){
-     return true;
-   }
-   input = input->this.pair.cdr;
-
-   while(sfs_eval_predicat(input->this.pair.car,env)== true){
-     if(error_syntax_AND_form(input)){
-       return nil;
-     }
-     else{
+    while(sfs_eval_predicat(input->this.pair.car,env)== true){
+      if(error_syntax_AND_form(input)){
+	return nil;
+      }
+      else{
        
-       DEBUG_MSG("car type = %d",input->this.pair.car->type);
-       DEBUG_MSG("cdr type = %d",input->this.pair.cdr->type);
-       DEBUG_MSG("next pair");
-       if(input->this.pair.cdr->type == SFS_NIL){
-	 if(input->this.pair.cdr->type != SFS_PAIR){
-	   input = input->this.pair.car;
-	   goto restart;
-	 }
-       }
-       input = input->this.pair.cdr;
-       DEBUG_MSG("inc");
-     }
-   }
-   return false;
- }
+	DEBUG_MSG("car type = %d",input->this.pair.car->type);
+	DEBUG_MSG("cdr type = %d",input->this.pair.cdr->type);
+	DEBUG_MSG("next pair");
+	if(input->this.pair.cdr->type == SFS_NIL){
+	  if(input->this.pair.cdr->type != SFS_PAIR){
+	    input = input->this.pair.car;
+	    goto restart;
+	  }
+	}
+	input = input->this.pair.cdr;
+	DEBUG_MSG("inc");
+      }
+    }
+    return false;
+  }
 
 /*Gestion de OR*/
-if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "or")){
+  if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "or")){
 
-  /*if (input->this.pair.cdr->type == SFS_NIL || input->caddr->type == SFS_NIL){
-		WARNING_MSG("Pas d'arguments à évaluer");
-		return false;
-		}
->>>>>>> Stashed changes
-	
-	WARNING_MSG("Ce n'est pas une paire");
-	return input;
-}
+    if(input->this.pair.cdr->type == SFS_NIL){
+      return false;
+    }
+    input = input->this.pair.cdr;
 
-object cdr(object input){
-	if (input->cadr->type==SFS_PAIR)
-	{
-		input->cadr=sfs_eval(input->cadr);
-		if(input->cadr->type==SFS_PAIR) return input->cadr->this.pair.cdr;
-	}
-	
-	WARNING_MSG("Ce n'est pas une paire");
-	return input;
-}
-
-object set_car(object input)
-{
-	object env_courant=creer_env();
-	env_courant=env;
-
-	if(input->cadr->type==SFS_PAIR && input->cadr->this.pair.car->type==SFS_SYMBOL)
-	{
-		object p=creer_env();
-		p=recherche_env(env_courant,input->cadr->this.pair.car->this.symbol);
-		if(p!=NULL)
-		{
-			p->this.pair.cdr=sfs_eval(input->caddr);
-			return env_courant;
-
-		}
-
-<<<<<<< Updated upstream
-		else WARNING_MSG("Erreur de syntaxe");
-	}
-=======
-	else return input;*/
- if(input->this.pair.cdr->type == SFS_NIL){
-     return false;
-   }
-   input = input->this.pair.cdr;
-
-   while(sfs_eval_predicat(input->this.pair.car,env)== false){
-     if(error_syntax_OR_form(input)){
-       return nil;
-     }
-     else{
+    while(sfs_eval_predicat(input->this.pair.car,env)== false){
+      if(error_syntax_OR_form(input)){
+	return nil;
+      }
+      else{
        
-       DEBUG_MSG("car type = %d",input->this.pair.car->type);
-       DEBUG_MSG("cdr type = %d",input->this.pair.cdr->type);
-       DEBUG_MSG("next pair");
-       if(input->this.pair.cdr->type == SFS_NIL){
-	 if(input->this.pair.cdr->type != SFS_PAIR){
-	   input = input->this.pair.car;
-	   goto restart;
-	 }
-       }
-       input = input->this.pair.cdr;
-       DEBUG_MSG("inc");
-     }
-   }
-   return true;
->>>>>>> Stashed changes
+	DEBUG_MSG("car type = %d",input->this.pair.car->type);
+	DEBUG_MSG("cdr type = %d",input->this.pair.cdr->type);
+	DEBUG_MSG("next pair");
+	if(input->this.pair.cdr->type == SFS_NIL){
+	  if(input->this.pair.cdr->type != SFS_PAIR){
+	    input = input->this.pair.car;
+	    goto restart;
+	  }
+	}
+	input = input->this.pair.cdr;
+	DEBUG_MSG("inc");
+      }
+    }
+    return true;
+  }
 
-	else WARNING_MSG("Erreur de syntaxe");
-	return input;
-}
-} /*fin du test de SYMBOL*/
-
-} /*fin du test de PAIR*/
 
 else return input;
 
 }
 
-object set_cdr(object input)
-{
-	object env_courant=creer_env();
-	env_courant=env;
 
-	if(input->cadr->type==SFS_PAIR && input->cadr->cadr->type==SFS_SYMBOL)
-	{
-		object p=creer_env();
-		p=recherche_env(env_courant,input->cadr->cadr->this.symbol);
-		if(p!=NULL)
-		{
-			p->this.pair.cdr=sfs_eval(input->caddr);
-			return env_courant;
 
-		}
-
-		else WARNING_MSG("La variable n'est pas définie");
-	}
-	else WARNING_MSG("Erreur de syntaxe");
-
-	return input;
-}
-
-object new_list(object input)
-{
-	object new_list=make_object(SFS_PAIR);
-	if(input->cadr->type==SFS_PAIR)
-	{
-		input->cadr=sfs_eval(input->cadr);
-	}
-	else
-	{
-		new_list=input->this.pair.cdr;
-		return new_list;
-	}return input;
-		
-}
-*/
-/* Test si deux object sont identiques*/
-
-object eq_poly(object input)
-{
-	object resultat=make_object(SFS_BOOLEAN);
-	object env_courant=creer_env();
-	env_courant=env;
-
-	while(input->cddr->type!=SFS_NIL)
-	{	
-		/* on remplace les éléments non auto évaluants (les pairs et les symbols) par leur valeur */
-		if(input->cadr->type==SFS_PAIR) input->cadr=sfs_eval(input->cadr);
-		if(input->caddr->type==SFS_PAIR) input->caddr=sfs_eval(input->caddr);
-		if(input->cadr->type==SFS_SYMBOL) input->cadr=association(env_courant,input->cadr);
-		if(input->caddr->type==SFS_SYMBOL) input->caddr=association(env_courant,input->caddr);
-		
-		/* on regarde si les types sont égaux */
-		if(input->cadr->type==input->caddr->type)
-		{	
-			switch(input->cadr->type)
-			{		
-				case 0x00 : 
-					if(input->cadr->this.number==input->caddr->this.number) 
-					resultat->this.boolean=1;
-						
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						
-						return resultat;
-					}break;
-
-				case 0x01 :
-					if(input->cadr->this.character==input->caddr->this.character) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-
-				case 0x02 : 
-					if(!strcmp(input->cadr->this.string,input->caddr->this.string)) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-				
-				case 0x04 :
-					resultat->this.boolean=TRUE;
-					break;
-
-				case 0x05 : 
-					if(input->cadr->this.boolean==input->caddr->this.boolean) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-								
-				case 0x06 :
-					if(!strcmp(input->cadr->this.symbol,input->caddr->this.symbol)) 
-						resultat->this.boolean=TRUE;
-					else 
-					{
-						resultat->this.boolean=FALSE;
-						return resultat;
-					}break;
-									
-			}
-			input=input->this.pair.cdr;
-			
-		}
-		else{
-			resultat->this.boolean=FALSE;
-			input=input->this.pair.cdr;
-		}
-	
-	}return resultat;
-
-}
