@@ -23,17 +23,17 @@ int error_syntax_IF_form(object input){
 
   object o;
   if(input->this.pair.cdr->type != SFS_PAIR){
-    DEBUG_MSG("syntax error --> too few arguments");    
+    WARNING_MSG("syntax error --> too few arguments");    
     return 1;
   }
   else if(input->cddr->type != SFS_PAIR){
-    DEBUG_MSG("syntax error --> too few arguments");
+    WARNING_MSG("syntax error --> too few arguments");
     return 1;
-  }
+  }  
   o = input->cddr;
   if(o->this.pair.cdr->type != SFS_NIL){
     if(o->cddr->type != SFS_NIL){
-      DEBUG_MSG("syntax error --> too many arguments");
+      WARNING_MSG("syntax error --> too many arguments");
       return 1;
     }
   }
@@ -43,7 +43,7 @@ int error_syntax_IF_form(object input){
 int error_syntax_AND_form(object input){
   if(input->this.pair.car->type == SFS_PAIR){
     if(input->this.pair.car->type != SFS_SYMBOL){
-      ERROR_MSG("syntax error AND_form");
+      WARNING_MSG("syntax error AND_form");
       return 1;
     }
   }
@@ -55,7 +55,7 @@ int error_syntax_AND_form(object input){
 int error_syntax_OR_form(object input){
   if(input->this.pair.car->type == SFS_PAIR){
     if(input->this.pair.car->type != SFS_SYMBOL){
-      ERROR_MSG("syntax error OR_form");
+      WARNING_MSG("syntax error OR_form");
       return 1;
     }
   }
@@ -224,7 +224,8 @@ if ((input->type==SFS_PAIR) && !strcmp(input->this.pair.car->this.symbol, "and")
 	DEBUG_MSG("inc");
       }
     }
-    return true;
+    input = input->this.pair.car;
+    goto restart;
   }
 
 
