@@ -44,8 +44,9 @@ void sfs_print_atom( object o ) {
   case SFS_SPECIAL_ATOM:
     printf("%c", o->this.character);
     break;
-    /*case SFS_VARIABLE:
-    printf("%s ", ...)*/
+    case SFS_VARIABLE_VALUE:
+      sfs_print(o->this.pair.car);
+      break;
   default:
     printf("Erreur atome inconnu");
     break;

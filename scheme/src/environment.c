@@ -77,7 +77,7 @@ object delete_environment(object env){
   }*/
 
 void add_variable(object name, object value, object env){
-
+DEBUG_MSG("----- %d -----",value->type);
   object variable = make_pair();
   variable->this.pair.car = make_pair();
   /*variable->caar = make_pair();*/
@@ -133,7 +133,7 @@ void add_variable(object name, object value, object env){
 }
 
 object add_variable_value(object value, object env){
-  object variable_value = make_pair();
+  object variable_value = make_variable_value();
   switch(value->type){
   case SFS_NUMBER:
     variable_value->this.pair.car = make_integer(value->this.number);
@@ -156,8 +156,11 @@ object add_variable_value(object value, object env){
     variable_value->this.pair.car = make_boolean(value->this.boolean);
     variable_value->this.pair.cdr = make_nil();
     break;  
-    /*case SFS_SYMBOL:
-    variable->cdar = make_symbol(value->this.symbol); /*nécessité de faire un lien avec la variable si elle existe */
+  case /*SFS_VARIABLE_VALUE*/16:
+      DEBUG_MSG("**** je passe laaa aussi ^^ ****"); 
+    variable_value->this.pair.car = value;
+    variable_value->this.pair.cdr = make_nil(); /*nécessité de faire un lien avec la variable si elle existe */
+    break;
     /*variable->cdar->this.pair.cdr = make_nil();
     break;
     /*case SFS_ARITH_OP:
@@ -167,9 +170,11 @@ object add_variable_value(object value, object env){
     printf("%c", o->this.character);
     break;*/
     default:
+      DEBUG_MSG(" marche pas ");
     return make_nil();
     break;
   }
+  DEBUG_MSG("******* value type = %d *********",variable_value->this.pair.car->type);
   return variable_value;
 }
 
@@ -260,13 +265,14 @@ object research_variable_all_env(object variable_name, object env){
 /* fonctions pour debuggage */
 
 void display_variable(object variable){
-  object var = variable->this.pair.car;
+  /*object var = variable->this.pair.car;
   if(variable->cdar->type == SFS_PAIR){
     sfs_print_pair(variable->this.pair.car);
   }
   else{
     sfs_print_atom(variable);
-  }
+    }*/
+  sfs_print(variable->this.pair.car);
 }
 
 void display_environment(object env, int num_env2display){

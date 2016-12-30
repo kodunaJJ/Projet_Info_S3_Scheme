@@ -94,9 +94,9 @@ object make_special_atom( char c ){
 	return t;
 }
 
-object make_variable(){
+object make_variable_value(){
 	object t = make_object( SFS_PAIR );
-	t->type = SFS_VARIABLE;
+	t->type = SFS_VARIABLE_VALUE;
 	return t;
 }
 

@@ -56,7 +56,7 @@ extern "C" {
   object make_pair(void);
   object make_arith_op(char c);
   object make_special_atom(char c);
-  object make_variable();
+  object make_variable_value();
   object make_primitive(char* str);
 
 
@@ -71,7 +71,7 @@ extern "C" {
 #define SFS_ARITH_OP     0X07
 #define SFS_SPECIAL_ATOM 0x08
 #define SFS_ENVIRONMENT  0x09
-#define SFS_VARIABLE     0x10
+#define SFS_VARIABLE_VALUE 0x0A
 #define SFS_PRIMITVE     0x11
   
 

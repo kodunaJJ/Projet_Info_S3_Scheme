@@ -13,11 +13,11 @@
 #include "environment.h"
 
 
-/*int is_forme(object o){
-  if (strcmp(o->this.symbol == ("quote" || "define" || "set!" || "if" || "and" || "or" ))==0) return 1;
+int is_form(object o){
+  if (strcmp(o->this.symbol,"quote") == 0 || strcmp(o->this.symbol,"define") == 0 || strcmp(o->this.symbol,"set!") == 0 || strcmp(o->this.symbol,"if") == 0 || strcmp(o->this.symbol,"and") == 0 || strcmp(o->this.symbol,"or") == 0 ) return 1;
   else return 0;
   }
-*/
+
 
 int auto_evaluating_object(object input){
   switch(input->type){
@@ -89,6 +89,9 @@ int error_syntax_DEFINE_form(object input){
     WARNING_MSG("Expected variable value");
     return 1;
   }
+  else if(is_form(input->cadr)){
+    WARNING_MSG("Imposible to change a form value");
+  }
   else{
     return 0;
   }
@@ -155,6 +158,7 @@ object sfs_eval(object input, object env ) {
 	    return nil;
 	  }
 	  else{
+	    DEBUG_MSG("je passe laaaaaaaaaaaaaaa");
 	    object search_res = research_variable(input->cadr,env);
 	    if(search_res->type == SFS_NIL){
 	      DEBUG_MSG("research ok");
@@ -162,7 +166,6 @@ object sfs_eval(object input, object env ) {
 	      return env->cadr->this.pair.car;
 	    }
 	    else {
-	      /*DEBUG_MSG("debut modification valeur !!!!!!");*/
 	      delete_variable_value(search_res);
 	      search_res->this.pair.cdr = add_variable_value(sfs_eval(input->caddr,env),env);
 	      return search_res->this.pair.car;
@@ -280,6 +283,7 @@ object sfs_eval(object input, object env ) {
   else if(input->type == SFS_SYMBOL){
     /*if(symbol_exist(symbol_name, env)){*/
     DEBUG_MSG("%s",input->this.symbol);
+    DEBUG_MSG("/////// %d ////////////",research_variable(input,env)->this.pair.cdr->type);
     return research_variable(input,env)->this.pair.cdr;
   }
   /*else{
