@@ -94,4 +94,10 @@ object make_special_atom( char c ){
 	return t;
 }
 
+object make_variable(){
+	object t = make_object( SFS_PAIR );
+	t->type = SFS_VARIABLE;
+	return t;
+}
+
 /* Création des primitives*/

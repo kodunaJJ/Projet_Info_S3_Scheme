@@ -43,9 +43,6 @@ object sfs_or;
 
 object top_level_env;
 
-object false_test;
-object true_test;
-object nil_test;
 
 void init_interpreter ( void ) {
 
@@ -53,20 +50,8 @@ void init_interpreter ( void ) {
   true = make_boolean(TRUE);
   false = make_boolean(FALSE);
 
-  /* nil_test=make_symbol("@nil");
-  true_test=make_symbol("@true");
-  false_test=make_symbol("@false");*/
   top_level_env = create_top_level_environment();
-  /*display_environment(top_level_env,TOP_LEVEL);
-
- 
-  add_variable(nil_test,nil,top_level_env);
- 
-  add_variable(true_test,true,top_level_env);
- 
-  add_variable(false_test,false,top_level_env);
- 
-  display_environment(top_level_env,TOP_LEVEL);*/
+  display_environment(top_level_env,TOP_LEVEL);
  
 }
 

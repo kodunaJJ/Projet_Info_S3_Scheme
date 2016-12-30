@@ -56,6 +56,7 @@ extern "C" {
   object make_pair(void);
   object make_arith_op(char c);
   object make_special_atom(char c);
+  object make_variable();
   object make_primitive(char* str);
 
 
@@ -70,7 +71,8 @@ extern "C" {
 #define SFS_ARITH_OP     0X07
 #define SFS_SPECIAL_ATOM 0x08
 #define SFS_ENVIRONMENT  0x09
-#define SFS_PRIMITVE     0x10
+#define SFS_VARIABLE     0x10
+#define SFS_PRIMITVE     0x11
   
 
 
@@ -84,7 +86,7 @@ extern "C" {
 #define cddddr cdddr->this.pair.cdr
 
   extern object nil;
-  extern object true;
+  extern object true; 
   extern object false;
 
 #ifdef __cplusplus
