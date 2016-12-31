@@ -282,8 +282,8 @@ object sfs_eval(object input, object env ) {
 
   else if(input->type == SFS_SYMBOL){
     /*if(symbol_exist(symbol_name, env)){*/
-    DEBUG_MSG("%s",input->this.symbol);
-    DEBUG_MSG("/////// %d ////////////",research_variable(input,env)->this.pair.cdr->type);
+    /*DEBUG_MSG("%s",input->this.symbol);
+      DEBUG_MSG("/////// %d ////////////",research_variable(input,env)->this.pair.cdr->type);*/
     return research_variable(input,env)->this.pair.cdr;
   }
   /*else{

@@ -77,6 +77,8 @@ object make_string( char* str ){
 /* Création des paires //on utilise les pointeurs car et cdr */
 object make_pair(){
 	object t = make_object( SFS_PAIR );
+	t->this.pair.car = make_nil();
+	t->this.pair.cdr = make_nil();
 	return t;
 }
 
@@ -95,7 +97,7 @@ object make_special_atom( char c ){
 }
 
 object make_variable_value(){
-	object t = make_object( SFS_PAIR );
+  object t = make_pair();
 	t->type = SFS_VARIABLE_VALUE;
 	return t;
 }

@@ -44,7 +44,11 @@ void sfs_print_atom( object o ) {
   case SFS_SPECIAL_ATOM:
     printf("%c", o->this.character);
     break;
-    case SFS_VARIABLE_VALUE:
+  case SFS_VARIABLE_VALUE:
+    DEBUG_MSG(" o type %d", o->this.pair.car->type);
+    if( o->this.pair.car->type == SFS_PAIR){
+      printf("(");
+    }
       sfs_print(o->this.pair.car);
       break;
   default:
