@@ -113,7 +113,9 @@ int error_syntax_SET_form(object input){
 
 
 object sfs_eval_predicat(object input, object env){
+   DEBUG_MSG("1) predicat type %d", input->type);
   input = sfs_eval(input, env);
+  DEBUG_MSG("2) predicat type %d", input->type);
   if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
   else return true;
 }
@@ -146,13 +148,13 @@ object sfs_eval(object input, object env ) {
 
 	/* Gestion de la forme QUOTE */
 
-	if (/*(input->type==SFS_PAIR) &&*/ !strcmp(input->this.pair.car->this.symbol, "quote")){
+	if (!strcmp(input->this.pair.car->this.symbol, "quote")){
 	  return input->cadr;
 	}
 
 
 	/*Gestion de DEFINE */
-	if (/*(input->type==SFS_PAIR) &&*/ !strcmp(input->this.pair.car->this.symbol, "define")){
+	if (!strcmp(input->this.pair.car->this.symbol, "define")){
 
 	  if(error_syntax_DEFINE_form(input)){
 	    return nil;
@@ -175,7 +177,7 @@ object sfs_eval(object input, object env ) {
 
 
 	/*Gestion de SET! */ 
-	if (/*(input->type==SFS_PAIR) &&*/ !strcmp(input->this.pair.car->this.symbol, "set!")){
+	if (!strcmp(input->this.pair.car->this.symbol, "set!")){
 	  object var = research_variable(input->cadr,env);
 	  if(var->type == SFS_NIL){
 	    WARNING_MSG("Unknown variable");
@@ -191,7 +193,7 @@ object sfs_eval(object input, object env ) {
 
 
 	/*Gestion de IF */
-	if (/*(input->type==SFS_PAIR) && */!strcmp(input->this.pair.car->this.symbol, "if")){
+	if (!strcmp(input->this.pair.car->this.symbol, "if")){
 	  if(error_syntax_IF_form(input)){
 	    WARNING_MSG("Syntax error");
 	    return nil;
@@ -216,7 +218,7 @@ object sfs_eval(object input, object env ) {
 
 
 	/*Gestion de AND*/
-	if (/*(input->type==SFS_PAIR) &&*/ !strcmp(input->this.pair.car->this.symbol, "and")){
+	if (!strcmp(input->this.pair.car->this.symbol, "and")){
 
 	  if(input->this.pair.cdr->type == SFS_NIL){
 	    return true;
@@ -246,7 +248,7 @@ object sfs_eval(object input, object env ) {
 	}
 
 	/*Gestion de OR*/
-	if (/*(input->type==SFS_PAIR) &&*/ !strcmp(input->this.pair.car->this.symbol, "or")){
+	if (!strcmp(input->this.pair.car->this.symbol, "or")){
 
 	  if(input->this.pair.cdr->type == SFS_NIL){
 	    return false;
@@ -284,7 +286,15 @@ object sfs_eval(object input, object env ) {
     /*if(symbol_exist(symbol_name, env)){*/
     /*DEBUG_MSG("%s",input->this.symbol);
       DEBUG_MSG("/////// %d ////////////",research_variable(input,env)->this.pair.cdr->type);*/
-    return research_variable(input,env)->this.pair.cdr;
+    /*return research_variable(input,env)->this.pair.cdr;*/
+    object search_res = research_variable(input,env);
+    if(search_res->type == SFS_NIL){
+      WARNING_MSG("Unbound variable !");
+      return search_res;
+    }
+    else{
+      return search_res->this.pair.cdr;
+    }
   }
   /*else{
     WARNING_MSG("Unbound variable");
