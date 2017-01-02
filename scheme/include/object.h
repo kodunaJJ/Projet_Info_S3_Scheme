@@ -31,13 +31,11 @@ extern "C" {
       uint	       boolean;
 
       struct pair_t {
-	struct object_t *car;
-	struct object_t *cdr;
+		struct object_t *car;
+		struct object_t *cdr;
       }pair;
       
-      struct {
-      	struct object_t*(*function)(struct object_t*);
-      	} primitive;
+      	struct object_t*(*primitive)(struct object_t*);
 
       struct object_t *special;
 
@@ -72,7 +70,7 @@ extern "C" {
 #define SFS_SPECIAL_ATOM 0x08
 #define SFS_ENVIRONMENT  0x09
 #define SFS_VARIABLE_VALUE 0x0A
-#define SFS_PRIMITVE     0x11
+#define SFS_PRIMITIVE     0x11
   
 
 

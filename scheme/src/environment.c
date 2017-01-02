@@ -1,3 +1,4 @@
+#include "object.h"
 #include "environment.h"
 #include "mem.h"
 #include "notify.h"
