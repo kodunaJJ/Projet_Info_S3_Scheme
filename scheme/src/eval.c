@@ -167,7 +167,7 @@ object sfs_eval(object input, object env ) {
 			}
 		}
 	}
-	}
+	
 	/* Gestion de la forme QUOTE */
 
 	if (!strcmp(input->this.pair.car->this.symbol, "quote")){
@@ -302,7 +302,7 @@ object sfs_eval(object input, object env ) {
 	  input = input->this.pair.car;
 	  goto restart;
 	}
-      
+    }
     
   
 
