@@ -16,7 +16,7 @@
 int is_form(object o){
   if (strcmp(o->this.symbol,"quote") == 0 || strcmp(o->this.symbol,"define") == 0 || strcmp(o->this.symbol,"set!") == 0 || strcmp(o->this.symbol,"if") == 0 || strcmp(o->this.symbol,"and") == 0 || strcmp(o->this.symbol,"or") == 0 ) return 1;
   else return 0;
-  }
+}
 
 
 int auto_evaluating_object(object input){
@@ -110,10 +110,20 @@ int error_syntax_SET_form(object input){
     return 0;
   }
 }
+int error_syntax_QUOTE_form(object input){
+  if(input->this.pair.cdr->type == SFS_NIL){
+    WARNING_MSG("Nothing to quote");
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
 
 
 object sfs_eval_predicat(object input, object env){
-   DEBUG_MSG("1) predicat type %d", input->type);
+  DEBUG_MSG("1) predicat type %d", input->type);
   input = sfs_eval(input, env);
   DEBUG_MSG("2) predicat type %d", input->type);
   if (input->type==SFS_BOOLEAN && input->this.boolean==FALSE) return false;
@@ -149,7 +159,12 @@ object sfs_eval(object input, object env ) {
 	/* Gestion de la forme QUOTE */
 
 	if (!strcmp(input->this.pair.car->this.symbol, "quote")){
-	  return input->cadr;
+	  if(error_syntax_QUOTE_form(input)){
+	    return nil;
+	  }
+	  else{
+	    return input->cadr;
+	  }
 	}
 
 
@@ -215,8 +230,6 @@ object sfs_eval(object input, object env ) {
        
 	}
 	
-
-
 	/*Gestion de AND*/
 	if (!strcmp(input->this.pair.car->this.symbol, "and")){
 
@@ -304,6 +317,3 @@ object sfs_eval(object input, object env ) {
   else return input;
 
 }
-
-
-
