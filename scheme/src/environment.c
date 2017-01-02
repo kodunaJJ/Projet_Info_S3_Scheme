@@ -116,10 +116,10 @@ DEBUG_MSG("----- %d -----",value->type);
     break;  
   case SFS_SYMBOL:
     variable->cdar = make_pair();
-    variable->cdar = make_symbol(value->this.symbol); /*nécessité de faire un lien avec la variable si elle existe */
-    /* variable->cdar->this.pair.cdr = make_nil();
+    variable->cdar = make_symbol(value->this.symbol); nécessité de faire un lien avec la variable si elle existe 
+     variable->cdar->this.pair.cdr = make_nil();
     break;
-    /*case SFS_ARITH_OP:
+    case SFS_ARITH_OP:
     printf("%c", o->this.character);
     break;
   case SFS_SPECIAL_ATOM:
@@ -128,12 +128,12 @@ DEBUG_MSG("----- %d -----",value->type);
     /*default:
     variable->cdar = make_nil();
     break;
-  }*/
+  }
   variable->this.pair.cdr = env->this.pair.cdr;
   env->this.pair.cdr=variable;
 }
 
-/*object copy_pair(object root, object env){
+object copy_pair(object root, object env){
   object p = make_pair();
 
   object car;
@@ -167,10 +167,10 @@ DEBUG_MSG("----- %d -----",value->type);
     break;  
   case SFS_SYMBOL:
     variable->cdar = make_pair();
-    variable->cdar = make_symbol(value->this.symbol); /*nécessité de faire un lien avec la variable si elle existe */
-    /* variable->cdar->this.pair.cdr = make_nil();
+    variable->cdar = make_symbol(value->this.symbol); nécessité de faire un lien avec la variable si elle existe 
+     variable->cdar->this.pair.cdr = make_nil();
     break;
-    /*case SFS_ARITH_OP:
+    case SFS_ARITH_OP:
     printf("%c", o->this.character);
     break;
   case SFS_SPECIAL_ATOM:
@@ -178,8 +178,8 @@ DEBUG_MSG("----- %d -----",value->type);
     break;*/
     /*default:
     variable->cdar = make_nil();
-    break;*/
-    /* }
+    break;
+     }
   p->this.pair.car = car;
   p->this.pair.cdr = cdr;
     return p;
