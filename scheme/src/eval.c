@@ -137,8 +137,9 @@ object sfs_eval(object input, object env ) {
 
   DEBUG_MSG("type de input à évaluer : %d",input->type);
 
-  /* gestion des paires */
 
+  /* gestion des paires */
+/*Dans le cas d'une paire on gère les primitives et les formes*/
   if(input->type == SFS_PAIR){
     if(input->this.pair.car->type == SFS_PAIR){
       input = input->this.pair.car;
@@ -148,13 +149,23 @@ object sfs_eval(object input, object env ) {
       WARNING_MSG("pair is not a known function");
       return nil;
     }
-    else if(input->this.pair.car->type == SFS_SYMBOL){
+    /*recherche du symbole dans l'environnement courant*/
+    else if(input->this.pair.car->type == SFS_SYMBOL){ 
       object search_res = research_variable_all_env(input->this.pair.car,env);
       if(search_res->type == SFS_NIL){
 	WARNING_MSG("pair is not a known function");
 	return nil;
       }
       else{
+      /* Test si le cdr est une primitive */
+			if(p->this.pair.cdr->type==SFS_PRIMITIVE)
+			{
+
+				object (*prim)(object); /* Pointeur de fonction */
+				prim = p->this.pair.cdr->this.primitive; /* Association de la fonction */
+				return prim(input);
+			}
+		}
 
 	/* Gestion de la forme QUOTE */
 
@@ -295,6 +306,7 @@ object sfs_eval(object input, object env ) {
   }
 
 
+/*Renvoie directement la valeur de la variable si on l'entre*/
   else if(input->type == SFS_SYMBOL){
     /*if(symbol_exist(symbol_name, env)){*/
     /*DEBUG_MSG("%s",input->this.symbol);
