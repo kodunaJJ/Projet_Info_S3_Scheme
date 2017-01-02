@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-
+#include "object.h"
 #include "primitives.h"
 #include "eval.h"
 #include "environment.h"
@@ -20,7 +20,7 @@ object add(object input, object env)
 				{
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
+						input->this.pair.car=sfs_eval(input->this.pair.car, env);
 					}
 					if(input->this.pair.car->type==SFS_NUMBER)
 					{
@@ -46,7 +46,7 @@ object sous(object input, object env)
 				{
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
+						input->this.pair.car=sfs_eval(input->this.pair.car, env);
 					}
 					if(input->this.pair.car->type==SFS_NUMBER)
 					{
@@ -73,7 +73,7 @@ object mult(object input, object env)
 				{
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
+						input->this.pair.car=sfs_eval(input->this.pair.car, env);
 					}
 					if(input->this.pair.car->type==SFS_NUMBER)
 					{
@@ -100,7 +100,7 @@ object divi(object input, object env)
 				if(input->this.pair.cdr->type!=SFS_NIL)
 				{
 					if(input->cadr->type==SFS_PAIR){
-						input->cadr=sfs_eval(input->cadr);
+						input->cadr=sfs_eval(input->cadr, env);
 					}
 					if(input->cadr->type==SFS_NUMBER && input->cadr->this.number !=0){
 						resultat->this.number=input->cadr->this.number;
@@ -124,7 +124,7 @@ object divi(object input, object env)
 				{
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
+						input->this.pair.car=sfs_eval(input->this.pair.car, env);
 					}
 					if(input->this.pair.car->type==SFS_NUMBER)
 					{
@@ -154,10 +154,10 @@ object egal(object input, object env)
 				if(input->this.pair.cdr->type!=SFS_NIL){
 					input=input->this.pair.cdr;
 					if(input->this.pair.car->type==SFS_PAIR){
-						input->this.pair.car=sfs_eval(input->this.pair.car);
+						input->this.pair.car=sfs_eval(input->this.pair.car, env);
 					}
 					if(input->this.pair.car->type==SFS_SYMBOL){
-						p=research_environment(input->this.pair.car->this.symbol, env);
+						p=research_variable(input->this.pair.car, env);
 						if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
 							operande1->this.number=p->this.pair.cdr->this.number;
 						}
@@ -180,10 +180,10 @@ object egal(object input, object env)
 					if(input->this.pair.cdr->type!=SFS_NIL){
 						input=input->this.pair.cdr;
 						if(input->this.pair.car->type==SFS_PAIR){
-							input->this.pair.car=sfs_eval(input->this.pair.car);
+							input->this.pair.car=sfs_eval(input->this.pair.car, env);
 						}
 						if(input->this.pair.car->type==SFS_SYMBOL){
-							p=recherche(env,input->this.pair.car->this.symbol);
+							p=research_variable(input->this.pair.car, env);
 							if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
 								operande2->this.number=p->this.pair.cdr->this.number;
 							}
@@ -201,7 +201,7 @@ object egal(object input, object env)
 						}
 					}
 					resultat->this.boolean= (operande1->this.number == operande2->this.number) ? TRUE:FALSE;
-					operande1->this.number. = operande2->this.number;
+					operande1->this.number = operande2->this.number;
 				}
 				return resultat;
 }

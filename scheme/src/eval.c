@@ -82,7 +82,7 @@ restart:
 
  /*Renvoie directement la valeur de la variable si on l'entre*/
 if(input->type==SFS_SYMBOL){
-	p=research_variable(input->this.symbol, env_courant);
+	p=research_variable(input, env_courant);
 	if (p==NULL) return input;
 	return p->this.pair.cdr;
 }
@@ -95,14 +95,14 @@ if(input->type==SFS_PAIR){
 		if(input->this.pair.car->type==SFS_SYMBOL)
 		{
 			/*Recherche du symbole dans l'environnement courant*/
-			p=research_variable(input->this.pair.car->this.symbol, env_courant);
+			p=research_variable(input->this.pair.car, env_courant);
 			if(p==NULL) return input; /*Renvoie l'entrée si le symbole n'existe pas*/
 
 			/* Test si le cdr est une primitive */
 			if(p->this.pair.cdr->type==SFS_PRIMITIVE)
 			{
 
-				object* (*prim)(object*); /* Pointeur de fonction */
+				object (*prim)(object); /* Pointeur de fonction */
 				prim = p->this.pair.cdr->this.primitive; /* Association de la fonction */
 				return prim(input);
 			}
