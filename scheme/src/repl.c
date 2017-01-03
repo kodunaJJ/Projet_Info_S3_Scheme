@@ -51,18 +51,9 @@ void init_interpreter ( void ) {
   false = make_boolean(FALSE);
 
   top_level_env = create_top_level_environment();
-  display_environment(top_level_env,TOP_LEVEL);
+  /*display_environment(top_level_env,TOP_LEVEL);*/
  
 }
-
-void init_forme (void){
-	sfs_quote = make_symbol("quote");
-	sfs_define= make_symbol("define");
-	sfs_set = make_symbol("set!");
-	sfs_if = make_symbol("if");
-	sfs_and = make_symbol("and");
-	sfs_or = make_symbol("or");
-	}
 
 int main ( int argc, char *argv[] ) {
 
@@ -162,7 +153,7 @@ int main ( int argc, char *argv[] ) {
         }
 	
         output = sfs_eval( sexpr,top_level_env );
-	  display_environment(top_level_env,TOP_LEVEL);
+	/*display_environment(top_level_env,TOP_LEVEL);*/
         if( NULL == output) {
             /* si fichier alors on sort*/
             if (mode == SCRIPT) {

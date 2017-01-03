@@ -13,10 +13,8 @@ object create_environment(){
   env->type = SFS_ENVIRONMENT;
   env->this.pair.car=nil;
   env->this.pair.cdr=nil;
-  /*printf("env type = %d\n", env->type);
-printf("env num = %d\n",env->this.pair.car->this.number);
-sfs_print(env->this.pair.car);
-sfs_print(env->this.pair.cdr);*/
+  /*sfs_print(env->this.pair.car);
+    sfs_print(env->this.pair.cdr);*/
   return env;
 }
 
@@ -35,13 +33,6 @@ object create_top_level_environment(){
   add_variable(or_scm,nil,top);
   add_variable(define,nil,top);
   add_variable(set_scm,nil,top);
-
-  /* modification de make_pair pour initialiser car et cdr à nil ??? */
-  
-  /* top->this.pair.car=nil; */
-
-  /* ajout de la creation des formes ??? */
-
   return top;
 }
 
@@ -78,57 +69,11 @@ object delete_environment(object env){
   }*/
 
 void add_variable(object name, object value, object env){
-DEBUG_MSG("----- %d -----",value->type);
+  /*DEBUG_MSG("----- %d -----",value->type);*/
   object variable = make_pair();
   variable->this.pair.car = make_pair();
-  /*variable->caar = make_pair();*/
-  variable->caar/*->this.pair.car*/ = make_symbol(name->this.symbol);
-  
+  variable->caar = make_symbol(name->this.symbol);
   variable->cdar = add_variable_value(value,env);
-  /*variable->caar->this.pair.cdr = make_nil();*/
-
-  /* pas de prise en charge des listes pour l'instant */
-  /*switch(value->type){
-  case SFS_NUMBER:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_integer(value->this.number);
-    variable->cdar->this.pair.cdr = make_nil();
-    break;
-  case SFS_CHARACTER:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_character(value->this.character);
-    variable->cdar->this.pair.cdr = make_nil();
-    break;
-  case SFS_STRING:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_string(value->this.string);
-    variable->cdar->this.pair.cdr = make_nil();
-    break;
-  case SFS_NIL:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_nil();
-    variable->cdar->this.pair.cdr = make_nil();
-    break;
-  case SFS_BOOLEAN:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_boolean(value->this.boolean);
-    variable->cdar->this.pair.cdr = make_nil();
-    break;  
-  case SFS_SYMBOL:
-    variable->cdar = make_pair();
-    variable->cdar = make_symbol(value->this.symbol); /*nécessité de faire un lien avec la variable si elle existe */
-    /* variable->cdar->this.pair.cdr = make_nil();
-    break;
-    /*case SFS_ARITH_OP:
-    printf("%c", o->this.character);
-    break;
-  case SFS_SPECIAL_ATOM:
-    printf("%c", o->this.character);
-    break;*/
-    /*default:
-    variable->cdar = make_nil();
-    break;
-  }*/
   variable->this.pair.cdr = env->this.pair.cdr;
   env->this.pair.cdr=variable;
 }
@@ -141,95 +86,82 @@ DEBUG_MSG("----- %d -----",value->type);
 
   switch(root->type){
   case SFS_NUMBER:
-    return  make_integer(value->this.number);
-    break;
+  return  make_integer(value->this.number);
+  break;
   case SFS_CHARACTER:
-    variable->cdar->this.pair.car = make_character(value->this.character);
-    break;
+  variable->cdar->this.pair.car = make_character(value->this.character);
+  break;
   case SFS_STRING:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_string(value->this.string);
-    variable->cdar->this.pair.cdr = make_nil();
-    break;
+  variable->cdar = make_pair();
+  variable->cdar->this.pair.car = make_string(value->this.string);
+  variable->cdar->this.pair.cdr = make_nil();
+  break;
   case SFS_PAIR:
-    p = make_pair();
-    p->this.pair.car = copy_pair(root->this.car,env);
-    break;
+  p = make_pair();
+  p->this.pair.car = copy_pair(root->this.car,env);
+  break;
   case SFS_NIL:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_nil();
-    variable->cdar->this.pair.cdr = make_nil();
-    break;
+  variable->cdar = make_pair();
+  variable->cdar->this.pair.car = make_nil();
+  variable->cdar->this.pair.cdr = make_nil();
+  break;
   case SFS_BOOLEAN:
-    variable->cdar = make_pair();
-    variable->cdar->this.pair.car = make_boolean(value->this.boolean);
-    variable->cdar->this.pair.cdr = make_nil();
-    break;  
+  variable->cdar = make_pair();
+  variable->cdar->this.pair.car = make_boolean(value->this.boolean);
+  variable->cdar->this.pair.cdr = make_nil();
+  break;  
   case SFS_SYMBOL:
-    variable->cdar = make_pair();
-    variable->cdar = make_symbol(value->this.symbol); /*nécessité de faire un lien avec la variable si elle existe */
-    /* variable->cdar->this.pair.cdr = make_nil();
-    break;
-    /*case SFS_ARITH_OP:
-    printf("%c", o->this.character);
-    break;
-  case SFS_SPECIAL_ATOM:
-    printf("%c", o->this.character);
-    break;*/
-    /*default:
-    variable->cdar = make_nil();
-    break;*/
-    /* }
-  p->this.pair.car = car;
-  p->this.pair.cdr = cdr;
-    return p;
-}*/
+  variable->cdar = make_pair();
+  variable->cdar = make_symbol(value->this.symbol); /*nécessité de faire un lien avec la variable si elle existe */
+/* variable->cdar->this.pair.cdr = make_nil();
+   break;
+   /*case SFS_ARITH_OP:
+   printf("%c", o->this.character);
+   break;
+   case SFS_SPECIAL_ATOM:
+   printf("%c", o->this.character);
+   break;*/
+/*default:
+  variable->cdar = make_nil();
+  break;*/
+/* }
+   p->this.pair.car = car;
+   p->this.pair.cdr = cdr;
+   return p;
+   }*/
 object add_variable_value(object value, object env/*, int start*/){
   object variable_value = make_variable_value();
   /*DEBUG_MSG("->-> value type = %d", value->type);
-  DEBUG_MSG("value of value = %c",value->this.pair.car->this.character);
-  DEBUG_MSG("9999999 variable value %d //99999999",variable_value->type);*/
+    DEBUG_MSG("value of value = %c",value->this.pair.car->this.character);
+    DEBUG_MSG("9999999 variable value %d //99999999",variable_value->type);*/
   switch(value->type){
   case SFS_NUMBER:
     variable_value->this.pair.car = make_integer(value->this.number);
-    /*variable_value->this.pair.cdr = make_nil();*/
     break;
-    case SFS_CHARACTER:
+  case SFS_CHARACTER:
     variable_value->this.pair.car = make_character(value->this.character);
-    /*variable_value->this.pair.cdr = make_nil();*/
     break;
   case SFS_STRING:
     variable_value->this.pair.car = make_string(value->this.string);
-    /*variable_value->this.pair.cdr = make_nil();*/
     break;
   case SFS_PAIR:
-    /*variable_value->this.pair.car = add_variable_value(value->this.pair.car,env,start);
-      variable_value->this.pair.cdr = add_variable_value(value->this.pair.cdr,env,start);*/
-    variable_value->this.pair.car = /*copy_pair(value,env)*/value;
+    variable_value->this.pair.car = value;
     break;
   case SFS_NIL:
-    /*variable_value->this.pair.car = make_nil();
-      variable_value->this.pair.cdr = make_nil();*/
     break;
-    case SFS_BOOLEAN:
+  case SFS_BOOLEAN:
     variable_value->this.pair.car = make_boolean(value->this.boolean);
-    /*variable_value->this.pair.cdr = make_nil();*/
     break;  
   case SFS_VARIABLE_VALUE:
-    /*DEBUG_MSG("**** je passe laaa aussi ^^ ****"); */
     variable_value->this.pair.car = value;
-    /*variable_value->this.pair.cdr = make_nil();*/
     break;
-    /*variable->cdar->this.pair.cdr = make_nil();
-      break;*/
-    case SFS_ARITH_OP:
-      variable_value->this.pair.car = make_arith_op(value->this.character);
+  case SFS_ARITH_OP:
+    variable_value->this.pair.car = make_arith_op(value->this.character);
     break;
     /*case SFS_SPECIAL_ATOM:
-    printf("%c", o->this.character);
-    break;*/
-    default:
-      /*DEBUG_MSG(" marche pas ");*/
+      printf("%c", o->this.character);
+      break;*/
+  default:
     return make_nil();
     break;
   }
@@ -251,10 +183,10 @@ object delete_variable(object variable){
 
 void delete_variable_value(object variable){
   if(variable->this.pair.cdr->type == SFS_NIL){
-  sfs_free(variable->caar);
-  sfs_free(variable->cdar);
-  sfs_free(variable->this.pair.cdr);
-  variable->this.pair.cdr=nil;
+    sfs_free(variable->caar);
+    sfs_free(variable->cdar);
+    sfs_free(variable->this.pair.cdr);
+    variable->this.pair.cdr=nil;
   }
   else if(variable->this.pair.cdr->type == SFS_PAIR){
   }
@@ -277,7 +209,7 @@ object research_variable(object variable_name, object env){
     /* DEBUG_MSG("compared to %s",var->caar/\*->this.pair.car*\/->this.symbol); */
     /* DEBUG_MSG("variable type %d", var->cdar/\*->this.pair.car*\/->type); */
     /* DEBUG_MSG("variable value %d", var->cdar->this.pair.car->this.number); */
-    if(strcmp(var->caar/*->this.pair.car*/->this.symbol, variable_name->this.symbol) == 0){
+    if(strcmp(var->caar->this.symbol, variable_name->this.symbol) == 0){
       return var->this.pair.car;
     }
     else{
@@ -304,7 +236,7 @@ object research_variable_all_env(object variable_name, object env){
   while(env1->type != SFS_NIL){
     
     do{
-      if(strcmp(var->caar/*->this.pair.car*/->this.symbol, variable_name->this.symbol) == 0){
+      if(strcmp(var->caar->this.symbol, variable_name->this.symbol) == 0){
 	return var->cdar;
       }
       else{
@@ -325,10 +257,10 @@ object research_variable_all_env(object variable_name, object env){
 
 void display_variable(object variable){
   /*object var = variable->this.pair.car;
-  if(variable->cdar->type == SFS_PAIR){
+    if(variable->cdar->type == SFS_PAIR){
     sfs_print_pair(variable->this.pair.car);
-  }
-  else{
+    }
+    else{
     sfs_print_atom(variable);
     }*/
   sfs_print(variable->this.pair.car);
