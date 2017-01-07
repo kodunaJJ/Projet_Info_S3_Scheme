@@ -58,6 +58,9 @@ object sub(object input, object env)
       res_init = sfs_eval(input->cadr, env);
       DEBUG_MSG("res_init value = %d", res_init->this.number);
       DEBUG_MSG("res_init type = %d", res_init->type);
+      if(res_init->type == SFS_VARIABLE_VALUE){
+	res_init = res_init->this.pair.car;
+      }
     }
     else{
       resultat->this.number -= input->cadr->this.number;
