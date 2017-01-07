@@ -37,7 +37,7 @@ object add(object input, object env)
   return resultat;
 }
 
-object sous(object input, object env)
+object sub(object input, object env)
 {
   object p=create_environment();
   /*object p=make_pair();*/

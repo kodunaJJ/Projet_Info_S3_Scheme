@@ -3,6 +3,7 @@
 #include "mem.h"
 #include "notify.h"
 #include "print.h"
+#include "primitives.h"
 
 /* environnement = paire dont car indique l'environnement précédent
    et cdr indique la liste de variables associées à l'environnement */
@@ -27,12 +28,29 @@ object create_top_level_environment(){
   object define = make_symbol("define");
   object set_scm = make_symbol("set!");
 
+  object prim = make_object(SFS_PRIMITIVE);
+
   add_variable(quote,nil,top);
   add_variable(if_scm,nil,top);
   add_variable(and_scm,nil,top);
   add_variable(or_scm,nil,top);
   add_variable(define,nil,top);
   add_variable(set_scm,nil,top);
+  
+  prim->this.primitive = add;
+  add_variable(make_symbol("+"),prim,top);
+
+  prim->this.primitive = sub;
+  add_variable(make_symbol("-"),prim,top);
+
+  prim->this.primitive = mult;
+  add_variable(make_symbol("*"),prim,top);
+
+  prim->this.primitive = divi;
+  add_variable(make_symbol("/"),prim, top);
+
+  
+  
   return top;
 }
 
@@ -158,6 +176,13 @@ object add_variable_value(object value, object env/*, int start*/){
   case SFS_ARITH_OP:
     variable_value->this.pair.car = make_arith_op(value->this.character);
     break;
+  case SFS_PRIMITIVE:
+    /*DEBUG_MSG(" *** primitives ***");
+      DEBUG_MSG("variable_value type = %d", variable_value->this.pair.car->type);*/
+    variable_value->this.pair.car = make_primitive(value);
+    /* DEBUG_MSG("value type = %d", value->type);*/
+       DEBUG_MSG("variable_value type = %d", variable_value->this.pair.car->type);
+       break;
     /*case SFS_SPECIAL_ATOM:
       printf("%c", o->this.character);
       break;*/
@@ -210,6 +235,7 @@ object research_variable(object variable_name, object env){
     /* DEBUG_MSG("variable type %d", var->cdar/\*->this.pair.car*\/->type); */
     /* DEBUG_MSG("variable value %d", var->cdar->this.pair.car->this.number); */
     if(strcmp(var->caar->this.symbol, variable_name->this.symbol) == 0){
+        DEBUG_MSG("fin recherche");
       return var->this.pair.car;
     }
     else{
@@ -219,6 +245,7 @@ object research_variable(object variable_name, object env){
   }while(var->type != SFS_NIL);
 
   /*WARNING_MSG("Unbound variable");*/
+    DEBUG_MSG("fin recherche type = nil");
   return nil;
 }
 
@@ -236,8 +263,12 @@ object research_variable_all_env(object variable_name, object env){
   while(env1->type != SFS_NIL){
     
     do{
+      DEBUG_MSG("valeur = %s",var->caar->this.symbol);
       if(strcmp(var->caar->this.symbol, variable_name->this.symbol) == 0){
-	return var->cdar;
+	/*DEBUG_MSG("*** + **** = %s",var->caar->this.symbol);
+	  DEBUG_MSG("var type = %d",var->cdar->type);*/
+	  DEBUG_MSG("fin recherche");
+	return var->this.pair.car;
       }
       else{
 	var = var->this.pair.cdr;
@@ -249,6 +280,7 @@ object research_variable_all_env(object variable_name, object env){
   }
 
   /*WARNING_MSG("Unbound variable");*/
+    DEBUG_MSG("fin recherche type nil");
   return nil;
 }
 

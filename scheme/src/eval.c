@@ -89,9 +89,9 @@ int error_syntax_DEFINE_form(object input){
     WARNING_MSG("Expected variable value");
     return 1;
   }
-  else if(is_form(input->cadr)){
+  /*else if(is_form(input->cadr)){
     WARNING_MSG("Imposible to change a form value");
-  }
+    }*/
   else{
     return 0;
   }
@@ -141,29 +141,37 @@ object sfs_eval(object input, object env ) {
   /* gestion des paires */
   /*Dans le cas d'une paire on gère les primitives et les formes*/
   if(input->type == SFS_PAIR){
+    DEBUG_MSG("c'est une paire");
     if(input->this.pair.car->type == SFS_PAIR){
+      DEBUG_MSG("le car est aussi une paire");
       input = input->this.pair.car;
       goto restart;
     }
     else if(auto_evaluating_object(input->this.pair.car)){
-      WARNING_MSG("pair is not a known function");
-      return nil;
-    }
+      /*WARNING_MSG("pair is not a known function");*/
+      DEBUG_MSG("input = %s", input->this.pair.car->this.symbol);
+      ERROR_MSG("pair is not a known function");
+      /*return nil;*/
+      }
     /*recherche du symbole dans l'environnement courant*/
-    else if(input->this.pair.car->type == SFS_SYMBOL){ 
+    else if(input->this.pair.car->type == SFS_SYMBOL){
+      DEBUG_MSG("c'est un symbol");
+      DEBUG_MSG("input = %s", input->this.pair.car->this.symbol);
       object search_res = research_variable_all_env(input->this.pair.car,env);
+      DEBUG_MSG("search_res type %d",search_res->this.pair.cdr->type);
       if(search_res->type == SFS_NIL){
-	WARNING_MSG("pair is not a known function");
-	return nil;
+	/*WARNING_MSG("pair is not a known function");
+	  return nil;*/
+	ERROR_MSG("pair is not a known function");
       }
       else{
 	/* Test si le cdr est une primitive */
-	if(search_res->this.pair.cdr->type==SFS_PRIMITIVE)
+	if(/*search_res*/research_variable_all_env(input->this.pair.car,env)->cadr->type==SFS_PRIMITIVE)
 	  {
-
-	    object (*prim)(object); /* Pointeur de fonction */
-	    prim = search_res->this.pair.cdr->this.primitive; /* Association de la fonction */
-	    return prim(input);
+	    DEBUG_MSG("c'est une primitive");
+	    object (*prim)(object, object); /* Pointeur de fonction */
+	    prim = search_res->this.pair.cdr->this.pair.car->this.primitive; /* Association de la fonction */
+	    return prim(input, env);
 	  }
       }
     }
@@ -184,7 +192,8 @@ object sfs_eval(object input, object env ) {
     if (!strcmp(input->this.pair.car->this.symbol, "define")){
 
       if(error_syntax_DEFINE_form(input)){
-	return nil;
+	ERROR_MSG("pair is not a known function");
+	/*return nil;*/
       }
       else{
 	/*DEBUG_MSG("je passe laaaaaaaaaaaaaaa");*/
@@ -205,10 +214,11 @@ object sfs_eval(object input, object env ) {
 
     /*Gestion de SET! */ 
     if (!strcmp(input->this.pair.car->this.symbol, "set!")){
-      object var = research_variable(input->cadr,env);
+      object var = research_variable_all_env(input->cadr,env);
       if(var->type == SFS_NIL){
-	WARNING_MSG("Unknown variable");
-	return nil;
+	/*WARNING_MSG("Unknown variable");
+	  return nil;*/
+	ERROR_MSG("pair is not a known function");
       }
       else{
 	/* DEBUG_MSG("previous value name --> %s",var->this.pair.car->this.symbol);
@@ -222,8 +232,9 @@ object sfs_eval(object input, object env ) {
     /*Gestion de IF */
     if (!strcmp(input->this.pair.car->this.symbol, "if")){
       if(error_syntax_IF_form(input)){
-	WARNING_MSG("Syntax error");
-	return nil;
+	/*WARNING_MSG("Syntax error");
+	  return nil;*/
+	ERROR_MSG("pair is not a known function");
       }
       else{
 	if (sfs_eval_predicat(input->cadr, env)== true && input->caddr->type != SFS_NIL){
@@ -302,7 +313,7 @@ object sfs_eval(object input, object env ) {
       input = input->this.pair.car;
       goto restart;
     }
-  }
+}
     
   /*Renvoie directement la valeur de la variable si on l'entre*/
   else if(input->type == SFS_SYMBOL){
@@ -310,13 +321,17 @@ object sfs_eval(object input, object env ) {
       DEBUG_MSG("/////// %d ////////////",research_variable(input,env)->this.pair.cdr->type);*/
     object search_res = research_variable(input,env);
     if(search_res->type == SFS_NIL){
-      WARNING_MSG("Unbound variable !");
-      return search_res;
+      /*WARNING_MSG("Unbound variable !");
+	return search_res;*/
+      ERROR_MSG("pair is not a known function");
     }
     else{
       return search_res->this.pair.cdr;
     }
   }
-  else return input;
+  else{
+    DEBUG_MSG(" object auto evaluant");
+    return input;
+  }
 
 }

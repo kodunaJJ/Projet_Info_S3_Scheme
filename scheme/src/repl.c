@@ -20,6 +20,7 @@
 #include "eval.h"
 #include "print.h"
 #include "environment.h"
+#include "primitives.h"
 
 /* mode d'interaction avec l'interpreteur (exemple)*/
 typedef enum {INTERACTIF,SCRIPT} inter_mode;
@@ -51,7 +52,10 @@ void init_interpreter ( void ) {
   false = make_boolean(FALSE);
 
   top_level_env = create_top_level_environment();
+  DEBUG_MSG("variable name = %s",top_level_env->cadr->this.pair.car->this.symbol);
+  DEBUG_MSG("value type = %d",top_level_env->cadr->this.pair.cdr->this.pair.car->type);
   /*display_environment(top_level_env,TOP_LEVEL);*/
+  DEBUG_MSG("fin init_interpreter");
  
 }
 

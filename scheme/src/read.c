@@ -446,8 +446,13 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     default : break;
     }
   }
-  else if(is_arithemetic_op(str[indice]) && str[indice+1] =='\0') return make_arith_op(str[indice]);
-  
+  else if(is_arithemetic_op(str[indice]) && str[indice+1] =='\0'){
+    char s[2];
+    s[0] = str[indice];
+    s[1] = '\0';
+    DEBUG_MSG("s = %s",s);
+    return /*make_arith_op(str[indice]);*/ make_symbol(s);
+  }
   else if(str[indice] == '+' || str[indice]=='-'){ /*lecture des nombres */ /* pas de prise en compte d'un depassement de capacite */
     int i;
     for(i = indice + 1 ; i<strlen(str)-1; i++) {

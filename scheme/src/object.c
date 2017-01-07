@@ -63,7 +63,7 @@ object make_integer( int val ){
 /* Création des caractères */
 object make_character( char c ){
 	object t = make_object( SFS_CHARACTER );
-	t->this.character = c ;
+	t->this.character = c;
 	return t;
 }
 
@@ -103,3 +103,9 @@ object make_variable_value(){
 }
 
 /* Création des primitives*/
+
+object make_primitive(object o){
+  object t = make_object(SFS_PRIMITIVE);
+  t->this.primitive = o->this.primitive;
+  return t;
+  }

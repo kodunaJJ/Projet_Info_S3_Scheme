@@ -35,7 +35,7 @@ extern "C" {
 		struct object_t *cdr;
       }pair;
       
-      	struct object_t*(*primitive)(struct object_t*);
+      struct object_t*(*primitive)(struct object_t*, struct object_t*);
 
       struct object_t *special;
 
@@ -55,7 +55,7 @@ extern "C" {
   object make_arith_op(char c);
   object make_special_atom(char c);
   object make_variable_value();
-  object make_primitive(char* str);
+  object make_primitive(object o);
 
 
 
@@ -70,7 +70,7 @@ extern "C" {
 #define SFS_SPECIAL_ATOM 0x08
 #define SFS_ENVIRONMENT  0x09
 #define SFS_VARIABLE_VALUE 0x0A
-#define SFS_PRIMITIVE     0x11
+#define SFS_PRIMITIVE     0x0B
   
 
 
