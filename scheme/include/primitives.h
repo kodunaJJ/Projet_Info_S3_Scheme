@@ -12,7 +12,10 @@ object add(object input, object env);
 object mult(object input, object env);
 object divi(object input, object env);
 object sub(object input, object env);
-object egal(object input, object env);
+  object remainder(object input, object env);
+object equal(object input, object env);
+  object greater(object input, object env);
+  object lower(object input, object env);
 
 #ifdef __cplusplus
 }

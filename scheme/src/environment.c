@@ -48,9 +48,20 @@ object create_top_level_environment(){
 
   prim->this.primitive = divi;
   add_variable(make_symbol("/"),prim, top);
+  add_variable(make_symbol("quotient"),prim,top);
 
-  
-  
+  prim->this.primitive = remainder;
+  add_variable(make_symbol("remainder"),prim,top);
+
+  prim->this.primitive = equal;
+  add_variable(make_symbol("="),prim,top);
+
+  prim->this.primitive = greater;
+  add_variable(make_symbol(">"),prim,top);
+
+  prim->this.primitive = lower;
+  add_variable(make_symbol("<"),prim,top);
+
   return top;
 }
 

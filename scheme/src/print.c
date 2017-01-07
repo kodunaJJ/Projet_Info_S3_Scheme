@@ -92,7 +92,7 @@ void sfs_print( object o ) {
 
 void sfs_print_expr( object o ){
   printf( "==> " );
-  /*if(o->type==SFS_PAIR) printf("(");*/
+  if(o->type==SFS_PAIR) printf("(");
   sfs_print( o );
   printf( "\n" );
 }

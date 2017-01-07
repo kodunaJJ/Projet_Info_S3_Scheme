@@ -165,7 +165,7 @@ object sfs_eval(object input, object env ) {
       if(search_res->type == SFS_NIL){
 	/*WARNING_MSG("pair is not a known function");
 	  return nil;*/
-	ERROR_MSG("pair is not a known function");
+	ERROR_MSG("Unbound variable or unknown function");
       }
       else{
 	/* Test si le cdr est une primitive */
