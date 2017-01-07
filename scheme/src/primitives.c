@@ -16,6 +16,11 @@ object add(object input, object env)
   object p=create_environment();
   /*object p=make_pair();*/
   object resultat=make_integer(0);
+  if(input->this.pair.cdr->type == SFS_NIL){
+    WARNING_MSG("No operand");
+  }
+  else{
+    
   while(input->this.pair.cdr->type!=SFS_NIL)
     {
       input=input->this.pair.cdr;
@@ -31,17 +36,42 @@ object add(object input, object env)
 	if(p->this.pair.cdr->type==SFS_NUMBER){
 	  resultat->this.number+=p->this.pair.cdr->this.number;
 	}
-	else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
+	else{
+	  ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
+	}
       }
     }
+  }
   return resultat;
 }
 
 object sub(object input, object env)
 {
-  object p=create_environment();
+  object p;
   /*object p=make_pair();*/
   object resultat=make_integer(0);
+  object res_init;
+  if(input->this.pair.cdr->type != SFS_NIL){
+    if(input->cddr->type != SFS_NIL){
+      res_init = sfs_eval(input->cadr, env);
+      DEBUG_MSG("res_init value = %d", res_init->this.number);
+      DEBUG_MSG("res_init type = %d", res_init->type);
+    }
+    else{
+      resultat->this.number -= input->cadr->this.number;
+      return resultat;
+    }
+    if(res_init->type == SFS_NUMBER){
+      resultat->this.number = res_init->this.number;
+    }
+    else{
+      ERROR_MSG("Wrong operand type !");
+    }
+  }
+  else{
+    ERROR_MSG("No operand !");
+  }
+  input=input->this.pair.cdr;
   while(input->this.pair.cdr->type!=SFS_NIL)
     {
       input=input->this.pair.cdr;
@@ -54,11 +84,15 @@ object sub(object input, object env)
 	}
       else if(input->this.pair.car->type==SFS_SYMBOL){
 	p=research_variable(input->this.pair.car, env);
-	if(p->this.pair.cdr->type==SFS_NUMBER){
-	  resultat->this.number-=p->this.pair.cdr->this.number;
+	if(p->type == SFS_NIL){
+	  ERROR_MSG("Unbound variable");
 	}
-	else ERROR_MSG("%s ne peut être un opérande !",p->this.pair.car->this.symbol);
+	else if(p->cadr->type==SFS_NUMBER){
+	  resultat->this.number-=p->cadr->this.number;
+	}
       }
+      else ERROR_MSG("Wrong operand type !");
+      
     }
   return resultat;
 }

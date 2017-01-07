@@ -120,7 +120,10 @@ int error_syntax_QUOTE_form(object input){
   }
 }
 
-
+/*int error_syntax_noarg_PRIMITIVES( object input){
+  if(input->type == SFS_PAIR){
+    if(input->this.pair.cdr->type == SFS_NIL){
+      WARNING_MSG(" " */
 
 object sfs_eval_predicat(object input, object env){
   /*DEBUG_MSG("1) predicat type %d", input->type);*/
