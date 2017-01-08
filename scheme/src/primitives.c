@@ -9,6 +9,8 @@
 #include "environment.h"
 #include "basic.h"
 #include "read.h"
+#include <ctype.h>
+#include <math.h>
 
 /*extern object env;*/
 
@@ -363,7 +365,7 @@ object equal(object input, object env){
 	ERROR_MSG("Wrong type of operand");
       }
     }
-    	c_op1->this.number = op1->this.number;
+    c_op1->this.number = op1->this.number;
     while(input->this.pair.cdr->type != SFS_NIL){
       input = input->this.pair.cdr;
 
@@ -499,7 +501,7 @@ object lower(object input, object env){
 	ERROR_MSG("Wrong type of operand");
       }
     }
-    	c_op1->this.number = op1->this.number;
+    c_op1->this.number = op1->this.number;
     while(input->this.pair.cdr->type != SFS_NIL){
       input = input->this.pair.cdr;
 
@@ -660,11 +662,109 @@ object integer_to_char(object input, object env){
 }
 
 object number_to_string(object input, object env){
-  return input;
+  object op;
+  object res = make_object(SFS_STRING);
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("No operand");
+  }
+  else{
+    input = input->this.pair.cdr;
+    if(input->this.pair.cdr->type != SFS_NIL){
+      ERROR_MSG("Too many arguments");
+    }
+    op = sfs_eval(input->this.pair.car,env);
+    if(op->type != SFS_NUMBER){
+      if(op->type == SFS_VARIABLE_VALUE){
+	op = op->this.pair.car;
+	if(op->type == SFS_NUMBER){
+	  sprintf(res->this.string, "%d",op->this.number);
+	  return res;
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}
+      }
+      else{
+	ERROR_MSG("Wrong type of operand !");
+      }
+    }
+    else{
+      sprintf(res->this.string, "\"%d\"",op->this.number);
+      return res;
+	
+    }
+  } 
+  
 }
 
 object string_to_number(object input, object env){
-  return input;
+    object op;
+  object res = make_object(SFS_NUMBER);
+  int i = 0;
+  int sig = 1;
+  int exp = 1;
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("No operand");
+  }
+  else{
+    input = input->this.pair.cdr;
+    if(input->this.pair.cdr->type != SFS_NIL){
+      ERROR_MSG("Too many arguments");
+    }
+    op = sfs_eval(input->this.pair.car,env);
+    if(op->type != SFS_STRING){
+      if(op->type == SFS_VARIABLE_VALUE){
+	op = op->this.pair.car;
+	if(op->type == SFS_STRING){
+	  while(i<strlen(op->this.string)-1){
+	    res->this.number += (int)op->this.string[i+1];
+	  }
+	  return res;
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}
+      }
+      else{
+	ERROR_MSG("Wrong type of operand !");
+      }
+    }
+    else{
+      DEBUG_MSG("string value = %s",op->this.string);
+      exp = strlen(op->this.string) - 3;
+      while(i<strlen(op->this.string)-2){
+	 DEBUG_MSG("character value = %c",op->this.string[i+1]);
+	 if(isdigit(op->this.string[i+1]) == 0){
+	   if(op->this.string[1] == '+' || op->this.string[1] == '-'){
+	     if(op->this.string[2] != '"' && op->this.string[3] != '\0'){
+	     i++;
+	     exp --;
+	     if(op->this.string[1] == '-'){
+	       sig = -1;
+	     }
+	     }
+	     else{
+	       	     WARNING_MSG("Invalid string");
+		     return false;}
+	   }
+	   else if(op->this.string[i+1] != '"' && op->this.string[i+2] != '\0'){
+	     WARNING_MSG("Invalid string");
+	     return false;
+	   }
+	 }
+	 DEBUG_MSG("calcul = %d",(int)((op->this.string[i+1]-48)*pow(10,exp)*sig));
+	 res->this.number += (int)((op->this.string[i+1]-48)*pow(10,exp)*sig);
+	    i++;
+	    exp--;
+	    if(exp < 0){
+	      exp = 0;
+	    }
+	  }
+
+      return res;
+	
+    }
+  }
 }
 
 object symbol_to_string(object input, object env){
