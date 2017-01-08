@@ -226,7 +226,8 @@ object sfs_eval(object input, object env ) {
       else{
 	/* DEBUG_MSG("previous value name --> %s",var->this.pair.car->this.symbol);
 	   DEBUG_MSG("previous value name --> %d",var->this.pair.cdr->this.number);*/
-	var->this.pair.cdr = sfs_eval(input->caddr,env);
+	delete_variable_value(var);
+	var->this.pair.cdr = add_variable_value(sfs_eval(input->caddr,env),env);
 	return var->this.pair.cdr;
       }
     }

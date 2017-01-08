@@ -17,6 +17,13 @@ object equal(object input, object env);
   object greater(object input, object env);
   object lower(object input, object env);
 
+  object char_to_integer(object input, object env);
+  object integer_to_char(object input, object env);
+  object number_to_string(object input, object env);
+  object string_to_number(object input, object env);
+  object symbol_to_string(object input, object env);
+  object string_to_symbol(object input, object env);
+
 #ifdef __cplusplus
 }
 #endif

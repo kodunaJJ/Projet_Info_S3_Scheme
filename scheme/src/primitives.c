@@ -8,8 +8,12 @@
 #include "eval.h"
 #include "environment.h"
 #include "basic.h"
+#include "read.h"
 
 /*extern object env;*/
+
+
+/* fonctions de calcul arithmetique de base */
 
 object add(object input, object env)
 {
@@ -324,69 +328,7 @@ object remainder(object input, object env)
   else ERROR_MSG("No operand");
 }
 
-/*object egal(object input, object env)
-
-{
-  object p=create_environment();
-  object resultat=make_boolean(1);
-  object operande1=make_integer(1);
-  object operande2=make_integer(1);
-				
-				
-  if(input->this.pair.cdr->type!=SFS_NIL){
-    input=input->this.pair.cdr;
-    if(input->this.pair.car->type==SFS_PAIR){
-      input->this.pair.car=sfs_eval(input->this.pair.car, env);
-    }
-    if(input->this.pair.car->type==SFS_SYMBOL){
-      p=research_variable(input->this.pair.car, env);
-      if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-	operande1->this.number=p->this.pair.cdr->this.number;
-      }
-      else {
-	WARNING_MSG("Pas de nombre à comparer");
-	return nil;
-      }
-    }
-    else if(input->this.pair.car->type==SFS_NUMBER){
-      operande1->this.number=input->this.pair.car->this.number;
-    }
-    else {
-      WARNING_MSG("Pas de nombre à comparer");
-      return nil;
-    }
-  }
-				
-  while(input->this.pair.cdr->type!=SFS_NIL && resultat->this.boolean==TRUE){
-
-    if(input->this.pair.cdr->type!=SFS_NIL){
-      input=input->this.pair.cdr;
-      if(input->this.pair.car->type==SFS_PAIR){
-	input->this.pair.car=sfs_eval(input->this.pair.car, env);
-      }
-      if(input->this.pair.car->type==SFS_SYMBOL){
-	p=research_variable(input->this.pair.car, env);
-	if(p!=NULL && p->this.pair.cdr->type==SFS_NUMBER){
-	  operande2->this.number=p->this.pair.cdr->this.number;
-	}
-	else {
-	  WARNING_MSG("Pas de nombre à comparer");
-	  return nil;
-	}
-      }
-      else if(input->this.pair.car->type==SFS_NUMBER){
-	operande2->this.number=input->this.pair.car->this.number;
-      }
-      else {
-	WARNING_MSG("Pas de nombre à comparer");
-	return nil;
-      }
-    }
-    resultat->this.boolean= (operande1->this.number == operande2->this.number) ? TRUE:FALSE;
-    operande1->this.number = operande2->this.number;
-  }
-  return resultat;
-  }*/
+/* fonctions de comparaison arithmetique */
 
 object equal(object input, object env){
   object op1;
@@ -551,4 +493,85 @@ object lower(object input, object env){
     } 
     return resultat;
   }
+}
+
+
+
+/* fonctions de conversion de type */
+
+object char_to_integer(object input, object env){
+  object op;
+  object res;
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("No operand");
+  }
+  else{
+    input = input->this.pair.cdr;
+    if(input->this.pair.cdr->type != SFS_NIL){
+      ERROR_MSG("Too many arguments");
+    }
+    op = sfs_eval(input->this.pair.car,env);
+    if(op->type != SFS_CHARACTER){
+      if(op->type == SFS_VARIABLE_VALUE){
+	op = op->this.pair.car;
+	if(op->type == SFS_CHARACTER){
+	  res=make_integer((int)op->this.character);
+	  return res;
+	}
+	else if(op->type == SFS_STRING){
+	  if(is_scm_newline(op->this.string,0)){
+	    res=make_integer((int)'\n');
+	    return res;
+	  }
+	  else if(is_scm_space(op->this.string,0)){
+	    res=make_integer((int)' ');
+	    return res;
+	  }
+	  else{
+	    ERROR_MSG("Wrong type of operand !");
+	  }
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}	  
+      }
+      if(op->type == SFS_STRING){
+	if(is_scm_newline(op->this.string,0)){
+	  res=make_integer((int)'\n');
+	  return res;
+	}
+	else if(is_scm_space(op->this.string,0)){
+	  res=make_integer((int)' ');
+	  return res;
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}
+      }
+    }
+    else{
+      res=make_integer((int)op->this.character);
+      return res;
+    }
+  }
+}
+
+object integer_to_char(object input, object env){
+  return input;
+}
+
+object number_to_string(object input, object env){
+  return input;
+}
+
+object string_to_number(object input, object env){
+  return input;
+}
+
+object symbol_to_string(object input, object env){
+  return input;
+}
+
+object string_to_symbol(object input, object env){
+  return input;
 }

@@ -62,6 +62,25 @@ object create_top_level_environment(){
   prim->this.primitive = lower;
   add_variable(make_symbol("<"),prim,top);
 
+
+    prim->this.primitive = char_to_integer;
+  add_variable(make_symbol("char->integer"),prim,top);
+
+      prim->this.primitive = integer_to_char;
+  add_variable(make_symbol("integer->char"),prim,top);
+
+      prim->this.primitive = number_to_string;
+  add_variable(make_symbol("number->string"),prim,top);
+
+      prim->this.primitive = string_to_number;
+  add_variable(make_symbol("string->number"),prim,top);
+
+      prim->this.primitive = symbol_to_string;
+  add_variable(make_symbol("symbol->string"),prim,top);
+
+      prim->this.primitive = string_to_symbol;
+  add_variable(make_symbol("string->symbol"),prim,top);
+
   return top;
 }
 
