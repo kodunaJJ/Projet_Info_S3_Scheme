@@ -557,7 +557,67 @@ object char_to_integer(object input, object env){
 }
 
 object integer_to_char(object input, object env){
-  return input;
+  object op;
+  object res;
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("No operand");
+  }
+  else{
+    input = input->this.pair.cdr;
+    if(input->this.pair.cdr->type != SFS_NIL){
+      ERROR_MSG("Too many arguments");
+    }
+    op = sfs_eval(input->this.pair.car,env);
+    if(op->type != SFS_NUMBER){
+      if(op->type == SFS_VARIABLE_VALUE){
+	op = op->this.pair.car;
+	if(op->type == SFS_NUMBER){
+	  if(op->this.number == (int)' '){
+	    res = make_string("#\\space");
+	    return res;
+	  }
+	  else if(op->this.number == (int)'\n'){
+	    res=make_string("#\\newline");
+	    return res;
+	  }
+	  else{
+	    if(-1 < op->this.number && op->this.number < 128){
+	      res=make_character((char)op->this.number);
+	      return res;
+	    }
+	    else{
+	      ERROR_MSG("Conversion impossible integer value does not correspond to a character");
+	    }
+	  }
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}
+      }
+      else{
+	ERROR_MSG("Wrong type of operand !");
+      }
+    }
+    else{
+      if(op->this.number == (int)' '){
+	res = make_string("#\\space");
+	return res;
+      }
+      else if(op->this.number == (int)'\n'){
+	res=make_string("#\\newline");
+	return res;
+      }
+      else{
+	if(op->this.number > -1 && op->this.number < 128){
+	  res=make_character((char)op->this.number);
+	  return res;
+	}
+	else{
+	  ERROR_MSG("Conversion impossible integer value does not correspond to a character");
+	}
+      }
+    } 
+  }
 }
 
 object number_to_string(object input, object env){
