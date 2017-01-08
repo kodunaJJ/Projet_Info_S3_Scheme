@@ -25,29 +25,29 @@ object add(object input, object env)
   }
   else{
     
-  while(input->this.pair.cdr->type!=SFS_NIL)
-    {
-      input=input->this.pair.cdr;
-      if(input->this.pair.car->type==SFS_PAIR){
-	input->this.pair.car=sfs_eval(input->this.pair.car, env);
+    while(input->this.pair.cdr->type!=SFS_NIL)
+      {
+	input=input->this.pair.cdr;
+	if(input->this.pair.car->type==SFS_PAIR){
+	  input->this.pair.car=sfs_eval(input->this.pair.car, env);
+	}
+	if(input->this.pair.car->type==SFS_NUMBER)
+	  {
+	    resultat->this.number+=input->this.pair.car->this.number;
+	  }
+	else if(input->this.pair.car->type==SFS_SYMBOL){
+	  p=research_variable(input->this.pair.car, env);
+	  if(p->type == SFS_NIL){
+	    ERROR_MSG("Unbound variable");
+	  }
+	  else if(p->cadr->type==SFS_NUMBER){
+	    resultat->this.number+=p->cadr->this.number;
+	  }
+	  else ERROR_MSG("wrong operand type");
+	}
+	else ERROR_MSG("Wrong operand type !");
       }
-      if(input->this.pair.car->type==SFS_NUMBER)
-	{
-	  resultat->this.number+=input->this.pair.car->this.number;
-	}
-      else if(input->this.pair.car->type==SFS_SYMBOL){
-	p=research_variable(input->this.pair.car, env);
-	if(p->type == SFS_NIL){
-	  ERROR_MSG("Unbound variable");
-	}
-	else if(p->cadr->type==SFS_NUMBER){
-	  resultat->this.number+=p->cadr->this.number;
-	}
-		else ERROR_MSG("wrong operand type");
-      }
-      else ERROR_MSG("Wrong operand type !");
-	}
-      }
+  }
   return resultat;
 }
 
@@ -100,7 +100,7 @@ object sub(object input, object env)
 	else if(p->cadr->type==SFS_NUMBER){
 	  resultat->this.number-=p->cadr->this.number;
 	}
-		else ERROR_MSG("wrong operand type");
+	else ERROR_MSG("wrong operand type");
       }
       else ERROR_MSG("Wrong operand type !");
       
@@ -167,15 +167,15 @@ object divi(object input, object env)
 	    op1=op1->this.pair.car;
 	    DEBUG_MSG("op1 type = %d",op1->type);
 	    if(op1->type != SFS_NUMBER){
-	    ERROR_MSG("Wrong type of operand");
-	  }
+	      ERROR_MSG("Wrong type of operand");
+	    }
 	  }
 	  else{
 	    ERROR_MSG("Wrong type of operand");
 	  }
 	}
         if(input->cdddr->type != SFS_NIL){
-	ERROR_MSG("too many arguments");
+	  ERROR_MSG("too many arguments");
 	}  
 	op2=sfs_eval(input->cddr->this.pair.car, env);
 	DEBUG_MSG("op2 type = %d",op2->type);
@@ -183,8 +183,8 @@ object divi(object input, object env)
 	  if(op2->type == SFS_VARIABLE_VALUE){
 	    op2=op2->this.pair.car;
 	    if(op2->type != SFS_NUMBER){
-	    ERROR_MSG("Wrong type of operand");
-	  }
+	      ERROR_MSG("Wrong type of operand");
+	    }
 	  }
 	  else{
 	    ERROR_MSG("Wrong type of operand");
@@ -201,39 +201,39 @@ object divi(object input, object env)
 
 	}
       else
-      /*if(input->cadr->type==SFS_SYMBOL){
-	p=research_variable(input->cadr, env);
-	if(p->this.pair.cdr->type==SFS_NUMBER){
+	/*if(input->cadr->type==SFS_SYMBOL){
+	  p=research_variable(input->cadr, env);
+	  if(p->this.pair.cdr->type==SFS_NUMBER){
 	  resultat->this.number=p->this.pair.cdr->this.number;
-	}
-	else ERROR_MSG("No operand");
-	input=input->this.pair.cdr;
-      }
-      }*/
-  /*while(input->this.pair.cdr->type!=SFS_NIL)
-    {
-      input=input->this.pair.cdr;
-      if(input->this.pair.car->type==SFS_PAIR){
-	input->this.pair.car=sfs_eval(input->this.pair.car, env);
-      }
-      if(input->this.pair.car->type==SFS_NUMBER)
-	{
+	  }
+	  else ERROR_MSG("No operand");
+	  input=input->this.pair.cdr;
+	  }
+	  }*/
+	/*while(input->this.pair.cdr->type!=SFS_NIL)
+	  {
+	  input=input->this.pair.cdr;
+	  if(input->this.pair.car->type==SFS_PAIR){
+	  input->this.pair.car=sfs_eval(input->this.pair.car, env);
+	  }
+	  if(input->this.pair.car->type==SFS_NUMBER)
+	  {
 	  resultat->this.number/=input->this.pair.car->this.number;
-	}
-      else if(input->this.pair.car->type==SFS_SYMBOL){
-	p=research_variable(input->this.pair.car, env);
-	if(p->type == SFS_NIL){
+	  }
+	  else if(input->this.pair.car->type==SFS_SYMBOL){
+	  p=research_variable(input->this.pair.car, env);
+	  if(p->type == SFS_NIL){
 	  ERROR_MSG("Unbound variable");
-	}
-	else if(p->cadr->type==SFS_NUMBER){
+	  }
+	  else if(p->cadr->type==SFS_NUMBER){
 	  resultat->this.number/=p->cadr->this.number;
-	}
-	else ERROR_MSG("Wrong operand type !");
-      }
-      else ERROR_MSG("wrong operand type !");
-      }*/
+	  }
+	  else ERROR_MSG("Wrong operand type !");
+	  }
+	  else ERROR_MSG("wrong operand type !");
+	  }*/
 	ERROR_MSG("Wrong type of operand");
-}
+    }
   else ERROR_MSG("No operand");
 }
 
@@ -258,15 +258,15 @@ object remainder(object input, object env)
 	    op1=op1->this.pair.car;
 	    DEBUG_MSG("op1 type = %d",op1->type);
 	    if(op1->type != SFS_NUMBER){
-	    ERROR_MSG("Wrong type of operand");
-	  }
+	      ERROR_MSG("Wrong type of operand");
+	    }
 	  }
 	  else{
 	    ERROR_MSG("Wrong type of operand");
 	  }
 	}
         if(input->cdddr->type != SFS_NIL){
-	ERROR_MSG("too many arguments");
+	  ERROR_MSG("too many arguments");
 	}  
 	op2=sfs_eval(input->cddr->this.pair.car, env);
 	DEBUG_MSG("op2 type = %d",op2->type);
@@ -274,8 +274,8 @@ object remainder(object input, object env)
 	  if(op2->type == SFS_VARIABLE_VALUE){
 	    op2=op2->this.pair.car;
 	    if(op2->type != SFS_NUMBER){
-	    ERROR_MSG("Wrong type of operand");
-	  }
+	      ERROR_MSG("Wrong type of operand");
+	    }
 	  }
 	  else{
 	    ERROR_MSG("Wrong type of operand");
@@ -292,39 +292,39 @@ object remainder(object input, object env)
 
 	}
       else
-      /*if(input->cadr->type==SFS_SYMBOL){
-	p=research_variable(input->cadr, env);
-	if(p->this.pair.cdr->type==SFS_NUMBER){
+	/*if(input->cadr->type==SFS_SYMBOL){
+	  p=research_variable(input->cadr, env);
+	  if(p->this.pair.cdr->type==SFS_NUMBER){
 	  resultat->this.number=p->this.pair.cdr->this.number;
-	}
-	else ERROR_MSG("No operand");
-	input=input->this.pair.cdr;
-      }
-      }*/
-  /*while(input->this.pair.cdr->type!=SFS_NIL)
-    {
-      input=input->this.pair.cdr;
-      if(input->this.pair.car->type==SFS_PAIR){
-	input->this.pair.car=sfs_eval(input->this.pair.car, env);
-      }
-      if(input->this.pair.car->type==SFS_NUMBER)
-	{
+	  }
+	  else ERROR_MSG("No operand");
+	  input=input->this.pair.cdr;
+	  }
+	  }*/
+	/*while(input->this.pair.cdr->type!=SFS_NIL)
+	  {
+	  input=input->this.pair.cdr;
+	  if(input->this.pair.car->type==SFS_PAIR){
+	  input->this.pair.car=sfs_eval(input->this.pair.car, env);
+	  }
+	  if(input->this.pair.car->type==SFS_NUMBER)
+	  {
 	  resultat->this.number/=input->this.pair.car->this.number;
-	}
-      else if(input->this.pair.car->type==SFS_SYMBOL){
-	p=research_variable(input->this.pair.car, env);
-	if(p->type == SFS_NIL){
+	  }
+	  else if(input->this.pair.car->type==SFS_SYMBOL){
+	  p=research_variable(input->this.pair.car, env);
+	  if(p->type == SFS_NIL){
 	  ERROR_MSG("Unbound variable");
-	}
-	else if(p->cadr->type==SFS_NUMBER){
+	  }
+	  else if(p->cadr->type==SFS_NUMBER){
 	  resultat->this.number/=p->cadr->this.number;
-	}
-	else ERROR_MSG("Wrong operand type !");
-      }
-      else ERROR_MSG("wrong operand type !");
-      }*/
+	  }
+	  else ERROR_MSG("Wrong operand type !");
+	  }
+	  else ERROR_MSG("wrong operand type !");
+	  }*/
 	ERROR_MSG("Wrong type of operand");
-}
+    }
   else ERROR_MSG("No operand");
 }
 
@@ -333,12 +333,18 @@ object remainder(object input, object env)
 object equal(object input, object env){
   object op1;
   object op2;
+  object c_op1 = make_object(SFS_NUMBER);
+  object c_op2 = make_object(SFS_NUMBER);
   object resultat=true;
   
   if(input->this.pair.cdr->type == SFS_NIL){
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return true;
   }
   if(input->cddr->type != SFS_PAIR){
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return true;
   }
   else{
@@ -347,6 +353,7 @@ object equal(object input, object env){
     if(op1->type != SFS_NUMBER){
       if(op1->type == SFS_VARIABLE_VALUE){
 	op1=op1->this.pair.car;
+
 	DEBUG_MSG("op1 type = %d",op1->type);
 	if(op1->type != SFS_NUMBER){
 	  ERROR_MSG("Wrong type of operand");
@@ -356,31 +363,37 @@ object equal(object input, object env){
 	ERROR_MSG("Wrong type of operand");
       }
     }
+    	c_op1->this.number = op1->this.number;
     while(input->this.pair.cdr->type != SFS_NIL){
       input = input->this.pair.cdr;
 
       /*if(input->this.pair.cdr->type != SFS_NIL){*/
-	op2 = sfs_eval(input->this.pair.car,env);
-	if(op2->type != SFS_NUMBER){
-	  if(op2->type == SFS_VARIABLE_VALUE){
-	    op2=op2->this.pair.car;
-	    DEBUG_MSG("op2 type = %d",op2->type);
-	    if(op2->type != SFS_NUMBER){
-	      ERROR_MSG("Wrong type of operand");
-	    }
-	  }
-	  else{
+      op2 = sfs_eval(input->this.pair.car,env);
+      if(op2->type != SFS_NUMBER){
+	if(op2->type == SFS_VARIABLE_VALUE){
+	  op2=op2->this.pair.car;
+	  DEBUG_MSG("op2 type = %d",op2->type);
+	  if(op2->type != SFS_NUMBER){
 	    ERROR_MSG("Wrong type of operand");
 	  }
 	}
-	/* }*/
-      if( op1->this.number == op2->this.number){
-	op1->this.number = op2->this.number;
+	else{
+	  ERROR_MSG("Wrong type of operand");
+	}
+      }
+      /* }*/
+      c_op2->this.number = op2->this.number;
+      if( c_op1->this.number == c_op2->this.number){
+	c_op1->this.number = c_op2->this.number;
       }
       else{
+	sfs_free(c_op1);
+	sfs_free(c_op2);
 	return false;
       }
-    } 
+    }
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return resultat;
   }
 }
@@ -388,12 +401,18 @@ object equal(object input, object env){
 object greater(object input, object env){
   object op1;
   object op2;
+  object c_op1 = make_object(SFS_NUMBER);
+  object c_op2 = make_object(SFS_NUMBER);
   object resultat=true;
   
   if(input->this.pair.cdr->type == SFS_NIL){
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return true;
   }
   if(input->cddr->type != SFS_PAIR){
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return true;
   }
   else{
@@ -402,6 +421,7 @@ object greater(object input, object env){
     if(op1->type != SFS_NUMBER){
       if(op1->type == SFS_VARIABLE_VALUE){
 	op1=op1->this.pair.car;
+	
 	DEBUG_MSG("op1 type = %d",op1->type);
 	if(op1->type != SFS_NUMBER){
 	  ERROR_MSG("Wrong type of operand");
@@ -411,6 +431,7 @@ object greater(object input, object env){
 	ERROR_MSG("Wrong type of operand");
       }
     }
+    c_op1->this.number = op1->this.number;
     while(input->this.pair.cdr->type != SFS_NIL){
       input = input->this.pair.cdr;
 
@@ -429,26 +450,37 @@ object greater(object input, object env){
 	}
       }
       /* }*/
-      if( op1->this.number > op2->this.number){
-	op1->this.number = op2->this.number;
+      c_op2->this.number = op2->this.number;
+      if( c_op1->this.number > c_op2->this.number){
+	c_op1->this.number = c_op2->this.number;
       }
       else{
+	sfs_free(c_op1);
+	sfs_free(c_op2);
 	return false;
       }
-    } 
+    }
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return resultat;
   }
 }
 
 object lower(object input, object env){
-    object op1;
+  object op1;
   object op2;
+  object c_op1 = make_object(SFS_NUMBER);
+  object c_op2 = make_object(SFS_NUMBER);
   object resultat=true;
   
   if(input->this.pair.cdr->type == SFS_NIL){
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return true;
   }
   if(input->cddr->type != SFS_PAIR){
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return true;
   }
   else{
@@ -457,6 +489,7 @@ object lower(object input, object env){
     if(op1->type != SFS_NUMBER){
       if(op1->type == SFS_VARIABLE_VALUE){
 	op1=op1->this.pair.car;
+ 
 	DEBUG_MSG("op1 type = %d",op1->type);
 	if(op1->type != SFS_NUMBER){
 	  ERROR_MSG("Wrong type of operand");
@@ -466,6 +499,7 @@ object lower(object input, object env){
 	ERROR_MSG("Wrong type of operand");
       }
     }
+    	c_op1->this.number = op1->this.number;
     while(input->this.pair.cdr->type != SFS_NIL){
       input = input->this.pair.cdr;
 
@@ -484,13 +518,18 @@ object lower(object input, object env){
 	}
       }
       /* }*/
-      if( op1->this.number < op2->this.number){
-	op1->this.number = op2->this.number;
+      c_op2->this.number = op2->this.number;
+      if(c_op1->this.number < c_op2->this.number){
+	c_op1->this.number = c_op2->this.number;
       }
       else{
+	sfs_free(c_op1);
+	sfs_free(c_op2);
 	return false;
       }
-    } 
+    }
+    sfs_free(c_op1);
+    sfs_free(c_op2);
     return resultat;
   }
 }
