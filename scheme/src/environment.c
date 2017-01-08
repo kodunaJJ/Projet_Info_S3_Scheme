@@ -81,6 +81,16 @@ object create_top_level_environment(){
       prim->this.primitive = string_to_symbol;
   add_variable(make_symbol("string->symbol"),prim,top);
 
+
+        prim->this.primitive = cons;
+  add_variable(make_symbol("cons"),prim,top);
+
+        prim->this.primitive = car;
+  add_variable(make_symbol("car"),prim,top);
+
+        prim->this.primitive = cdr;
+  add_variable(make_symbol("cdr"),prim,top);
+
   return top;
 }
 

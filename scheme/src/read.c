@@ -338,7 +338,7 @@ void get_atom(char* input, uint *here, char* str){ /* On récupère la chaine de
     str[indice]=input[(*here)];
     (*here)++; /* incrementation pour etre sur l'espace ou la parenthese fermante */
     	
-    if(indice<BIGSTRING) str[indice +1] = '\0';
+    if(indice<BIGSTRING) str[indice +1] == '\0';
     else{
       str[BIGSTRING-1]='\0';
       WARNING_MSG("Chaine de caractere trop longue");
@@ -363,7 +363,7 @@ void get_atom(char* input, uint *here, char* str){ /* On récupère la chaine de
 		(*here)++;
       indice ++;
     }
-    if(indice<BIGSTRING) str[indice] = '\0';
+    if(indice<BIGSTRING) str[indice] == '\0';
     else{
       str[BIGSTRING-1]='\0';
       WARNING_MSG("Chaine de caractere trop longue");
