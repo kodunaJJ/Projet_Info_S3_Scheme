@@ -313,9 +313,16 @@ object sfs_read( char *input, uint *here ) {
 
 
 
-void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de caractères entre 2 espaces */
+void get_atom(char* input, uint *here, char* str){ /* On récupère la chaine de caractères entre 2 espaces */
   uint indice =0;
   while (isspace(input[*here]) && input[*here] != '\0') (*here)++;
+  
+  if(input[*here]=='\'') {
+  	strcpy(str,input);
+  	DEBUG_MSG("valeur de string : %s",str);
+  	DEBUG_MSG("BYPASS");
+  	}
+  
   if(input[*here]=='"'){
     do{
       str[indice] = input[*here];
@@ -339,7 +346,7 @@ void get_atom(char* input, uint *here, char *str){ /* On récupère la chaine de
   }
   else{
     while (isspace(input[*here]) == 0 && input[*here]!='\0' && input[*here]!='"') {
-      if(input[*here]==')'|| input[*here]=='('){
+      if(input[*here]=='('|| input[*here]==')'){
 	if(*here > 0){
 	  if(input[(*here)-1]!='\\') break;
 	}
@@ -400,10 +407,29 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
   char str[BIGSTRING]="";
   uint indice = 0;
   /*int val= 0;*/
-
+DEBUG_MSG("valeur de input1 : %s",input);
   get_atom(input, here, str);
   
-  if(str[indice] == '"'){ /*lecture des string */
+  DEBUG_MSG("valeur de str1 : %s",str);
+  
+  if(input[indice] == '\''){ /*Gestion de la tranformation de 'abc en (quote abc)*/
+  		char quote[256] = "";
+  		strcpy(quote, "(quote ");
+  		DEBUG_MSG("valeur de str : %s",str);
+  		while(indice < strlen(input)+1){ 
+  			quote[indice+7]=input[indice+1]; 
+  			indice++;
+  			}
+  		
+  		quote[strlen(input)+6]=')';
+  		/*quote[strlen(str)+7]='\0';*/
+  		DEBUG_MSG("valeur de quote : %s",quote);
+  		(*here)=0;
+  		
+  		return sfs_read(quote, here);
+  		}
+  
+  else if(str[indice] == '"'){ /*lecture des string */
     return make_string(str);
   }
 	
@@ -509,27 +535,12 @@ object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour 
     return make_special_atom(str[indice]); en attendant de savoir ce qu'on en fait ^^ 
   }*/
   
-  
-  else {
+ 
   	
-  	if(str[indice] == '\''){ /*Gestion de la tranformation de 'abc en (quote abc)*/
-  		char quote[256] = "";
-  		strcpy(quote, "(quote ");
-  		DEBUG_MSG("valeur de str : %s",str);
-  		while(indice < strlen(str)+1){ 
-  			quote[indice+7]=str[indice+1]; 
-  			indice++;
-  			}
-  		
-  		quote[strlen(str)+6]=')';
-  		/*quote[strlen(str)+7]='\0';*/
-  		DEBUG_MSG("valeur de quote : %s",quote);
-  		(*here)=0;
-  		return sfs_read(quote, here);
-  		}
+  	
   		
     else return make_symbol(str);
-	}
+	
   /*else {
     return make_string(str);  cas fourre tout a ameliorer au plus vite 
   }*/

@@ -182,6 +182,7 @@ object sfs_eval(object input, object env ) {
     /* Gestion de la forme QUOTE */
 
     if (!strcmp(input->this.pair.car->this.symbol, "quote")){
+    DEBUG_MSG("c'est le QUOTE");
       if(error_syntax_QUOTE_form(input)){
 	return nil;
       }
@@ -193,6 +194,7 @@ object sfs_eval(object input, object env ) {
 
     /*Gestion de DEFINE */
     if (!strcmp(input->this.pair.car->this.symbol, "define")){
+    DEBUG_MSG("c'est le DEFINE");
 
       if(error_syntax_DEFINE_form(input)){
 	ERROR_MSG("pair is not a known function");
@@ -217,6 +219,7 @@ object sfs_eval(object input, object env ) {
 
     /*Gestion de SET! */ 
     if (!strcmp(input->this.pair.car->this.symbol, "set!")){
+    DEBUG_MSG("c'est le SET!");
       object var = research_variable_all_env(input->cadr,env);
       if(var->type == SFS_NIL){
 	/*WARNING_MSG("Unknown variable");
@@ -235,6 +238,7 @@ object sfs_eval(object input, object env ) {
 
     /*Gestion de IF */
     if (!strcmp(input->this.pair.car->this.symbol, "if")){
+    DEBUG_MSG("c'est le IF");
       if(error_syntax_IF_form(input)){
 	/*WARNING_MSG("Syntax error");
 	  return nil;*/
@@ -259,6 +263,7 @@ object sfs_eval(object input, object env ) {
 	
     /*Gestion de AND*/
     if (!strcmp(input->this.pair.car->this.symbol, "and")){
+    DEBUG_MSG("c'est le AND");
 
       if(input->this.pair.cdr->type == SFS_NIL){
 	return true;
