@@ -843,3 +843,75 @@ object string_to_symbol(object input, object env){
     }
   } 
 }
+
+object cons(object input, object env){
+  return input;
+}
+
+object car(object input, object env){
+  object res;
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("Too few arguments");
+  }
+  else if(input->cddr->type != SFS_NIL){
+    ERROR_MSG("Too many arguments");
+  }
+  if(input->cadr->type == SFS_PAIR){
+    input=input->cadr;
+    res = sfs_eval(input,env);
+    if(res->type == SFS_PAIR){
+      return res->this.pair.car;
+    }
+    else{
+      if(res->type == SFS_VARIABLE_VALUE){
+	res = res->this.pair.car;
+	if(res->this.pair.car->type == SFS_PAIR){
+	  return res->this.pair.car;
+	}
+	else{
+	  ERROR_MSG("Not a pair !");
+	}
+      }
+      else{
+	ERROR_MSG("Not a pair !");
+      }
+    }
+  }
+  else{
+    ERROR_MSG("Not a pair !");
+  }
+}
+
+object cdr(object input, object env){
+    object res;
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("Too few arguments");
+  }
+  else if(input->cddr->type != SFS_NIL){
+    ERROR_MSG("Too many arguments");
+  }
+  if(input->cadr->type == SFS_PAIR){
+    input=input->cadr;
+    res = sfs_eval(input,env);
+    if(res->type == SFS_PAIR){
+      return res->this.pair.cdr;
+    }
+    else{
+      if(res->type == SFS_VARIABLE_VALUE){
+	res = res->this.pair.car;
+	if(res->this.pair.car->type == SFS_PAIR){
+	  return res->this.pair.cdr;
+	}
+	else{
+	  ERROR_MSG("Not a pair !");
+	}
+      }
+      else{
+	ERROR_MSG("Not a pair !");
+      }
+    }
+  }
+  else{
+    ERROR_MSG("Not a pair !");
+  }
+}

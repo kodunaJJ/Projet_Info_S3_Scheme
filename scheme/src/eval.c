@@ -161,7 +161,7 @@ object sfs_eval(object input, object env ) {
       DEBUG_MSG("c'est un symbol");
       DEBUG_MSG("input = %s", input->this.pair.car->this.symbol);
       object search_res = research_variable_all_env(input->this.pair.car,env);
-      DEBUG_MSG("search_res type %d",search_res->this.pair.cdr->type);
+      /*DEBUG_MSG("search_res type %d",search_res->this.pair.cdr->type);*/
       if(search_res->type == SFS_NIL){
 	/*WARNING_MSG("pair is not a known function");
 	  return nil;*/
@@ -199,7 +199,6 @@ object sfs_eval(object input, object env ) {
 	/*return nil;*/
       }
       else{
-	/*DEBUG_MSG("je passe laaaaaaaaaaaaaaa");*/
 	object search_res = research_variable(input->cadr,env);
 	if(search_res->type == SFS_NIL){
 	  DEBUG_MSG("research ok");

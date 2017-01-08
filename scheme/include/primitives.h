@@ -24,6 +24,10 @@ object equal(object input, object env);
   object symbol_to_string(object input, object env);
   object string_to_symbol(object input, object env);
 
+  object cons(object input, object env);
+  object car(object input, object env);
+  object cdr(object input, object env);
+
 #ifdef __cplusplus
 }
 #endif
