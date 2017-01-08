@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <math.h>
 
 #include "object.h"
 #include "primitives.h"
@@ -9,8 +11,9 @@
 #include "environment.h"
 #include "basic.h"
 #include "read.h"
-#include <ctype.h>
-#include <math.h>
+#include "mem.h"
+
+
 
 /*extern object env;*/
 
@@ -677,7 +680,7 @@ object number_to_string(object input, object env){
       if(op->type == SFS_VARIABLE_VALUE){
 	op = op->this.pair.car;
 	if(op->type == SFS_NUMBER){
-	  sprintf(res->this.string, "%d",op->this.number);
+	  sprintf(res->this.string, "\"%d\"",op->this.number);
 	  return res;
 	}
 	else{
@@ -768,9 +771,75 @@ object string_to_number(object input, object env){
 }
 
 object symbol_to_string(object input, object env){
-  return input;
+    object op;
+  object res = make_object(SFS_STRING);
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("No operand");
+  }
+  else{
+    input = input->this.pair.cdr;
+    if(input->this.pair.cdr->type != SFS_NIL){
+      ERROR_MSG("Too many arguments");
+    }
+    op = sfs_eval(input->this.pair.car,env);
+    if(op->type != SFS_SYMBOL){
+      if(op->type == SFS_VARIABLE_VALUE){
+	op = op->this.pair.car;
+	if(op->type == SFS_SYMBOL){
+	  sprintf(res->this.string, "\"%s\"",op->this.symbol);
+	  return res;
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}
+      }
+      else{
+	ERROR_MSG("Wrong type of operand !");
+      }
+    }
+    else{
+      sprintf(res->this.string, "\"%s\"",op->this.symbol);
+      return res;
+	
+    }
+  } 
 }
 
 object string_to_symbol(object input, object env){
-  return input;
+  object op;
+  object res = make_object(SFS_SYMBOL);
+  if(input->this.pair.cdr->type == SFS_NIL){
+    ERROR_MSG("No operand");
+  }
+  else{
+    input = input->this.pair.cdr;
+    if(input->this.pair.cdr->type != SFS_NIL){
+      ERROR_MSG("Too many arguments");
+    }
+    op = sfs_eval(input->this.pair.car,env);
+    if(op->type != SFS_STRING){
+      if(op->type == SFS_VARIABLE_VALUE){
+	op = op->this.pair.car;
+	if(op->type == SFS_STRING){
+	  sprintf(res->this.symbol, "%s",op->this.string+1);
+	  int i = (strlen(res->this.symbol)-1);
+	  *(res->this.symbol+i) = *(res->this.symbol+(i+1));
+	  return res;
+	}
+	else{
+	  ERROR_MSG("Wrong type of operand !");
+	}
+      }
+      else{
+	ERROR_MSG("Wrong type of operand !");
+      }
+    }
+    else{
+      sprintf(res->this.symbol, "%s",op->this.string+1);
+      int i = (strlen(res->this.symbol)-1);
+      *(res->this.symbol+i) = *(res->this.symbol+(i+1));
+      return res;
+	
+    }
+  } 
 }

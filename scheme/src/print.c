@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 void sfs_print_atom( object o ) {
-/*DEBUG_MSG(" entrée dans la fonction print atom type de l' atome : %d  ",o->type);*/
+DEBUG_MSG(" entrée dans la fonction print atom type de l' atome : %d  ",o->type);
   switch(o->type){
   case SFS_NUMBER:
     printf("%d",o->this.number);
