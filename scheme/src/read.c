@@ -317,11 +317,11 @@ void get_atom(char* input, uint *here, char* str){ /* On récupère la chaine de
   uint indice =0;
   while (isspace(input[*here]) && input[*here] != '\0') (*here)++;
   
-  if(input[*here]=='\'') {
+  /*if(input[*here]=='\'') {
   	strcpy(str,input);
   	DEBUG_MSG("valeur de string : %s",str);
   	DEBUG_MSG("BYPASS");
-  	}
+  	}*/
   
   if(input[*here]=='"'){
     do{
@@ -401,7 +401,7 @@ uint is_scm_newline(char* str, uint indice){
   return 0;
 }
 
-object sfs_read_atom( char *input, uint *here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
+object sfs_read_atom( char *input, uint* here ) { /* *here est le compteur pour savoir quel caractère on est en train de lire, initialisé à 0 pour le 1er caractère de l'atome S-expression */
  
   /*object atom = NULL;*/
   char str[BIGSTRING]="";
@@ -413,21 +413,53 @@ DEBUG_MSG("valeur de input1 : %s",input);
   DEBUG_MSG("valeur de str1 : %s",str);
   
   if(input[indice] == '\''){ /*Gestion de la tranformation de 'abc en (quote abc)*/
+  		DEBUG_MSG("valeur de str abrege: %s",str);
   		char quote[256] = "";
   		strcpy(quote, "(quote ");
-  		DEBUG_MSG("valeur de str : %s",str);
   		while(indice < strlen(input)+1){ 
   			quote[indice+7]=input[indice+1]; 
   			indice++;
   			}
   		
   		quote[strlen(input)+6]=')';
-  		/*quote[strlen(str)+7]='\0';*/
+  		
   		DEBUG_MSG("valeur de quote : %s",quote);
   		(*here)=0;
   		
   		return sfs_read(quote, here);
   		}
+  		
+  		/*
+  		char citation[BIGSTRING]="";
+	    char resultat[BIGSTRING]="";
+	    strcpy(citation,"(quote ");
+	    (*here)=0;
+	    DEBUG_MSG("valeur de *here : %d",*here);
+	    if((int)str[*here+1]==40)
+	    	{
+			while ((int)str[*here]!= 41 && *here<strlen(str))
+				{
+		    	resultat[*here]=str[*here+1];
+		    	(*here)++;   
+				}
+	    	}
+	    else 
+	    	{DEBUG_MSG("else");
+			while ((int)str[*here]!= 32 && *here<strlen(str))
+				{
+		    	resultat[*here]=str[*here+1];
+		    	DEBUG_MSG("valeur de resultat mid : %s",resultat);
+		    	(*here)++;     
+				}
+	    	}
+	    DEBUG_MSG("valeur de *here fin : %d",*here);
+	    DEBUG_MSG("valeur de resultat : %s",resultat);
+	    strcat(citation,resultat); 
+	    citation[strlen(citation)]=')'; 
+	    (*here)=0;
+	    DEBUG_MSG("on retourne : %s",citation);
+	    return sfs_read(citation,here);
+  		}*/
   
   else if(str[indice] == '"'){ /*lecture des string */
     return make_string(str);

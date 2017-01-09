@@ -141,6 +141,7 @@ object sfs_eval(object input, object env ) {
   DEBUG_MSG("type de input à évaluer : %d",input->type);
 
 
+
   /* gestion des paires */
   /*Dans le cas d'une paire on gère les primitives et les formes*/
   if(input->type == SFS_PAIR){
@@ -328,7 +329,9 @@ object sfs_eval(object input, object env ) {
     /*DEBUG_MSG("%s",input->this.symbol);
       DEBUG_MSG("/////// %d ////////////",research_variable(input,env)->this.pair.cdr->type);*/
     object search_res = research_variable(input,env);
-    if(search_res->type == SFS_NIL){
+    if(input->this.symbol[0]=='\'') return input;
+    
+    else if(search_res->type == SFS_NIL){
       /*WARNING_MSG("Unbound variable !");
 	return search_res;*/
       ERROR_MSG("pair is not a known function");
@@ -337,6 +340,7 @@ object sfs_eval(object input, object env ) {
       return search_res->this.pair.cdr;
     }
   }
+  
   else{
     DEBUG_MSG(" object auto evaluant");
     return input;
